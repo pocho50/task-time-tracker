@@ -1,0 +1,160 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum TaskStatus {
+  ANALYZING
+  IN_PROGRESS
+  APPROVED
+  FINALIZED
+}
+
+enum SprintStatus {
+  PLANNING
+  ACTIVE
+  COMPLETED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  name      String
+  password  String
+  role      UserRole  @default(USER)
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  projects    ProjectsOnUsers[]
+  tasks       TasksOnUsers[]
+  timeTracking TimeTrack[]
+
+  @@map("users")
+  @@index([email])
+  @@index([role])
+}
+
+model Project {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  users    ProjectsOnUsers[]
+  sprints  Sprint[]
+  tasks    Task[]
+
+  @@map("projects")
+}
+
+model ProjectsOnUsers {
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String   @map("project_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id")
+  assignedAt DateTime @default(now()) @map("assigned_at")
+
+  @@id([projectId, userId])
+  @@map("projects_users")
+  @@index([projectId])
+  @@index([userId])
+  @@index([assignedAt])
+}
+
+model Sprint {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  projectId String   @map("project_id")
+  startDate DateTime? @map("start_date")
+  endDate   DateTime? @map("end_date")
+  status    SprintStatus @default(PLANNING) @map("status")
+
+  // Relations
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  tasks     Task[]
+
+  @@map("sprints")
+  @@index([projectId])
+  @@index([status])
+  @@index([startDate, endDate])
+}
+
+model Task {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  projectId   String   @map("project_id")
+  sprintId    String?  @map("sprint_id")
+  priority    TaskPriority @default(MEDIUM) @map("priority")
+  status      TaskStatus @default(ANALYZING) @map("status")
+  estimatedHours Float? @map("estimated_hours")
+
+  // Relations
+  project     Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  sprint      Sprint?        @relation(fields: [sprintId], references: [id], onDelete: SetNull)
+  users       TasksOnUsers[]
+  timeTracking TimeTrack[]
+
+  @@map("tasks")
+  @@index([projectId])
+  @@index([sprintId])
+  @@index([status])
+  @@index([priority])
+  @@index([createdAt])
+}
+
+model TasksOnUsers {
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  taskId    String   @map("task_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id")
+  assignedAt DateTime @default(now()) @map("assigned_at")
+
+  @@id([taskId, userId])
+  @@map("tasks_users")
+  @@index([taskId])
+  @@index([userId])
+  @@index([assignedAt])
+}
+
+model TimeTrack {
+  id        String          @id @default(uuid())
+  taskId    String          @map("task_id")
+  userId    String          @map("user_id")
+  start     DateTime
+  end       DateTime?
+  notes     String?
+  createdAt DateTime        @default(now()) @map("created_at")
+  updatedAt DateTime        @updatedAt @map("updated_at")
+
+  // Relations
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("time_tracks")
+  @@index([taskId])
+  @@index([userId])
+  @@index([start, end])
+  @@index([createdAt])
+}
