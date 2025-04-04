@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   // Clean up existing data
-  console.log("Cleaning up existing data...")
+  console.log("Cleaning up existing data...");
   // Disable foreign key checks and truncate all tables
   await prisma.$transaction([
     prisma.$executeRaw`PRAGMA foreign_keys = OFF`,
@@ -17,8 +17,8 @@ async function main() {
     prisma.$executeRaw`DELETE FROM projects`,
     prisma.$executeRaw`DELETE FROM users`,
     prisma.$executeRaw`PRAGMA foreign_keys = ON`,
-  ])
-  console.log("Data cleanup completed")
+  ]);
+  console.log("Data cleanup completed");
 
   // Create admin user
   const adminPassword = await hash("admin123", 10);
@@ -46,6 +46,7 @@ async function main() {
   const project = await prisma.project.create({
     data: {
       name: "Time Tracker Development",
+      description: "Descripcion",
       users: {
         create: [
           {
@@ -60,6 +61,30 @@ async function main() {
       },
     },
   });
+  // create 18 additional projects
+  for (let i = 1; i <= 18; i++) {
+    const projectName = `Project ${i}`;
+    const projectDescription = `Description ${i}`;
+
+    const additionalProject = await prisma.project.create({
+      data: {
+        name: projectName,
+        description: projectDescription,
+        users: {
+          create: [
+            {
+              userId: admin.id,
+              assignedAt: new Date(),
+            },
+            {
+              userId: regularUser.id,
+              assignedAt: new Date(),
+            },
+          ],
+        },
+      },
+    });
+  }
 
   // Create a sprint
   const sprint = await prisma.sprint.create({
