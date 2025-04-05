@@ -1,7 +1,10 @@
 <script setup lang="ts">
 type Action = "edit" | "remove";
 defineProps<{ actions: Action[] }>();
-defineEmits(["@edit", "@remove"]);
+const emit = defineEmits<{
+  (event: "@edit"): void;
+  (event: "@remove"): void;
+}>();
 </script>
 <template>
   <div

@@ -8,7 +8,13 @@ export default defineNuxtConfig({
       title: "Time Tracker",
     },
   },
-  modules: ["@nuxt/eslint", "@nuxt/icon", "@nuxt/test-utils", "@nuxt/image"],
+  modules: [
+    "@nuxt/eslint",
+    "@nuxt/icon",
+    "@nuxt/test-utils",
+    "@nuxt/image",
+    "@vueuse/nuxt",
+  ],
   vite: {
     plugins: [tailwindcss()],
   },
