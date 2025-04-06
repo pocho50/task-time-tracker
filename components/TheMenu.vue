@@ -10,6 +10,11 @@ const menuItems = [
     icon: "mdi:timer",
     label: "Time Tracker",
   },
+  {
+    to: "/profile",
+    icon: "mdi:account",
+    label: "Profile",
+  },
 ];
 </script>
 
