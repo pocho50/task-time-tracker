@@ -1,23 +1,27 @@
 <script setup lang="ts">
+const { loggedIn, user, fetch: refreshSession } = useUserSession();
 definePageMeta({
   layout: "center",
 });
 
-const email = ref("");
-const password = ref("");
+const credentials = ref({
+  email: "",
+  password: "",
+});
 const isLoading = ref(false);
+const showPassword = ref(false);
 
 async function handleLogin() {
   try {
     isLoading.value = true;
-    // TODO: Implementar la lógica de autenticación aquí
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulación de delay
-    console.log("Login attempt:", {
-      email: email.value,
-      password: password.value,
+    await $fetch("/api/login", {
+      method: "POST",
+      body: credentials.value,
     });
+    await refreshSession();
+    await navigateTo("/");
   } catch (error) {
-    console.error("Error during login:", error);
+    console.error(error);
   } finally {
     isLoading.value = false;
   }
@@ -35,7 +39,7 @@ async function handleLogin() {
         </label>
         <input
           type="email"
-          v-model="email"
+          v-model="credentials.email"
           placeholder="correo@ejemplo.com"
           class="input input-bordered w-full"
           required
@@ -47,13 +51,22 @@ async function handleLogin() {
           <span class="label-text">Contraseña</span>
         </label>
 
-        <input
-          type="password"
-          v-model="password"
-          placeholder="********"
-          class="input input-bordered w-full"
-          required
-        />
+        <div class="relative">
+          <input
+            :type="showPassword ? 'text' : 'password'"
+            v-model="credentials.password"
+            placeholder="********"
+            class="input input-bordered w-full"
+            required
+          />
+
+          <Icon
+            :name="showPassword ? 'mdi:eye-off' : 'mdi:eye'"
+            @click="showPassword = !showPassword"
+            class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+            size="16"
+          />
+        </div>
         <label class="label">
           <a href="#" class="label-text-alt link link-hover"
             >¿Olvidaste tu contraseña?</a

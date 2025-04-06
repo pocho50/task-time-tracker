@@ -14,6 +14,7 @@ export default defineNuxtConfig({
     "@nuxt/test-utils",
     "@nuxt/image",
     "@vueuse/nuxt",
+    "nuxt-auth-utils",
   ],
   vite: {
     plugins: [tailwindcss()],

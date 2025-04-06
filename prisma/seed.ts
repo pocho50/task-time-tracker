@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcrypt";
+import { Hash } from "@adonisjs/hash";
+import { Scrypt } from "@adonisjs/hash/drivers/scrypt";
 
 const prisma = new PrismaClient();
 
@@ -20,11 +21,14 @@ async function main() {
   ]);
   console.log("Data cleanup completed");
 
+  const scrypt = new Scrypt({});
+  const hash = new Hash(scrypt);
+
   // Create admin user
-  const adminPassword = await hash("admin123", 10);
+  const adminPassword = await hash.make("admin123");
   const admin = await prisma.user.create({
     data: {
-      email: "admin@example.com",
+      email: "admin@admin.com",
       name: "Admin User",
       password: adminPassword,
       role: "ADMIN",
@@ -32,10 +36,10 @@ async function main() {
   });
 
   // Create regular user
-  const userPassword = await hash("user123", 10);
+  const userPassword = await hash.make("password");
   const regularUser = await prisma.user.create({
     data: {
-      email: "user@example.com",
+      email: "test@test.com",
       name: "Regular User",
       password: userPassword,
       role: "USER",
