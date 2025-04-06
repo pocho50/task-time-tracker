@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     head: {
       title: "Time Tracker",
     },
+    pageTransition: { name: "page", mode: "out-in" },
   },
   modules: [
     "@nuxt/eslint",
