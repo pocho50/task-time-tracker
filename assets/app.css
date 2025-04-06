@@ -4,3 +4,11 @@
 @theme {
   --aside-width: 260px;
 }
+
+@layer components {
+  .router-link-active,
+  .router-link-active:hover {
+    background-color: var(--menu-active-bg) !important;
+    color: var(--menu-active-fg) !important;
+  }
+}

@@ -19,16 +19,16 @@ const handleLogout = async () => {
       <TheLogo />
 
       <!-- Menu items -->
-      <ul class="menu p-4 w-full flex-1">
-        <li><a>Sidebar Item 1</a></li>
-        <li><a>Sidebar Item 2</a></li>
-      </ul>
+      <TheMenu />
 
       <!-- Logout button -->
       <div class="p-4">
-        <button class="btn btn-default btn-block gap-2" @click="handleLogout">
-          <Icon name="mdi:logout" />
-          Cerrar sesión
+        <button
+          class="btn btn-ghost btn-block gap-3 text-base-content"
+          @click="handleLogout"
+        >
+          <Icon name="mdi:logout" class="text-xl" />
+          <span>Cerrar sesión</span>
         </button>
       </div>
     </div>
