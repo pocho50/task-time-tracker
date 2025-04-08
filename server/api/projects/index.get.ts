@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
 export default defineEventHandler(async (event) => {
+  const { user } = await requireUserSession(event);
   const query = getQuery(event);
   const page = Number(query.page) || 1;
   const DEFAULT_PAGE_SIZE = 12;
@@ -14,6 +15,13 @@ export default defineEventHandler(async (event) => {
     prisma.project.findMany({
       skip,
       take: pageSize,
+      where: {
+        users: {
+          some: {
+            userId: user.id,
+          },
+        },
+      },
       orderBy: {
         createdAt: "desc",
       },
