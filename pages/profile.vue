@@ -1,4 +1,21 @@
 <script setup lang="ts">
+import { toTypedSchema } from "@vee-validate/zod";
+import * as zod from "zod";
+const validationSchema = toTypedSchema(
+  zod.object({
+    email: zod
+      .string()
+      .min(1, { message: "This is required" })
+      .email({ message: "Must be a valid email" }),
+    password: zod
+      .string()
+      .min(1, { message: "This is required" })
+      .min(8, { message: "Too short" }),
+  })
+);
+function onSubmit(values: any) {
+  alert(JSON.stringify(values, null, 2));
+}
 // TODO: Implement profile
 const openDrawer = ref(false);
 </script>
@@ -10,8 +27,26 @@ const openDrawer = ref(false);
       Open drawer
     </button>
     <AppDrawerRight v-model="openDrawer">
-      <!-- This paragraph element displays a simple greeting in Spanish -->
-      <p>Hola</p>
+      <VeeForm
+        :validation-schema="validationSchema"
+        @submit="onSubmit"
+        class="flex flex-col gap-2"
+      >
+        <AppFormInput
+          name="email"
+          class-input="w-full"
+          type="email"
+          placeholder="Email"
+        />
+        <AppFormInput
+          name="password"
+          class-input="w-full"
+          type="password"
+          placeholder="Password"
+        />
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </VeeForm>
     </AppDrawerRight>
   </section>
 </template>
