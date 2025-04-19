@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const menuItems = [
   {
-    to: "/",
+    to: "/projects",
     icon: "mdi:view-dashboard",
     label: "Projects",
   },
