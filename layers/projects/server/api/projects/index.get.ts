@@ -1,4 +1,4 @@
-import { Project } from "../../repositories/project";
+import { Project } from "../../repository/project";
 import { GetProjectsService } from "../../services/get-projects";
 import { DEFAULT_PAGE_SIZE } from "../../constants";
 
