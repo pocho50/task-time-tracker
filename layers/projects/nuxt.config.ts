@@ -2,4 +2,7 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   extends: ["../shared"],
+  imports: {
+    dirs: ["./repository"],
+  },
 });

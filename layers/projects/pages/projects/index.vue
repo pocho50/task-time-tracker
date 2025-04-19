@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { useRouteQuery } from "@vueuse/router";
 
+const { $api } = useNuxtApp();
+const projectRepo = projectsRepo($api);
 const page = useRouteQuery("page", 1, { transform: Number });
 
-const { data, refresh } = await useFetch("/api/projects", {
-  query: { page },
-  watch: false,
-});
+const { data, error, refresh } = await useAsyncData(() => projectRepo.getAll());
+
+console.log(data.value, error.value);
 
 watch(page, () => {
   refresh();
@@ -17,7 +18,6 @@ const projects = computed(() => data.value?.data);
 <template>
   <section class="py-12 px-4 bg-base-200">
     <AppTitle text="Projects" />
-
     <div
       class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
       v-if="projects"
