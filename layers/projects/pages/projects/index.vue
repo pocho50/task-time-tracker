@@ -23,6 +23,12 @@ const handleEdit = (id: string) => {
   // open drawer
   openDrawer.value = true;
 };
+
+const handleSave = async (projectData: ProjectFormData) => {
+  await projectRepo.save(projectData);
+  refresh();
+  openDrawer.value = false;
+};
 </script>
 <template>
   <section class="py-12 px-4 bg-base-200">
@@ -60,8 +66,8 @@ const handleEdit = (id: string) => {
       @@prev="page--"
       @@next="page++"
     />
-    <AppDrawerRight v-model="openDrawer">
-      <ProjectForm :initial-data="selectedProject" />
+    <AppDrawerRight v-model="openDrawer" title="Edit Project">
+      <ProjectForm :initial-data="selectedProject" @@submit="handleSave" />
     </AppDrawerRight>
   </section>
 </template>

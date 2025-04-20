@@ -8,32 +8,40 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: "submit", data: ProjectFormData): void;
+  (e: "@submit", data: ProjectFormData): void;
 }>();
 
-const formValues = {
+const formValues = reactive({
   name: props.initialData?.name || "",
   description: props.initialData?.description || "",
-};
+});
 
 watch(
-  () => props.initialData?.id,
-  () => {
-    formValues.name = props.initialData?.name || "";
-    formValues.description = props.initialData?.description || "";
-  }
+  () => props.initialData,
+  (newData) => {
+    formValues.name = newData?.name || "";
+    formValues.description = newData?.description || "";
+  },
+  { deep: true }
 );
 
-const onSubmit = (values: ProjectFormData) => {
-  emit("submit", {
-    ...values,
+const onSubmit = (values: Record<string, any>) => {
+  // save values and close drawer
+  const projectData: ProjectFormData = {
     id: props.initialData?.id,
-  });
+    name: values.name,
+    description: values.description,
+  };
+  emit("@submit", projectData);
 };
 </script>
 
 <template>
-  <VeeForm :validation-schema="validationSchema" class="flex flex-col gap-4">
+  <VeeForm
+    :validation-schema="validationSchema"
+    class="flex flex-col gap-4"
+    @submit="onSubmit"
+  >
     <AppFormInput
       type="text"
       name="name"
@@ -41,11 +49,10 @@ const onSubmit = (values: ProjectFormData) => {
       placeholder="Project Name"
       v-model="formValues.name"
     />
-    <AppFormInput
+    <AppFormTextarea
       name="description"
       class-input="w-full"
       placeholder="Project Description"
-      type="textarea"
       v-model="formValues.description"
     />
 

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 defineProps<{
   name: string;
-  type: string;
   placeholder: string;
   classInput?: string;
 }>();
@@ -14,9 +13,9 @@ const value = defineModel<string>();
       <span>{{ placeholder }}</span>
       <VeeField
         v-model="value"
+        as="textarea"
         :name
-        :type
-        class="input"
+        class="textarea"
         :class="classInput"
         :placeholder
       />
