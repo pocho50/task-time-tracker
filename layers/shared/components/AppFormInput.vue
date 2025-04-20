@@ -5,11 +5,20 @@ defineProps<{
   placeholder: string;
   classInput?: string;
 }>();
+
+const value = defineModel<string>();
 </script>
 <template>
   <label class="floating-label">
     <span>{{ placeholder }}</span>
-    <VeeField :name :type class="input" :class="classInput" :placeholder />
+    <VeeField
+      v-model="value"
+      :name
+      :type
+      class="input"
+      :class="classInput"
+      :placeholder
+    />
     <VeeErrorMessage :name />
   </label>
 </template>

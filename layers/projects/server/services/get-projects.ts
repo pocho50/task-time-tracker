@@ -1,4 +1,4 @@
-import { Project } from "../repositories/project";
+import { ProjectRepository } from "../repository/project";
 
 interface GetProjectsInput {
   userId: string;
@@ -7,7 +7,7 @@ interface GetProjectsInput {
 }
 
 export class GetProjectsService {
-  constructor(private repo: Project) {}
+  constructor(private repo: ProjectRepository) {}
 
   async execute({ userId, page, pageSize }: GetProjectsInput) {
     const skip = (page - 1) * pageSize;

@@ -1,19 +1,28 @@
 <script setup lang="ts">
-import { useRouteQuery } from "@vueuse/router";
-
 const { $api } = useNuxtApp();
-const projectRepo = projectsRepo($api);
+const projectRepo = new ProjectsRepo($api);
 const page = useRouteQuery("page", 1, { transform: Number });
 
-const { data, error, refresh } = await useAsyncData(() => projectRepo.getAll());
-
-console.log(data.value, error.value);
+const { data, refresh } = await useAsyncData(() => {
+  projectRepo.setParams({ page: page.value });
+  return projectRepo.getAll();
+});
 
 watch(page, () => {
   refresh();
 });
 
+const openDrawer = ref(false);
+
 const projects = computed(() => data.value?.data);
+
+const selectedProject = ref<ProjectFormData | undefined>(undefined);
+
+const handleEdit = (id: string) => {
+  selectedProject.value = projects.value?.find((p) => p.id === id);
+  // open drawer
+  openDrawer.value = true;
+};
 </script>
 <template>
   <section class="py-12 px-4 bg-base-200">
@@ -27,7 +36,10 @@ const projects = computed(() => data.value?.data);
         :key="project.id"
         class="card bg-base-100 shadow-md hover:shadow-2xl group relative overflow-hidden transition-transform duration-300 ease-in-out hover:scale-[1.03]"
       >
-        <AppCardAction :actions="['edit', 'remove']" />
+        <AppCardAction
+          :actions="['edit', 'remove']"
+          @@edit="handleEdit(project.id)"
+        />
         <div class="card-body">
           <h2 class="card-title">
             {{ project.name }}
@@ -48,5 +60,8 @@ const projects = computed(() => data.value?.data);
       @@prev="page--"
       @@next="page++"
     />
+    <AppDrawerRight v-model="openDrawer">
+      <ProjectForm :initial-data="selectedProject" />
+    </AppDrawerRight>
   </section>
 </template>
