@@ -22,9 +22,14 @@ const closeDrawer = () => {
       class="fixed top-0 right-0 h-full w-full sm:w-[300px] lg:w-[450px] bg-base-100 shadow-lg transition-transform duration-300 ease-in-out z-50"
       :class="open ? 'translate-x-0' : 'translate-x-full'"
     >
-      <p class="text-lg font-bold p-4" v-if="title">{{ title }}</p>
-      <div class="p-4 h-full overflow-y-auto">
-        <slot></slot>
+      <div class="flex flex-col h-full">
+        <p class="text-lg font-bold p-4" v-if="title">{{ title }}</p>
+        <div class="p-4 h-full overflow-y-auto grow">
+          <slot></slot>
+        </div>
+        <footer class="p-4 flex justify-end gap-4">
+          <slot name="actions"></slot>
+        </footer>
       </div>
     </aside>
   </Teleport>

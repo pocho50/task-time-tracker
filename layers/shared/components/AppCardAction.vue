@@ -20,7 +20,13 @@ const handleAction = (action: Action) => {
   <div
     class="dropdown dropdown-bottom dropdown-end absolute top-3 right-3 cursor-pointer"
   >
-    <Icon name="mdi:dots-vertical" tabindex="0" role="button" size="20" />
+    <Icon
+      name="mdi:dots-vertical"
+      aria-hidden="false"
+      tabindex="0"
+      role="button"
+      size="20"
+    />
     <ul
       tabindex="0"
       ref="dropDown"
