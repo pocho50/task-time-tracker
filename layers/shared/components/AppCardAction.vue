@@ -1,10 +1,20 @@
 <script setup lang="ts">
 type Action = "edit" | "remove";
+
 defineProps<{ actions: Action[] }>();
+
 const emit = defineEmits<{
   (event: "@edit"): void;
   (event: "@remove"): void;
 }>();
+
+const dropDown = ref<HTMLDivElement>();
+
+const handleAction = (action: Action) => {
+  dropDown.value?.blur();
+  if (action === "edit") emit("@edit");
+  if (action === "remove") emit("@remove");
+};
 </script>
 <template>
   <div
@@ -13,13 +23,14 @@ const emit = defineEmits<{
     <Icon name="mdi:dots-vertical" tabindex="0" role="button" size="20" />
     <ul
       tabindex="0"
+      ref="dropDown"
       class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
     >
       <li v-if="actions.includes('edit')">
-        <a @click="$emit('@edit')"><Icon name="mdi:edit" /> Edit</a>
+        <a @click="handleAction('edit')"><Icon name="mdi:edit" /> Edit</a>
       </li>
       <li v-if="actions.includes('remove')">
-        <a @click="$emit('@remove')"><Icon name="mdi:delete" /> Remove</a>
+        <a @click="handleAction('remove')"><Icon name="mdi:delete" /> Remove</a>
       </li>
     </ul>
   </div>
