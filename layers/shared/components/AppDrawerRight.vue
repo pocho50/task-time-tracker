@@ -5,6 +5,21 @@ defineProps<{ title?: string }>();
 const closeDrawer = () => {
   open.value = false;
 };
+
+// Add event listener for Escape key
+onMounted(() => {
+  window.addEventListener('keydown', handleKeyDown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown);
+});
+
+function handleKeyDown(event: KeyboardEvent) {
+  if (event.key === 'Escape' && open.value) {
+    closeDrawer();
+  }
+};
 </script>
 
 <template>
