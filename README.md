@@ -6,16 +6,31 @@ A modern time tracking application built with Nuxt, TypeScript, and Prisma ORM.
 
 ## Configuration
 
-Before running the project, copy `.env.example` to `.env` and fill in your own values.
+### Database Setup
+
+1. **Create the database:**
+   - Make sure your `DATABASE_URL` is set in the `.env` file.
+2. **Run Prisma migrations:**
+   - Apply all migrations to set up the database schema:
+     ```sh
+     npx prisma migrate deploy
+     ```
+3. **Seed the database:**
+   - Run the seeder script defined in `package.json`:
+     ```sh
+     npx prisma db seed
+     ```
 
 ### Environment Variables
+
+Before running the project, copy `.env.example` to `.env` and fill in your own values.
 
 - **DATABASE_URL**: Connection string for Prisma/SQLite.
   - In production, the SQLite database file should be stored **outside** the public directory for security reasons.
 - **NUXT_SESSION_PASSWORD**: Session secret for Nuxt Auth Utils.
   - Must be at least 32 characters long for security.
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+See the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) for more information.
 
 ## Setup
 
