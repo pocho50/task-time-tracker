@@ -15,7 +15,12 @@ A modern time tracking application built with Nuxt, TypeScript, and Prisma ORM.
      ```sh
      npx prisma migrate deploy
      ```
-3. **Seed the database:**
+3. **Generate Prisma Client:**
+   - Generate the Prisma Client based on your schema:
+     ```sh
+     npx prisma generate
+     ```
+4. **Seed the database:**
    - Run the seeder script defined in `package.json`:
      ```sh
      npx prisma db seed
