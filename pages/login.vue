@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { loginSchema } from "~/schemas";
+import { toTypedSchema } from "@vee-validate/zod";
+const validationSchema = toTypedSchema(loginSchema);
 const { loggedIn, user, fetch: refreshSession } = useUserSession();
 definePageMeta({
   layout: "center",
@@ -9,7 +12,6 @@ const credentials = ref({
   password: "",
 });
 const isLoading = ref(false);
-const showPassword = ref(false);
 
 async function handleLogin() {
   try {
@@ -28,46 +30,26 @@ async function handleLogin() {
 }
 </script>
 <template>
-  <div>
+  <div class="w-full max-w-md bg-base-100 rounded-lg shadow-xl p-8">
     <div class="flex justify-center mb-8">
       <TheLogo class="w-32" />
     </div>
-    <form @submit.prevent="handleLogin" class="space-y-6">
-      <div class="form-control">
-        <label class="label">
-          <span class="label-text">Email</span>
-        </label>
-        <input
-          type="email"
-          v-model="credentials.email"
-          placeholder="email@example.com"
-          class="input input-bordered w-full"
-          required
-        />
-      </div>
+    <VeeForm @submit="handleLogin" :validation-schema="validationSchema">
+      <AppFormInput
+        type="email"
+        name="email"
+        placeholder="Email"
+        class-input="input input-bordered w-full"
+        v-model="credentials.email"
+        required
+      />
 
-      <div class="form-control">
-        <label class="label">
-          <span class="label-text">Password</span>
-        </label>
-
-        <div class="relative">
-          <input
-            :type="showPassword ? 'text' : 'password'"
-            v-model="credentials.password"
-            placeholder="********"
-            class="input input-bordered w-full"
-            required
-          />
-
-          <Icon
-            :name="showPassword ? 'mdi:eye-off' : 'mdi:eye'"
-            @click="showPassword = !showPassword"
-            class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
-            size="16"
-          />
-        </div>
-      </div>
+      <AppFormPassword
+        name="password"
+        placeholder="Password"
+        class-input="input input-bordered w-full"
+        v-model="credentials.password"
+      />
 
       <div class="form-control mt-6">
         <button
@@ -79,6 +61,6 @@ async function handleLogin() {
           {{ isLoading ? "Signing in..." : "Sign In" }}
         </button>
       </div>
-    </form>
+    </VeeForm>
   </div>
 </template>
