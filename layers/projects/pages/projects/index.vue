@@ -14,14 +14,17 @@ watch(page, () => {
 
 const openDrawer = ref(false);
 const projectForm = useTemplateRef("projectForm");
+const selectedProject = ref<ProjectFormData | undefined>(undefined);
 
 const projects = computed(() => data.value?.data);
 
-const selectedProject = ref<ProjectFormData | undefined>(undefined);
-
 const handleEdit = (id: string) => {
   selectedProject.value = projects.value?.find((p) => p.id === id);
-  // open drawer
+  openDrawer.value = true;
+};
+
+const handleAdd = () => {
+  selectedProject.value = undefined;
   openDrawer.value = true;
 };
 
@@ -60,6 +63,9 @@ const handleSave = async (projectData: ProjectFormData) => {
         </div>
       </article>
     </div>
+    <!-- Icon add project fixed button -->
+    <AppAddBtn @click="handleAdd" />
+    <!-- Pagination -->
     <AppPagination
       v-if="data?.pagination"
       :page="page"
@@ -67,9 +73,13 @@ const handleSave = async (projectData: ProjectFormData) => {
       @@prev="page--"
       @@next="page++"
     />
-    <AppDrawerRight v-model="openDrawer" title="Edit Project">
+    <!-- Drawer -->
+    <AppDrawerRight
+      v-model="openDrawer"
+      :title="selectedProject ? 'Edit Project' : 'Add Project'"
+    >
       <LazyProjectForm
-        v-if="openDrawer && selectedProject"
+        v-if="openDrawer"
         ref="projectForm"
         :initial-data="selectedProject"
         @@submit="handleSave"

@@ -7,7 +7,12 @@ export class ProjectRepository {
     this.prisma = prisma || new PrismaClient();
   }
 
-  async save(data: { id?: string; name: string; description: string }) {
+  async save(data: {
+    id?: string;
+    name: string;
+    description: string;
+    userId: string;
+  }): Promise<Project> {
     if (data.id) {
       // Update existing project
       return this.prisma.project.update({
@@ -18,13 +23,21 @@ export class ProjectRepository {
         },
       });
     } else {
-      // Create new project
-      return this.prisma.project.create({
+      // Create the project first
+      const project = await this.prisma.project.create({
         data: {
           name: data.name,
           description: data.description,
         },
       });
+      // Assign user to project via join table
+      await this.prisma.projectsOnUsers.create({
+        data: {
+          projectId: project.id,
+          userId: data.userId,
+        },
+      });
+      return project;
     }
   }
 

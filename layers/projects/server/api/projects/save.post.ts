@@ -16,6 +16,7 @@ export default defineEventHandler(async (event) => {
       id,
       name,
       description: description || "",
+      userId: user.id,
     });
 
     return project;
