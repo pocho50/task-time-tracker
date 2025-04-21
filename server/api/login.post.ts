@@ -1,4 +1,4 @@
-import { loginSchema } from "~/validations";
+import { loginSchema } from "~/schemas";
 import { PrismaClient } from "@prisma/client";
 
 export default defineEventHandler(async (event) => {

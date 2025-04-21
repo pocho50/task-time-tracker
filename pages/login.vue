@@ -40,7 +40,7 @@ async function handleLogin() {
         <input
           type="email"
           v-model="credentials.email"
-          placeholder="correo@ejemplo.com"
+          placeholder="email@example.com"
           class="input input-bordered w-full"
           required
         />
@@ -48,7 +48,7 @@ async function handleLogin() {
 
       <div class="form-control">
         <label class="label">
-          <span class="label-text">Contraseña</span>
+          <span class="label-text">Password</span>
         </label>
 
         <div class="relative">
@@ -67,11 +67,6 @@ async function handleLogin() {
             size="16"
           />
         </div>
-        <label class="label">
-          <a href="#" class="label-text-alt link link-hover"
-            >¿Olvidaste tu contraseña?</a
-          >
-        </label>
       </div>
 
       <div class="form-control mt-6">
@@ -81,7 +76,7 @@ async function handleLogin() {
           :disabled="isLoading"
         >
           <span v-if="isLoading" class="loading loading-spinner"></span>
-          {{ isLoading ? "Iniciando sesión..." : "Iniciar Sesión" }}
+          {{ isLoading ? "Signing in..." : "Sign In" }}
         </button>
       </div>
     </form>
