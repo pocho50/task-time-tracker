@@ -5,6 +5,12 @@
   --aside-width: 260px;
 }
 
+@layer base {
+  fieldset {
+    @apply mb-3;
+  }
+}
+
 @layer components {
   .router-link-active,
   .router-link-active:hover {

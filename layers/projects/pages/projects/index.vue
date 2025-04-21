@@ -13,6 +13,7 @@ watch(page, () => {
 });
 
 const openDrawer = ref(false);
+const projectForm = useTemplateRef("projectForm");
 
 const projects = computed(() => data.value?.data);
 
@@ -67,7 +68,28 @@ const handleSave = async (projectData: ProjectFormData) => {
       @@next="page++"
     />
     <AppDrawerRight v-model="openDrawer" title="Edit Project">
-      <ProjectForm :initial-data="selectedProject" @@submit="handleSave" />
+      <LazyProjectForm
+        v-if="openDrawer && selectedProject"
+        ref="projectForm"
+        :initial-data="selectedProject"
+        @@submit="handleSave"
+      />
+      <template #actions>
+        <button
+          type="button"
+          class="btn btn-default btn-lg"
+          @click="openDrawer = false"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary btn-lg"
+          @click="projectForm?.triggerSubmit()"
+        >
+          Save
+        </button>
+      </template>
     </AppDrawerRight>
   </section>
 </template>

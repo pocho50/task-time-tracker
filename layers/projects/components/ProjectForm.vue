@@ -3,6 +3,8 @@ import { toTypedSchema } from "@vee-validate/zod";
 
 const validationSchema = toTypedSchema(projectSchema);
 
+const form = useTemplateRef("form");
+
 const props = defineProps<{
   initialData?: ProjectFormData;
 }>();
@@ -11,22 +13,8 @@ const emit = defineEmits<{
   (e: "@submit", data: ProjectFormData): void;
 }>();
 
-const formValues = reactive({
-  name: props.initialData?.name || "",
-  description: props.initialData?.description || "",
-});
-
-watch(
-  () => props.initialData,
-  (newData) => {
-    formValues.name = newData?.name || "";
-    formValues.description = newData?.description || "";
-  },
-  { deep: true }
-);
-
 const onSubmit = (values: Record<string, any>) => {
-  // save values and close drawer
+  // save values
   const projectData: ProjectFormData = {
     id: props.initialData?.id,
     name: values.name,
@@ -34,30 +22,36 @@ const onSubmit = (values: Record<string, any>) => {
   };
   emit("@submit", projectData);
 };
+
+const triggerSubmit = () => {
+  form.value?.requestSubmit();
+};
+
+defineExpose({
+  triggerSubmit,
+});
 </script>
 
 <template>
   <VeeForm
     :validation-schema="validationSchema"
+    :initial-values="initialData"
     class="flex flex-col gap-4"
-    @submit="onSubmit"
+    v-slot="{ handleSubmit }"
+    as="div"
   >
-    <AppFormInput
-      type="text"
-      name="name"
-      class-input="w-full"
-      placeholder="Project Name"
-      v-model="formValues.name"
-    />
-    <AppFormTextarea
-      name="description"
-      class-input="w-full"
-      placeholder="Project Description"
-      v-model="formValues.description"
-    />
-
-    <button type="submit" class="btn btn-primary">
-      {{ initialData?.id ? "Update" : "Create" }} Project
-    </button>
+    <form @submit="handleSubmit($event, onSubmit)" ref="form">
+      <AppFormInput
+        type="text"
+        name="name"
+        class-input="w-full"
+        placeholder="Project Name"
+      />
+      <AppFormTextarea
+        name="description"
+        class-input="w-full"
+        placeholder="Project Description"
+      />
+    </form>
   </VeeForm>
 </template>
