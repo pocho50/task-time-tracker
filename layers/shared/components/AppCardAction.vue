@@ -1,7 +1,13 @@
 <script setup lang="ts">
+import { ref } from "vue";
+import AppModal from "./AppModal.vue";
+
 type Action = "edit" | "remove";
 
-defineProps<{ actions: Action[] }>();
+const props = defineProps<{
+  actions: Action[];
+  removeConfirmMessage?: string;
+}>();
 
 const emit = defineEmits<{
   (event: "@edit"): void;
@@ -9,12 +15,18 @@ const emit = defineEmits<{
 }>();
 
 const dropDown = ref<HTMLDivElement>();
+const showRemoveModal = ref(false);
 
 const handleAction = (action: Action) => {
   dropDown.value?.blur();
   if (action === "edit") emit("@edit");
-  if (action === "remove") emit("@remove");
+  if (action === "remove") showRemoveModal.value = true;
 };
+
+function confirmRemove() {
+  showRemoveModal.value = false;
+  emit("@remove");
+}
 </script>
 <template>
   <div
@@ -39,5 +51,21 @@ const handleAction = (action: Action) => {
         <a @click="handleAction('remove')"><Icon name="mdi:delete" /> Remove</a>
       </li>
     </ul>
+    <AppModal v-model="showRemoveModal" title="Confirm Deletion">
+      <template #default>
+        <slot name="remove-confirm">
+          {{
+            props.removeConfirmMessage ||
+            "Are you sure you want to delete this item?"
+          }}
+        </slot>
+      </template>
+      <template #actions>
+        <button class="btn btn-default" @click="showRemoveModal = false">
+          Cancel
+        </button>
+        <button class="btn btn-error" @click="confirmRemove">Delete</button>
+      </template>
+    </AppModal>
   </div>
 </template>

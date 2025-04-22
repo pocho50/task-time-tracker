@@ -39,7 +39,7 @@ defineProps({
           {{ project.description }}
         </p>
         <button class="btn btn-default group-hover:btn-primary">
-          Select project
+          Select project (TODO)
         </button>
       </div>
     </article>
