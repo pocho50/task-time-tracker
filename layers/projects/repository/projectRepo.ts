@@ -7,6 +7,12 @@ export class ProjectsRepo<T> extends BaseRepo<T> {
     return this.fetch(`${this.basePath}?${query}`);
   }
 
+  async delete(id: string) {
+    return this.fetch(`${this.basePath}/${id}`, {
+      method: "DELETE",
+    });
+  }
+
   async save(data: ProjectFormData) {
     return this.fetch(`${this.basePath}/save`, {
       method: "POST",

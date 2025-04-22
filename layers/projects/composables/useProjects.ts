@@ -1,10 +1,5 @@
 import { ref, computed, watch } from "vue";
-import {
-  useNuxtApp,
-  useRouteQuery,
-  useAsyncData,
-  useTemplateRef,
-} from "#imports";
+import { useNuxtApp, useRouteQuery, useAsyncData } from "#imports";
 
 export function useProjects() {
   const { $api } = useNuxtApp();
@@ -41,6 +36,11 @@ export function useProjects() {
 
   const pagination = computed(() => data.value?.pagination);
 
+  const handleRemove = async (id: string) => {
+    await projectRepo.delete(id);
+    refresh();
+  };
+
   return {
     projects,
     pagination,
@@ -51,5 +51,6 @@ export function useProjects() {
     handleEdit,
     handleAdd,
     handleSave,
+    handleRemove,
   };
 }

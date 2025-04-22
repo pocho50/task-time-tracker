@@ -10,6 +10,10 @@ defineProps({
     type: Function as PropType<(id: string) => void>,
     required: true,
   },
+  onRemove: {
+    type: Function as PropType<(id: string) => void>,
+    required: true,
+  },
 });
 </script>
 <template>
@@ -25,6 +29,7 @@ defineProps({
       <AppCardAction
         :actions="['edit', 'remove']"
         @@edit="() => typeof project.id === 'string' && onEdit(project.id)"
+        @@remove="() => typeof project.id === 'string' && onRemove(project.id)"
       />
       <div class="card-body">
         <h2 class="card-title">

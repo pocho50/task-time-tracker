@@ -8,6 +8,7 @@ const {
   handleEdit,
   handleAdd,
   handleSave,
+  handleRemove,
 } = useProjects();
 
 // form template refs
@@ -16,7 +17,11 @@ const projectForm = useTemplateRef("projectForm");
 <template>
   <section class="py-12 px-4 bg-base-200">
     <AppTitle text="Projects" />
-    <ProjectList :projects="projects ?? []" :onEdit="handleEdit" />
+    <ProjectList
+      :projects="projects ?? []"
+      :onRemove="handleRemove"
+      :onEdit="handleEdit"
+    />
     <!-- Icon add project fixed button -->
     <AppAddBtn @click="handleAdd" />
     <!-- Pagination -->

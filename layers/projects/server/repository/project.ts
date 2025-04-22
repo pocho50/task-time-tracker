@@ -7,6 +7,12 @@ export class ProjectRepository {
     this.prisma = prisma || new PrismaClient();
   }
 
+  async delete(id: string): Promise<Project> {
+    return this.prisma.project.delete({
+      where: { id },
+    });
+  }
+
   async save(data: {
     id?: string;
     name: string;
