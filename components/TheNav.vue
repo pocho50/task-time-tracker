@@ -1,5 +1,13 @@
 <script setup lang="ts">
 defineEmits(["@toogleDrawer"]);
+
+import { useDark } from "@vueuse/core";
+const isDark = useDark({
+  selector: "html",
+  attribute: "data-theme",
+  valueDark: "dark",
+  valueLight: "light",
+});
 </script>
 <template>
   <nav
@@ -14,6 +22,14 @@ defineEmits(["@toogleDrawer"]);
     <label for="main-drawer" class="btn btn-ghost lg:hidden drawer-button">
       <Icon name="mdi:menu" size="24" />
     </label>
-    <h1 class="text-xl font-bold">Time Tracker</h1>
+    <h1 class="text-xl font-bold flex-1">Time Tracker</h1>
+    <button
+      class="btn btn-ghost"
+      :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+      @click="isDark = !isDark"
+    >
+      <Icon v-if="isDark" name="mdi:weather-night" size="24" />
+      <Icon v-else name="mdi:weather-sunny" size="24" />
+    </button>
   </nav>
 </template>
