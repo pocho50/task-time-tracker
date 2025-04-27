@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { PropType } from "vue";
-
 defineProps({
   projects: {
     type: Array as PropType<ProjectFormData[]>,
@@ -15,6 +14,8 @@ defineProps({
     required: true,
   },
 });
+
+const { userIsAllowedToWrite } = useUser();
 </script>
 <template>
   <div
@@ -27,6 +28,7 @@ defineProps({
       class="card bg-base-100 shadow-md hover:shadow-2xl group relative overflow-hidden transition-transform duration-300 ease-in-out hover:scale-[1.03]"
     >
       <AppCardAction
+        v-if="userIsAllowedToWrite(ENTITY)"
         :actions="['edit', 'remove']"
         @@edit="() => typeof project.id === 'string' && onEdit(project.id)"
         @@remove="() => typeof project.id === 'string' && onRemove(project.id)"

@@ -10,7 +10,7 @@ const {
   handleSave,
   handleRemove,
 } = useProjects();
-
+const { userIsAllowedToWrite } = useUser();
 // form template refs
 const projectForm = useTemplateRef("projectForm");
 </script>
@@ -23,7 +23,7 @@ const projectForm = useTemplateRef("projectForm");
       :onEdit="handleEdit"
     />
     <!-- Icon add project fixed button -->
-    <AppAddBtn @click="handleAdd" />
+    <AppAddBtn @click="handleAdd" v-if="userIsAllowedToWrite(ENTITY)" />
     <!-- Pagination -->
     <AppPagination
       v-if="pagination"

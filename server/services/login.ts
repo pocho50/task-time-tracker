@@ -1,0 +1,38 @@
+import { UserRepository, UserPermissionRepository } from "../repository/user";
+
+export interface LoginInput {
+  email: string;
+  password: string;
+}
+
+export class LoginService {
+  constructor(
+    private userRepo = new UserRepository(),
+    private permRepo = new UserPermissionRepository()
+  ) {}
+
+  async execute(
+    { email, password }: LoginInput,
+    setUserSession: Function,
+    event: any
+  ) {
+    const user = await this.userRepo.findByEmail(email);
+    if (!user || !(await verifyPassword(user.password, password))) {
+      throw createError({
+        statusCode: 401,
+        message: "Bad credentials",
+      });
+    }
+    const permissions = await this.permRepo.findManyByRole(user.role);
+    await setUserSession(event, {
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        permissions,
+      },
+    });
+    return {};
+  }
+}

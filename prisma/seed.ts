@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Hash } from "@adonisjs/hash";
 import { Scrypt } from "@adonisjs/hash/drivers/scrypt";
+import { PERMISSIONS } from "#layers/shared/utils/permissions";
 
 const prisma = new PrismaClient();
 
@@ -10,6 +11,7 @@ async function main() {
   // Disable foreign key checks and truncate all tables
   await prisma.$transaction([
     prisma.$executeRaw`PRAGMA foreign_keys = OFF`,
+    prisma.$executeRaw`DELETE FROM user_permissions`,
     prisma.$executeRaw`DELETE FROM time_tracks`,
     prisma.$executeRaw`DELETE FROM tasks_users`,
     prisma.$executeRaw`DELETE FROM projects_users`,
@@ -43,6 +45,27 @@ async function main() {
       name: "Regular User",
       password: userPassword,
       role: "USER",
+    },
+  });
+
+  // Assign permissions by role
+  // ADMIN role gets all project permissions (read, write, delete)
+  await prisma.userPermission.create({
+    data: {
+      role: "ADMIN",
+      entity: "projects",
+      permission:
+        PERMISSIONS.PROJECTS_READ |
+        PERMISSIONS.PROJECTS_WRITE |
+        PERMISSIONS.PROJECTS_DELETE,
+    },
+  });
+  // USER role gets only read permission for projects
+  await prisma.userPermission.create({
+    data: {
+      role: "USER",
+      entity: "projects",
+      permission: PERMISSIONS.PROJECTS_READ,
     },
   });
 

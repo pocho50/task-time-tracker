@@ -52,6 +52,19 @@ model User {
   @@index([role])
 }
 
+/// Relates a user to a set of permissions for a specific entity type (e.g., projects, tasks, sprints)
+model UserPermission {
+  id         Int       @id @default(autoincrement())
+  role       UserRole  @default(USER)
+  entity     String    // Entity type, e.g., 'projects', 'tasks', 'sprints'
+  permission Int       // Bitmask of permissions for the entity
+
+  @@index([role])
+  @@index([entity])
+  @@map("user_permissions")
+  @@unique([role, entity]) // One permission set per role per entity
+}
+
 model Project {
   id        String   @id @default(uuid())
   name      String

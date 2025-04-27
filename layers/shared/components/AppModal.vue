@@ -16,14 +16,16 @@ function emitClose() {
           class="font-bold text-lg mb-2 flex items-center justify-between"
         >
           <slot name="title">{{ title }}</slot>
-          <button
-            type="button"
-            aria-label="Close"
-            @click="emitClose"
-            class="btn btn-ghost btn-sm ml-2"
-          >
-            <Icon name="mdi:close" size="20" />
-          </button>
+          <ClientOnly>
+            <button
+              type="button"
+              aria-label="Close"
+              @click="emitClose"
+              class="btn btn-ghost btn-sm ml-2"
+            >
+              <Icon name="mdi:close" size="24" />
+            </button>
+          </ClientOnly>
         </header>
         <section>
           <slot />
