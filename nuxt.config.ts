@@ -33,6 +33,7 @@ export default defineNuxtConfig({
         },
       },
     ],
+    "@nuxtjs/i18n",
   ],
   vite: {
     plugins: [tailwindcss()],
