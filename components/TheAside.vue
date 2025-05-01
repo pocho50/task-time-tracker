@@ -3,7 +3,7 @@ const { clear } = useUserSession();
 
 const handleLogout = async () => {
   await clear();
-  navigateTo("/login");
+  navigateTo('/login');
 };
 </script>
 <template>

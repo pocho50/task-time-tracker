@@ -1,11 +1,11 @@
 <script setup lang="ts">
-defineEmits(["@toogleDrawer"]);
+defineEmits(['@toogleDrawer']);
 
 const isDark = useDark({
-  selector: "html",
-  attribute: "data-theme",
-  valueDark: "dark",
-  valueLight: "light",
+  selector: 'html',
+  attribute: 'data-theme',
+  valueDark: 'dark',
+  valueLight: 'light',
 });
 </script>
 <template>

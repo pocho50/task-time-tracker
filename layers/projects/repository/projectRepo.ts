@@ -1,7 +1,7 @@
-import { BaseRepo } from "./baseRepo";
+import { BaseRepo } from './baseRepo';
 
 export class ProjectsRepo<T> extends BaseRepo<T> {
-  readonly basePath = "/api/projects";
+  readonly basePath = '/api/projects';
   async getAll() {
     const query = this.getQueryParams();
     return this.fetch(`${this.basePath}?${query}`);
@@ -9,13 +9,13 @@ export class ProjectsRepo<T> extends BaseRepo<T> {
 
   async delete(id: string) {
     return this.fetch(`${this.basePath}/${id}`, {
-      method: "DELETE",
+      method: 'DELETE',
     });
   }
 
   async save(data: ProjectFormData) {
     return this.fetch(`${this.basePath}/save`, {
-      method: "POST",
+      method: 'POST',
       body: data,
     });
   }

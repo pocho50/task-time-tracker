@@ -4,8 +4,8 @@ const props = defineProps<{
   totalPages: number;
 }>();
 defineEmits<{
-  (event: "@prev"): void;
-  (event: "@next"): void;
+  (event: '@prev'): void;
+  (event: '@next'): void;
 }>();
 </script>
 <template>
@@ -19,7 +19,8 @@ defineEmits<{
         «
       </button>
       <button class="join-item btn btn-lg">
-        {{ $t('pagination.page') }} {{ page }} {{ $t('pagination.of') }} {{ totalPages }}
+        {{ $t('pagination.page') }} {{ page }} {{ $t('pagination.of') }}
+        {{ totalPages }}
       </button>
       <button
         class="join-item btn btn-lg"

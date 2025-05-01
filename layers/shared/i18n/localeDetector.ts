@@ -1,19 +1,19 @@
 // Detect based on query, cookie, header
 export default defineI18nLocaleDetector((event, config) => {
   // try to get locale from query
-  const query = tryQueryLocale(event, { lang: "" }); // disable locale default value with `lang` option
+  const query = tryQueryLocale(event, { lang: '' }); // disable locale default value with `lang` option
   if (query) {
     return query.toString();
   }
 
   // try to get locale from cookie
-  const cookie = tryCookieLocale(event, { lang: "", name: "i18n_redirected" }); // disable locale default value with `lang` option
+  const cookie = tryCookieLocale(event, { lang: '', name: 'i18n_redirected' }); // disable locale default value with `lang` option
   if (cookie) {
     return cookie.toString();
   }
 
   // try to get locale from header (`accept-header`)
-  const header = tryHeaderLocale(event, { lang: "" }); // disable locale default value with `lang` option
+  const header = tryHeaderLocale(event, { lang: '' }); // disable locale default value with `lang` option
   if (header) {
     return header.toString();
   }

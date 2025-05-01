@@ -1,10 +1,10 @@
-import { ref, computed, watch } from "vue";
-import { useNuxtApp, useRouteQuery, useAsyncData } from "#imports";
+import { ref, computed, watch } from 'vue';
+import { useNuxtApp, useRouteQuery, useAsyncData } from '#imports';
 
 export function useProjects() {
   const { $api } = useNuxtApp();
   const projectRepo = new ProjectsRepo($api);
-  const page = useRouteQuery("page", 1, { transform: Number });
+  const page = useRouteQuery('page', 1, { transform: Number });
 
   const { data, refresh } = useAsyncData(() => {
     projectRepo.setParams({ page: page.value });

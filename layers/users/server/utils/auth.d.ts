@@ -1,6 +1,6 @@
-import { UserRole } from "@prisma/client";
+import { UserRole } from '@prisma/client';
 
-declare module "#auth-utils" {
+declare module '#auth-utils' {
   interface User {
     id: string;
     name: string;

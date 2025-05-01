@@ -1,4 +1,4 @@
-import { PrismaClient, type UserRole } from "@prisma/client";
+import { PrismaClient, type UserRole } from '@prisma/client';
 
 export class UserRepository {
   private prisma: PrismaClient;

@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { toTypedSchema } from "@vee-validate/zod";
+import { toTypedSchema } from '@vee-validate/zod';
 
 const validationSchema = toTypedSchema(projectSchema);
 
-const form = useTemplateRef("form");
+const form = useTemplateRef('form');
 
 const props = defineProps<{
   initialData?: ProjectFormData;
 }>();
 
 const emit = defineEmits<{
-  (e: "@submit", data: ProjectFormData): void;
+  (e: '@submit', data: ProjectFormData): void;
 }>();
 
 const onSubmit = (values: Record<string, any>) => {
@@ -20,7 +20,7 @@ const onSubmit = (values: Record<string, any>) => {
     name: values.name,
     description: values.description,
   };
-  emit("@submit", projectData);
+  emit('@submit', projectData);
 };
 
 const triggerSubmit = () => {

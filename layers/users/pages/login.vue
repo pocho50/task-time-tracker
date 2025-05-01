@@ -1,27 +1,27 @@
 <script setup lang="ts">
-import { loginSchema } from "#layers/users/schemas";
-import { toTypedSchema } from "@vee-validate/zod";
+import { loginSchema } from '#layers/users/schemas';
+import { toTypedSchema } from '@vee-validate/zod';
 const validationSchema = toTypedSchema(loginSchema);
 const { loggedIn, user, fetch: refreshSession } = useUserSession();
 definePageMeta({
-  layout: "center",
+  layout: 'center',
 });
 
 const credentials = ref({
-  email: "",
-  password: "",
+  email: '',
+  password: '',
 });
 const isLoading = ref(false);
 
 async function handleLogin() {
   try {
     isLoading.value = true;
-    await $fetch("/api/login", {
-      method: "POST",
+    await $fetch('/api/login', {
+      method: 'POST',
       body: credentials.value,
     });
     await refreshSession();
-    await navigateTo("/");
+    await navigateTo('/');
   } catch (error) {
     console.error(error);
   } finally {

@@ -19,7 +19,7 @@ function handleKeyDown(event: KeyboardEvent) {
   if (event.key === 'Escape' && open.value) {
     closeDrawer();
   }
-};
+}
 </script>
 
 <template>

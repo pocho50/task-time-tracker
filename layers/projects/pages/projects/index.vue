@@ -14,7 +14,7 @@ const {
 const { userIsAllowedToWrite } = useUser();
 
 // form template refs
-const projectForm = useTemplateRef("projectForm");
+const projectForm = useTemplateRef('projectForm');
 </script>
 <template>
   <section class="py-12 px-4 bg-base-200">
@@ -51,14 +51,14 @@ const projectForm = useTemplateRef("projectForm");
           class="btn btn-default btn-lg"
           @click="openDrawer = false"
         >
-          {{ $t("cancel") }}
+          {{ $t('cancel') }}
         </button>
         <button
           type="button"
           class="btn btn-primary btn-lg"
           @click="projectForm?.triggerSubmit()"
         >
-          {{ $t("save") }}
+          {{ $t('save') }}
         </button>
       </template>
     </AppDrawerRight>

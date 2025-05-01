@@ -1,1 +1,1 @@
-export const ENTITY = "projects";
+export const ENTITY = 'projects';

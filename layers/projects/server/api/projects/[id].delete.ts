@@ -1,8 +1,8 @@
 // endpoint for deleting a project
-import { ProjectRepository } from "../../repository/project";
-import { assertHasPermissionOrThrow } from "#layers/shared/server/utils";
-import { ENTITY } from "#layers/projects/utils/constants";
-import { PERMISSIONS } from "#layers/shared/utils/permissions";
+import { ProjectRepository } from '../../repository/project';
+import { assertHasPermissionOrThrow } from '#layers/shared/server/utils';
+import { ENTITY } from '#layers/projects/utils/constants';
+import { PERMISSIONS } from '#layers/shared/utils/permissions';
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
   if (!id) {
     throw createError({
       statusCode: 400,
-      message: t("server.invalidId"),
+      message: t('server.invalidId'),
     });
   }
   const projectRepository = new ProjectRepository();
@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
     user?.permissions,
     ENTITY,
     PERMISSIONS.PROJECTS_WRITE,
-    t("server.unauthorizedDelete")
+    t('server.unauthorizedDelete')
   );
 
   return projectRepository.delete(id);

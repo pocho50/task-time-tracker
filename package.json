@@ -39,6 +39,7 @@
     "@iconify-json/mdi": "^1.2.3",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^22.13.14",
+    "prettier": "^3.5.3",
     "prisma": "^6.5.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.3",

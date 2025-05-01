@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 defineProps<{
   projects: ProjectFormData[];
   onEdit: (id: string) => void;

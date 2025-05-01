@@ -1,4 +1,4 @@
-import { UserRepository, UserPermissionRepository } from "../repository/user";
+import { UserRepository, UserPermissionRepository } from '../repository/user';
 
 export interface LoginInput {
   email: string;
@@ -18,7 +18,7 @@ export class LoginService {
   ) {
     // Get translation function for server-side
     const t = await useTranslation(event);
-    
+
     const user = await this.userRepo.findByEmail(email);
     if (!user || !(await verifyPassword(user.password, password))) {
       throw createError({

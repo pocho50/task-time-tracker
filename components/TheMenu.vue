@@ -1,19 +1,19 @@
 <script setup lang="ts">
 const menuItems = [
   {
-    to: "/projects",
-    icon: "mdi:view-dashboard",
-    label: "app.menu.projects",
+    to: '/projects',
+    icon: 'mdi:view-dashboard',
+    label: 'app.menu.projects',
   },
   {
-    to: "/tracker",
-    icon: "mdi:timer",
-    label: "app.menu.tasks",
+    to: '/tracker',
+    icon: 'mdi:timer',
+    label: 'app.menu.tasks',
   },
   {
-    to: "/profile",
-    icon: "mdi:account",
-    label: "app.menu.settings",
+    to: '/profile',
+    icon: 'mdi:account',
+    label: 'app.menu.settings',
   },
 ];
 </script>

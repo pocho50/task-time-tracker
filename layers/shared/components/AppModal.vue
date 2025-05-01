@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const open = defineModel<boolean>({ required: true });
 const props = defineProps({
-  title: { type: String, default: "" },
+  title: { type: String, default: '' },
 });
 function emitClose() {
   open.value = false;

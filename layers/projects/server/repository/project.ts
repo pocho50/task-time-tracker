@@ -1,4 +1,4 @@
-import { PrismaClient, type Project } from "@prisma/client";
+import { PrismaClient, type Project } from '@prisma/client';
 
 export class ProjectRepository {
   private prisma: PrismaClient;
@@ -75,7 +75,7 @@ export class ProjectRepository {
         },
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: 'desc',
       },
     });
   }

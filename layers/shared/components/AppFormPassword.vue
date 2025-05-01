@@ -6,7 +6,7 @@ defineProps<{
 }>();
 const value = defineModel<string>();
 const show = ref(false);
-const fieldType = computed(() => (show.value ? "text" : "password"));
+const fieldType = computed(() => (show.value ? 'text' : 'password'));
 function toggleShow() {
   show.value = !show.value;
 }

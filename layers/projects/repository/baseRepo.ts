@@ -1,4 +1,4 @@
-import type { NitroFetchRequest, $Fetch } from "nitropack";
+import type { NitroFetchRequest, $Fetch } from 'nitropack';
 
 export class BaseRepo<T> {
   protected params: Record<string, any> = {};
@@ -14,7 +14,7 @@ export class BaseRepo<T> {
   }
 
   getQueryParams(params: Record<string, any> = this.params) {
-    let query = "";
+    let query = '';
     if (Object.keys(params).length) {
       query = new URLSearchParams(params).toString();
     }
