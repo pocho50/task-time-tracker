@@ -10,13 +10,15 @@ const {
   handleSave,
   handleRemove,
 } = useProjects();
+
 const { userIsAllowedToWrite } = useUser();
+
 // form template refs
 const projectForm = useTemplateRef("projectForm");
 </script>
 <template>
   <section class="py-12 px-4 bg-base-200">
-    <AppTitle text="Projects" />
+    <AppTitle :text="$t('title')" />
     <ProjectList
       :projects="projects ?? []"
       :onRemove="handleRemove"
@@ -35,7 +37,7 @@ const projectForm = useTemplateRef("projectForm");
     <!-- Drawer -->
     <AppDrawerRight
       v-model="openDrawer"
-      :title="selectedProject ? 'Edit Project' : 'Add Project'"
+      :title="selectedProject ? $t('editProject') : $t('addProject')"
     >
       <LazyProjectForm
         v-if="openDrawer"
@@ -49,14 +51,14 @@ const projectForm = useTemplateRef("projectForm");
           class="btn btn-default btn-lg"
           @click="openDrawer = false"
         >
-          Cancel
+          {{ $t("cancel") }}
         </button>
         <button
           type="button"
           class="btn btn-primary btn-lg"
           @click="projectForm?.triggerSubmit()"
         >
-          Save
+          {{ $t("save") }}
         </button>
       </template>
     </AppDrawerRight>

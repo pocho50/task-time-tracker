@@ -5,4 +5,14 @@ export default defineNuxtConfig({
   imports: {
     dirs: ["./repository", "./schemas"],
   },
+  i18n: {
+    lazy: true,
+    langDir: "locales",
+    locales: [
+      {
+        code: "en",
+        file: "en.js"
+      }
+    ]
+  }
 });

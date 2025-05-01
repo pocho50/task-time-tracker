@@ -45,12 +45,12 @@ defineExpose({
         type="text"
         name="name"
         class-input="w-full"
-        placeholder="Project Name"
+        :placeholder="$t('projectName')"
       />
       <AppFormTextarea
         name="description"
         class-input="w-full"
-        placeholder="Project Description"
+        :placeholder="$t('projectDescription')"
       />
     </form>
   </VeeForm>

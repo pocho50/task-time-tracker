@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 defineProps<{
   projects: ProjectFormData[];
   onEdit: (id: string) => void;
@@ -35,13 +36,13 @@ const { userIsAllowedToWrite } = useUser();
             class="btn btn-default grow flex items-center gap-2 hover:btn-primary transition-colors"
           >
             <Icon name="mdi:format-list-checkbox" size="20" />
-            <span>Tasks</span>
+            <span>{{ $t('tasks') }}</span>
           </button>
           <button
             class="btn btn-default grow flex items-center gap-2 hover:btn-accent transition-colors"
           >
             <Icon name="mdi:cog-outline" size="20" />
-            <span>Config sprints</span>
+            <span>{{ $t('configSprints') }}</span>
           </button>
         </div>
       </div>
