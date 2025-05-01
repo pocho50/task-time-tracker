@@ -1,0 +1,13 @@
+{
+  "app": {
+    "title": "Time Tracker",
+    "logout": "Logout",
+    "menu": {
+      "dashboard": "Dashboard",
+      "projects": "Projects",
+      "tasks": "Tasks",
+      "reports": "Reports",
+      "settings": "Settings"
+    }
+  }
+}

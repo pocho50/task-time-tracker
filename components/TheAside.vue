@@ -28,7 +28,7 @@ const handleLogout = async () => {
           @click="handleLogout"
         >
           <Icon name="mdi:logout" class="text-xl" />
-          <span>Cerrar sesión</span>
+          <span>{{ $t('app.logout') }}</span>
         </button>
       </div>
     </div>

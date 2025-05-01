@@ -8,7 +8,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   app: {
     head: {
-      title: "Time Tracker",
+      titleTemplate: "%s - Time task tracker",
     },
     pageTransition: { name: "page", mode: "out-in" },
   },
@@ -33,7 +33,20 @@ export default defineNuxtConfig({
         },
       },
     ],
-    "@nuxtjs/i18n",
+    [
+      "@nuxtjs/i18n",
+      {
+        lazy: true,
+        defaultLocale: "en",
+        locales: [
+          {
+            code: "en",
+            file: "en.json",
+          },
+        ],
+        strategy: "no_prefix",
+      },
+    ],
   ],
   vite: {
     plugins: [tailwindcss()],

@@ -1,4 +1,4 @@
-# Time Tracker App
+# Task Time Tracker App
 
 > ⚠️ **Work in Progress:** This project is actively being developed. Features and structure may change at any time.
 

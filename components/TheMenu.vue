@@ -3,17 +3,17 @@ const menuItems = [
   {
     to: "/projects",
     icon: "mdi:view-dashboard",
-    label: "Projects",
+    label: "app.menu.projects",
   },
   {
     to: "/tracker",
     icon: "mdi:timer",
-    label: "Time Tracker",
+    label: "app.menu.tasks",
   },
   {
     to: "/profile",
     icon: "mdi:account",
-    label: "Profile",
+    label: "app.menu.settings",
   },
 ];
 </script>
@@ -23,7 +23,7 @@ const menuItems = [
     <li v-for="item in menuItems" :key="item.to">
       <NuxtLink :to="item.to" class="flex items-center gap-3">
         <Icon :name="item.icon" size="18" />
-        <span>{{ item.label }}</span>
+        <span>{{ $t(item.label) }}</span>
       </NuxtLink>
     </li>
   </ul>

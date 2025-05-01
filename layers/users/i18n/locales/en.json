@@ -1,6 +1,6 @@
 {
   "login": {
-    "title": "Welcome",
+    "title": "Task Time Tracker",
     "email": "Email",
     "password": "Password",
     "submit": "Login",
