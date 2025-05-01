@@ -19,7 +19,7 @@ function emitClose() {
           <ClientOnly>
             <button
               type="button"
-              aria-label="Close"
+              :aria-label="$t('common.close')"
               @click="emitClose"
               class="btn btn-ghost btn-sm ml-2"
             >
@@ -35,7 +35,7 @@ function emitClose() {
         </footer>
       </form>
       <form method="dialog" class="modal-backdrop" @click.prevent="emitClose">
-        <button aria-label="Close"></button>
+        <button :aria-label="$t('common.close')"></button>
       </form>
     </dialog>
   </teleport>

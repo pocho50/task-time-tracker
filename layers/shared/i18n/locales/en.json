@@ -1,1 +1,16 @@
-{}
+{
+  "pagination": {
+    "page": "Page",
+    "of": "of"
+  },
+  "common": {
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "confirmDeletion": "Confirm Deletion",
+    "confirmDeleteMessage": "Are you sure you want to delete this item?"
+  }
+}

@@ -19,7 +19,7 @@ defineEmits<{
         «
       </button>
       <button class="join-item btn btn-lg">
-        Page {{ page }} / {{ totalPages }}
+        {{ $t('pagination.page') }} {{ page }} {{ $t('pagination.of') }} {{ totalPages }}
       </button>
       <button
         class="join-item btn btn-lg"
