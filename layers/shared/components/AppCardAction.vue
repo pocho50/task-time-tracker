@@ -42,7 +42,7 @@ function confirmRemove() {
     <ul
       tabindex="0"
       ref="dropDown"
-      class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+      class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-xl border border-base-200 divide-y divide-base-200"
     >
       <li v-if="actions.includes('edit')">
         <a @click="handleAction('edit')"

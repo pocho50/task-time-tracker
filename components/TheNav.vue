@@ -4,8 +4,8 @@ defineEmits(['@toogleDrawer']);
 const isDark = useDark({
   selector: 'html',
   attribute: 'data-theme',
-  valueDark: 'dark',
-  valueLight: 'light',
+  valueDark: 'business',
+  valueLight: 'corporate',
 });
 </script>
 <template>
