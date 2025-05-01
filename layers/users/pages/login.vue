@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { loginSchema } from "~/schemas";
+import { loginSchema } from "#layers/users/schemas";
 import { toTypedSchema } from "@vee-validate/zod";
 const validationSchema = toTypedSchema(loginSchema);
 const { loggedIn, user, fetch: refreshSession } = useUserSession();
@@ -34,11 +34,12 @@ async function handleLogin() {
     <div class="flex justify-center mb-8">
       <TheLogo class="w-32" />
     </div>
+    <h1 class="text-2xl font-bold text-center mb-6">{{ $t('login.title') }}</h1>
     <VeeForm @submit="handleLogin" :validation-schema="validationSchema">
       <AppFormInput
         type="email"
         name="email"
-        placeholder="Email"
+        :placeholder="$t('login.email')"
         class-input="input input-bordered w-full"
         v-model="credentials.email"
         required
@@ -46,7 +47,7 @@ async function handleLogin() {
 
       <AppFormPassword
         name="password"
-        placeholder="Password"
+        :placeholder="$t('login.password')"
         class-input="input input-bordered w-full"
         v-model="credentials.password"
       />
@@ -58,7 +59,7 @@ async function handleLogin() {
           :disabled="isLoading"
         >
           <span v-if="isLoading" class="loading loading-spinner"></span>
-          {{ isLoading ? "Signing in..." : "Sign In" }}
+          {{ isLoading ? $t('login.signingIn') : $t('login.submit') }}
         </button>
       </div>
     </VeeForm>

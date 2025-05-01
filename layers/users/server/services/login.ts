@@ -16,11 +16,14 @@ export class LoginService {
     setUserSession: Function,
     event: any
   ) {
+    // Get translation function for server-side
+    const t = await useTranslation(event);
+    
     const user = await this.userRepo.findByEmail(email);
     if (!user || !(await verifyPassword(user.password, password))) {
       throw createError({
         statusCode: 401,
-        message: "Bad credentials",
+        message: t('login.error'),
       });
     }
     const permissions = await this.permRepo.findManyByRole(user.role);
