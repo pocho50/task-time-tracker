@@ -32,7 +32,7 @@ async function handleLogin() {
 <template>
   <div class="w-full max-w-md bg-base-100 rounded-lg shadow-xl p-8">
     <div class="flex justify-center mb-8">
-      <TheLogo class="w-32" />
+      <TheLogo />
     </div>
     <h1 class="text-2xl font-bold text-center mb-6">{{ $t('login.title') }}</h1>
     <VeeForm @submit="handleLogin" :validation-schema="validationSchema">
