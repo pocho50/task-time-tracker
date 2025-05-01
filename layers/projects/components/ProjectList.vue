@@ -1,19 +1,9 @@
 <script setup lang="ts">
-import type { PropType } from "vue";
-defineProps({
-  projects: {
-    type: Array as PropType<ProjectFormData[]>,
-    required: true,
-  },
-  onEdit: {
-    type: Function as PropType<(id: string) => void>,
-    required: true,
-  },
-  onRemove: {
-    type: Function as PropType<(id: string) => void>,
-    required: true,
-  },
-});
+defineProps<{
+  projects: ProjectFormData[];
+  onEdit: (id: string) => void;
+  onRemove: (id: string) => void;
+}>();
 
 const { userIsAllowedToWrite } = useUser();
 </script>

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 defineEmits(["@toogleDrawer"]);
 
-import { useDark } from "@vueuse/core";
 const isDark = useDark({
   selector: "html",
   attribute: "data-theme",
