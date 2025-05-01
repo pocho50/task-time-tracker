@@ -7,12 +7,15 @@ import { assertHasPermissionOrThrow } from "#layers/shared/server/utils";
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
 
+  // Get translation function for server-side
+  const t = await useTranslation(event);
+
   // Permission check (reusable helper)
   assertHasPermissionOrThrow(
     user?.permissions,
     ENTITY,
     PERMISSIONS.PROJECTS_WRITE,
-    "You do not have permission to add or edit projects."
+    t('server.unauthorized')
   );
 
   // validate schema
@@ -35,7 +38,7 @@ export default defineEventHandler(async (event) => {
     console.error("Error saving project:", error);
     throw createError({
       statusCode: 500,
-      message: "Error saving project",
+      message: t('server.errorSaving'),
     });
   }
 });

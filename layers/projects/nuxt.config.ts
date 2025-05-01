@@ -8,14 +8,16 @@ export default defineNuxtConfig({
   modules: ["@nuxtjs/i18n"],
   i18n: {
     lazy: true,
-    langDir: "locales",
     strategy: "no_prefix",
     defaultLocale: "en",
     locales: [
       {
         code: "en",
-        file: "en.js",
+        file: "en.json",
       },
     ],
+    experimental: {
+      localeDetector: "localeDetector.ts",
+    },
   },
 });

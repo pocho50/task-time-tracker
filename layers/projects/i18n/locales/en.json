@@ -1,0 +1,20 @@
+{
+  "projectName": "Project Name",
+  "projectDescription": "Project Description",
+  "tasks": "Tasks",
+  "configSprints": "Config sprints",
+  "title": "Projects",
+  "editProject": "Edit Project",
+  "addProject": "Add Project",
+  "cancel": "Cancel",
+  "save": "Save",
+
+  "server": {
+    "unauthorized": "You do not have permission to add or edit projects.",
+    "unauthorizedDelete": "You do not have permission to delete projects.",
+    "invalidId": "Invalid project id",
+    "errorSaving": "Error saving project",
+    "errorDeleting": "Error deleting project",
+    "errorFetching": "Error fetching projects"
+  }
+}

@@ -6,11 +6,16 @@ import { PERMISSIONS } from "#layers/shared/utils/permissions";
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
+
+  // Get translation function for server-side
+  const t = await useTranslation(event);
+
   const id = event.context.params?.id;
+
   if (!id) {
     throw createError({
       statusCode: 400,
-      message: "Invalid project id",
+      message: t("server.invalidId"),
     });
   }
   const projectRepository = new ProjectRepository();
@@ -20,7 +25,7 @@ export default defineEventHandler(async (event) => {
     user?.permissions,
     ENTITY,
     PERMISSIONS.PROJECTS_WRITE,
-    "You do not have permission to delete projects."
+    t("server.unauthorizedDelete")
   );
 
   return projectRepository.delete(id);
