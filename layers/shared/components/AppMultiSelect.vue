@@ -21,6 +21,7 @@ const props = withDefaults(
 
 // Define model for selected values (array of values)
 const selectedValues = defineModel<Array<string | number>>({ default: [] });
+const selectedLabels = ref<string[]>([]);
 
 // Ref to control dropdown visibility
 const dropdownOpen = ref(false);
@@ -31,10 +32,12 @@ const displayLabel = computed(() => {
     // Use prop placeholder if provided, otherwise use translated default
     return props.placeholder || t('multiSelect.placeholder');
   }
-  const selectedLabels = props.options
+  selectedLabels.value = props.options
     .filter((option) => selectedValues.value.includes(option.value))
     .map((option) => option.label);
-  return selectedLabels.join(', ');
+  return selectedLabels.value.length > 0
+    ? selectedLabels.value.join(', ')
+    : props.placeholder || t('multiSelect.placeholder');
 });
 
 // Toggle dropdown state
@@ -52,6 +55,7 @@ function closeDropdown() {
 // Reset selection
 function resetSelection() {
   selectedValues.value = [];
+  selectedLabels.value = [];
 }
 </script>
 
@@ -73,7 +77,7 @@ function resetSelection() {
         <span class="truncate flex-grow text-left">{{ displayLabel }}</span>
         <span class="flex items-center">
           <Icon
-            v-if="selectedValues.length > 0"
+            v-if="selectedLabels.length > 0"
             name="mdi:close"
             size="18"
             class="cursor-pointer text-base-content text-opacity-50 hover:text-opacity-100 mr-1"
