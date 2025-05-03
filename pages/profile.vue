@@ -1,9 +1,6 @@
-<script setup lang="ts">
-// TODO: Implement profile
-const openDrawer = ref(false);
-</script>
+<script setup lang="ts"></script>
 <template>
-  <section class="py-12 px-4">
+  <section class="py-12 px-4 bg-base-100">
     <AppTitle text="Profile" />
     <p>TODO: Implement profile</p>
   </section>

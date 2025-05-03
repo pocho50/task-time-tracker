@@ -18,7 +18,6 @@ export default defineEventHandler(async (event) => {
       message: t('server.invalidId'),
     });
   }
-  const projectRepository = new ProjectRepository();
 
   // Permission check
   assertHasPermissionOrThrow(
@@ -27,6 +26,8 @@ export default defineEventHandler(async (event) => {
     PERMISSIONS.PROJECTS_WRITE,
     t('server.unauthorizedDelete')
   );
+
+  const projectRepository = new ProjectRepository();
 
   return projectRepository.delete(id);
 });

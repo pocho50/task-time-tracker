@@ -13,6 +13,10 @@
     "confirmDeletion": "Confirm Deletion",
     "confirmDeleteMessage": "Are you sure you want to delete this item?"
   },
+  "multiSelect": {
+    "placeholder": "Select options",
+    "noOptions": "No options available"
+  },
   "server": {
     "unauthorized": "You do not have permission to perform this action."
   }
