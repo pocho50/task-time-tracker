@@ -1,4 +1,4 @@
-import { BaseRepo } from './baseRepo';
+import { BaseRepo } from '#layers/shared/repository/baseRepo';
 
 export class ProjectsRepo<T> extends BaseRepo<T> {
   readonly basePath = '/api/projects';

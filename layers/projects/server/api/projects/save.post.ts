@@ -20,14 +20,16 @@ export default defineEventHandler(async (event) => {
   );
 
   // validate schema
-  const { id, name, description } = await readValidatedBody(
+  const { id, name, description, usersId } = await readValidatedBody(
     event,
     projectSchema.parse
   );
 
   try {
     const service = new SaveProjectsService(new ProjectRepository());
-    return service.execute(id, name, description, user.id);
+    const allUsersId = usersId ?? [];
+    if (!usersId?.includes(user.id)) allUsersId.push(user.id);
+    return service.execute(id, name, description, allUsersId);
   } catch (error) {
     console.error('Error saving project:', error);
     throw createError({

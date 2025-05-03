@@ -8,6 +8,10 @@
   "addProject": "Add Project",
   "cancel": "Cancel",
   "save": "Save",
+  "multiSelect": {
+    "placeholder": "Select users",
+    "assignUsersToProject": "Assign users to project"
+  },
 
   "server": {
     "unauthorized": "You do not have permission to add or edit projects.",

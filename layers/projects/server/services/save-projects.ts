@@ -8,13 +8,13 @@ export class SaveProjectsService {
     id: string | undefined,
     name: string,
     description: string,
-    userId: string
+    usersId: string[]
   ) {
     return this.repo.save({
       id,
       name,
       description,
-      userId,
+      usersId,
     });
   }
 }

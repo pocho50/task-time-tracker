@@ -1,4 +1,5 @@
 import { PrismaClient, type Project } from '@prisma/client';
+import type { ProjectWithIdUsers } from '../../utils';
 
 export class ProjectRepository {
   private prisma: PrismaClient;
@@ -17,17 +18,22 @@ export class ProjectRepository {
     id?: string;
     name: string;
     description: string;
-    userId: string;
+    usersId: string[];
   }): Promise<Project> {
     if (data.id) {
       // Update existing project
-      return this.prisma.project.update({
+      const project = await this.prisma.project.update({
         where: { id: data.id },
         data: {
           name: data.name,
           description: data.description,
         },
       });
+      // delete all users from project
+      await this.deleteAllUsersFromProject(project.id);
+      // Assign users to the project
+      await this.assignUsersToProject(project.id, data.usersId);
+      return project;
     } else {
       // Create the project first
       const project = await this.prisma.project.create({
@@ -36,15 +42,30 @@ export class ProjectRepository {
           description: data.description,
         },
       });
-      // Assign user to project via join table
-      await this.prisma.projectsOnUsers.create({
-        data: {
-          projectId: project.id,
-          userId: data.userId,
-        },
-      });
+      // Assign users to project
+      await this.assignUsersToProject(project.id, data.usersId);
       return project;
     }
+  }
+
+  // Assign users to a project
+  async assignUsersToProject(
+    projectId: string,
+    usersId: string[]
+  ): Promise<void> {
+    await this.prisma.projectsOnUsers.createMany({
+      data: usersId.map((userId) => ({
+        projectId,
+        userId,
+      })),
+    });
+  }
+
+  // delete all users from project
+  async deleteAllUsersFromProject(projectId: string): Promise<void> {
+    await this.prisma.projectsOnUsers.deleteMany({
+      where: { projectId },
+    });
   }
 
   async countProjectsForUser(userId: string): Promise<number> {
@@ -63,8 +84,8 @@ export class ProjectRepository {
     userId: string,
     skip: number,
     take: number
-  ): Promise<Project[]> {
-    return this.prisma.project.findMany({
+  ): Promise<ProjectWithIdUsers[]> {
+    const projects = await this.prisma.project.findMany({
       skip,
       take,
       where: {
@@ -74,9 +95,22 @@ export class ProjectRepository {
           },
         },
       },
+      include: {
+        users: {
+          select: { userId: true },
+        },
+      },
       orderBy: {
         createdAt: 'desc',
       },
+    });
+
+    return projects.map((project) => {
+      return {
+        ...project,
+        users: undefined,
+        usersId: project.users.map((user) => user.userId),
+      };
     });
   }
 }

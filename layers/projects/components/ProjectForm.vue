@@ -3,11 +3,16 @@ import { toTypedSchema } from '@vee-validate/zod';
 
 const validationSchema = toTypedSchema(projectSchema);
 
-const form = useTemplateRef('form');
-
 const props = defineProps<{
   initialData?: ProjectFormData;
 }>();
+
+const form = useTemplateRef('form');
+
+const selectedUsers = ref<string[]>([]);
+selectedUsers.value = props.initialData?.usersId ?? [];
+
+provide('selectedUsers', selectedUsers);
 
 const emit = defineEmits<{
   (e: '@submit', data: ProjectFormData): void;
@@ -19,6 +24,7 @@ const onSubmit = (values: Record<string, any>) => {
     id: props.initialData?.id,
     name: values.name,
     description: values.description,
+    usersId: selectedUsers.value,
   };
   emit('@submit', projectData);
 };
@@ -52,6 +58,7 @@ defineExpose({
         class-input="w-full"
         :placeholder="$t('projectDescription')"
       />
+      <ProjectFormMultiSelectUsers />
     </form>
   </VeeForm>
 </template>
