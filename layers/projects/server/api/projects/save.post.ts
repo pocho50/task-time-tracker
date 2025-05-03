@@ -3,6 +3,7 @@ import { projectSchema } from '#layers/projects/schemas';
 import { PERMISSIONS } from '#layers/shared/utils/permissions';
 import { ENTITY } from '#layers/projects/utils/constants';
 import { assertHasPermissionOrThrow } from '#layers/shared/server/utils';
+import { SaveProjectsService } from '../../services/save-projects';
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
@@ -23,17 +24,10 @@ export default defineEventHandler(async (event) => {
     event,
     projectSchema.parse
   );
-  const projectRepository = new ProjectRepository();
 
   try {
-    const project = await projectRepository.save({
-      id,
-      name,
-      description: description || '',
-      userId: user.id,
-    });
-
-    return project;
+    const service = new SaveProjectsService(new ProjectRepository());
+    return service.execute(id, name, description, user.id);
   } catch (error) {
     console.error('Error saving project:', error);
     throw createError({

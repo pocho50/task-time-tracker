@@ -3,6 +3,7 @@ import { ProjectRepository } from '../../repository/project';
 import { assertHasPermissionOrThrow } from '#layers/shared/server/utils';
 import { ENTITY } from '#layers/projects/utils/constants';
 import { PERMISSIONS } from '#layers/shared/utils/permissions';
+import { DeleteProjectsService } from '../../services/delete-projects';
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
@@ -27,7 +28,7 @@ export default defineEventHandler(async (event) => {
     t('server.unauthorizedDelete')
   );
 
-  const projectRepository = new ProjectRepository();
+  const service = new DeleteProjectsService(new ProjectRepository());
 
-  return projectRepository.delete(id);
+  return service.execute(id);
 });
