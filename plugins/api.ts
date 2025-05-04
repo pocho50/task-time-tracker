@@ -9,7 +9,7 @@ export default defineNuxtPlugin({
       headers,
       async onResponse({ request, response, options }) {},
       onResponseError: ({ response }) => {
-        if (response?._data?.message) {
+        if (response?._data?.message && import.meta.client) {
           showToast({
             title: $i18n.t('common.error'),
             message: response._data.message,
