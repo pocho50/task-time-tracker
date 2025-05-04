@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { UserRepo } from '~/layers/users/repository/userRepo';
+import { useUsers } from '~/layers/users/composables/useUsers';
 
 const selectedUsers: Ref<string[]> = inject('selectedUsers')!;
-// get users
-const { $api } = useNuxtApp();
-const userRepo = new UserRepo($api);
-const { data: users } = useAsyncData('users', () => userRepo.getAll());
+
+const { users } = useUsers();
 
 const getUsersForMultiSelect = () => {
   return (

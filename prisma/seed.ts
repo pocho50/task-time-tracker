@@ -31,7 +31,7 @@ async function main() {
   const admin = await prisma.user.create({
     data: {
       email: 'admin@admin.com',
-      name: 'Admin User',
+      name: 'Jose',
       password: adminPassword,
       role: 'ADMIN',
     },
@@ -42,7 +42,7 @@ async function main() {
   const regularUser = await prisma.user.create({
     data: {
       email: 'test@test.com',
-      name: 'Regular User',
+      name: 'Pedro',
       password: userPassword,
       role: 'USER',
     },
@@ -60,6 +60,17 @@ async function main() {
         PERMISSIONS.PROJECTS_DELETE,
     },
   });
+  // ADMIN role gets all users permissions (read, write, delete)
+  await prisma.userPermission.create({
+    data: {
+      role: 'ADMIN',
+      entity: 'users',
+      permission:
+        PERMISSIONS.USERS_READ |
+        PERMISSIONS.USERS_WRITE |
+        PERMISSIONS.USERS_DELETE,
+    },
+  });
   // USER role gets only read permission for projects
   await prisma.userPermission.create({
     data: {
@@ -72,7 +83,7 @@ async function main() {
   // Create a project
   const project = await prisma.project.create({
     data: {
-      name: 'Time Tracker Development',
+      name: 'Task Time Tracker',
       description: 'Descripcion',
       users: {
         create: [
@@ -88,30 +99,6 @@ async function main() {
       },
     },
   });
-  // create 18 additional projects
-  for (let i = 1; i <= 18; i++) {
-    const projectName = `Project ${i}`;
-    const projectDescription = `Description ${i}`;
-
-    const additionalProject = await prisma.project.create({
-      data: {
-        name: projectName,
-        description: projectDescription,
-        users: {
-          create: [
-            {
-              userId: admin.id,
-              assignedAt: new Date(),
-            },
-            {
-              userId: regularUser.id,
-              assignedAt: new Date(),
-            },
-          ],
-        },
-      },
-    });
-  }
 
   // Create a sprint
   const sprint = await prisma.sprint.create({

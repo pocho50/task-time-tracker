@@ -9,5 +9,14 @@
     "noAccount": "Don't have an account?",
     "signUp": "Sign up",
     "error": "Invalid email or password"
+  },
+  "server": {
+    "unauthorizedRead": "You do not have permission to read users.",
+    "unauthorizedWrite": "You do not have permission to add or edit users.",
+    "unauthorizedDelete": "You do not have permission to delete users.",
+    "invalidId": "Invalid user id",
+    "errorSaving": "Error saving user",
+    "errorDeleting": "Error deleting user",
+    "errorFetching": "Error fetching users"
   }
 }
