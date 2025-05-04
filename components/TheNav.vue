@@ -27,8 +27,8 @@ const isDark = useDark({
       :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
       @click="isDark = !isDark"
     >
-      <Icon v-if="isDark" name="mdi:weather-night" size="24" />
-      <Icon v-else name="mdi:weather-sunny" size="24" />
+      <Icon v-show="isDark" name="mdi:weather-night" size="24" />
+      <Icon v-show="!isDark" name="mdi:weather-sunny" size="24" />
     </button>
   </nav>
 </template>
