@@ -8,6 +8,11 @@
   "addProject": "Add Project",
   "cancel": "Cancel",
   "save": "Save",
+  "emptyState": {
+    "noProjects": "No projects found",
+    "noProjectsDescription": "You don't have any projects yet."
+  },
+
   "multiSelect": {
     "placeholder": "Select users",
     "assignUsersToProject": "Assign users to project"

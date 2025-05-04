@@ -24,11 +24,15 @@ const projectForm = useTemplateRef('projectForm');
       :onRemove="handleRemove"
       :onEdit="handleEdit"
     />
+    <AppEmptyState v-if="!projects || projects.length === 0">
+      <template #title>{{ $t('emptyState.noProjects') }}</template>
+      {{ $t('emptyState.noProjectsDescription') }}
+    </AppEmptyState>
     <!-- Icon add project fixed button -->
     <AppAddBtn @click="handleAdd" v-if="userIsAllowedToWrite(ENTITY)" />
     <!-- Pagination -->
     <AppPagination
-      v-if="pagination"
+      v-if="pagination && pagination.pageCount > 1"
       :page="page"
       :totalPages="pagination.pageCount"
       @@prev="page--"
