@@ -1,6 +1,11 @@
 import tailwindcss from '@tailwindcss/vite';
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  runtimeConfig: {
+    public: {
+      appTitle: 'Task Time Tracker',
+    },
+  },
   compatibilityDate: '2024-11-01',
   routeRules: {
     '/': { redirect: '/projects' },
