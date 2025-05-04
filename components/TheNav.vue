@@ -7,7 +7,6 @@ const isDark = useDark({
   valueDark: 'business',
   valueLight: 'corporate',
 });
-const config = useRuntimeConfig();
 </script>
 <template>
   <nav
@@ -22,7 +21,9 @@ const config = useRuntimeConfig();
     <label for="main-drawer" class="btn btn-ghost lg:hidden drawer-button">
       <Icon name="mdi:menu" size="24" />
     </label>
-    <h1 class="text-xl font-bold flex-1">{{ config.public.appTitle }}</h1>
+    <h1 class="text-xl font-bold flex-1">
+      {{ useRuntimeConfig().public.appTitle }}
+    </h1>
     <button
       class="btn btn-ghost"
       :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"

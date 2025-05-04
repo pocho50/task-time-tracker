@@ -2,35 +2,11 @@
 import { loginSchema } from '#layers/users/schemas';
 import { toTypedSchema } from '@vee-validate/zod';
 const validationSchema = toTypedSchema(loginSchema);
-const { loggedIn, user, fetch: refreshSession } = useUserSession();
 definePageMeta({
   layout: 'center',
 });
 
-const credentials = ref({
-  email: '',
-  password: '',
-});
-const isLoading = ref(false);
-
-const { $api } = useNuxtApp();
-
-async function handleLogin() {
-  try {
-    isLoading.value = true;
-    await $api('/login', {
-      method: 'POST',
-      body: credentials.value,
-    });
-    await refreshSession();
-    await navigateTo('/');
-  } catch (error) {
-    console.error(error);
-  } finally {
-    isLoading.value = false;
-  }
-}
-const config = useRuntimeConfig();
+const { login, isLoading, credentials } = useLogin();
 </script>
 <template>
   <div class="w-full max-w-md bg-base-100 rounded-lg shadow-xl p-8">
@@ -38,9 +14,9 @@ const config = useRuntimeConfig();
       <TheLogo />
     </div>
     <h1 class="text-2xl font-bold text-center mb-6">
-      {{ config.public.appTitle }}
+      {{ useRuntimeConfig().public.appTitle }}
     </h1>
-    <VeeForm @submit="handleLogin" :validation-schema="validationSchema">
+    <VeeForm @submit="login" :validation-schema="validationSchema">
       <AppFormInput
         type="email"
         name="email"
