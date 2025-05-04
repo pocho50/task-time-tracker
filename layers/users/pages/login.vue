@@ -13,10 +13,12 @@ const credentials = ref({
 });
 const isLoading = ref(false);
 
+const { $api } = useNuxtApp();
+
 async function handleLogin() {
   try {
     isLoading.value = true;
-    await $fetch('/api/login', {
+    await $api('/login', {
       method: 'POST',
       body: credentials.value,
     });

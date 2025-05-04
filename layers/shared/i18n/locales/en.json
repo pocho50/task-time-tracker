@@ -10,6 +10,7 @@
     "delete": "Delete",
     "edit": "Edit",
     "add": "Add",
+    "error": "Error",
     "confirmDeletion": "Confirm Deletion",
     "confirmDeleteMessage": "Are you sure you want to delete this item?"
   },
