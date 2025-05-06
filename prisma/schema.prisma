@@ -40,6 +40,8 @@ model User {
   name      String
   password  String
   role      UserRole  @default(USER)
+  locale    String    @default("en")
+  theme     String    @default("light")
   createdAt DateTime  @default(now()) @map("created_at")
 
   // Relations

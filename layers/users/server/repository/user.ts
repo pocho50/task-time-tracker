@@ -7,6 +7,20 @@ export class UserRepository {
     this.prisma = prisma || new PrismaClient();
   }
 
+  // find user by id
+  async findById(id: string) {
+    return this.prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        locale: true,
+        theme: true,
+      },
+    });
+  }
+
   // find all users
   async findMany() {
     return this.prisma.user.findMany({
