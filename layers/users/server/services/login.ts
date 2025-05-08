@@ -33,6 +33,8 @@ export class LoginService {
         name: user.name,
         email: user.email,
         role: user.role,
+        locale: user.locale,
+        theme: user.theme,
         permissions,
       },
     });
