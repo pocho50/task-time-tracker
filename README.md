@@ -25,6 +25,15 @@ A modern time tracking application built with Nuxt, TypeScript, and Prisma ORM.
      ```sh
      npx prisma db seed
      ```
+   - The seed creates two default users:
+     - **Admin User**
+       - Email: admin@admin.com
+       - Password: admin123
+       - Role: ADMIN
+     - **Regular User**
+       - Email: test@test.com
+       - Password: password
+       - Role: USER
 
 ### Environment Variables
 
