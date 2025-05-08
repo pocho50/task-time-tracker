@@ -27,11 +27,21 @@
       "invalid_string": {
         "email": "Invalid email"
       },
+      "invalid_type_received_undefined": "This field is required",
+      "invalid_type": "Invalid type",
+      "invalid_email": "Invalid email address",
       "too_small": {
-        "string": {
-          "inclusive": "Minimum {minimum} characters"
+        "string": { "inclusive": "Minimum {minimum} characters" }
+      },
+      "too_small_string": {
+        "minimum": {
+          "one": "Should be at least 1 character",
+          "other": "Should be at least {minimum} characters"
         }
       }
+    },
+    "validations": {
+      "email": "Please enter a valid email address"
     }
   }
 }
