@@ -20,5 +20,18 @@
   },
   "server": {
     "unauthorized": "You do not have permission to perform this action."
+  },
+
+  "zodI18n": {
+    "errors": {
+      "invalid_string": {
+        "email": "Invalid email"
+      },
+      "too_small": {
+        "string": {
+          "inclusive": "Minimum {minimum} characters"
+        }
+      }
+    }
   }
 }

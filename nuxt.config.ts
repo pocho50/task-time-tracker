@@ -52,6 +52,7 @@ export default defineNuxtConfig({
         strategy: 'no_prefix',
       },
     ],
+    'nuxt-zod-i18n',
   ],
   vite: {
     plugins: [tailwindcss()],
