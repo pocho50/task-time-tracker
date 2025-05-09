@@ -5,6 +5,7 @@ defineProps<{
     | 'primary'
     | 'secondary'
     | 'accent'
+    | 'default'
     | 'info'
     | 'success'
     | 'warning'

@@ -50,20 +50,22 @@ const projectForm = useTemplateRef('projectForm');
         @@submit="handleSave"
       />
       <template #actions>
-        <button
+        <AppButton
           type="button"
-          class="btn btn-default btn-lg"
+          variant="default"
+          size="lg"
           @click="openDrawer = false"
         >
           {{ $t('cancel') }}
-        </button>
-        <button
+        </AppButton>
+        <AppButton
           type="button"
-          class="btn btn-primary btn-lg"
+          variant="primary"
+          size="lg"
           @click="projectForm?.triggerSubmit()"
         >
           {{ $t('save') }}
-        </button>
+        </AppButton>
       </template>
     </AppDrawerRight>
   </section>

@@ -23,13 +23,10 @@ const handleLogout = async () => {
 
       <!-- Logout button -->
       <div class="p-4">
-        <button
-          class="btn btn-ghost btn-block gap-3 text-base-content"
-          @click="handleLogout"
-        >
+        <AppButton variant="default" class="w-full" @click="handleLogout">
           <Icon name="mdi:logout" class="text-xl" />
           <span>{{ $t('app.logout') }}</span>
-        </button>
+        </AppButton>
       </div>
     </div>
   </aside>
