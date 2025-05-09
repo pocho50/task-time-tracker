@@ -1,4 +1,12 @@
 {
+  "settings": {
+    "title": "Settings",
+    "userName": "Name",
+    "userEmail": "Email",
+    "userLocale": "Language",
+    "userTheme": "Theme",
+    "save": "Save settings"
+  },
   "login": {
     "title": "Task Time Tracker",
     "email": "Email",

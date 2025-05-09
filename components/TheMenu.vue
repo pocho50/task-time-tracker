@@ -11,7 +11,7 @@ const menuItems = [
     label: 'app.menu.tasks',
   },
   {
-    to: '/profile',
+    to: '/settings',
     icon: 'mdi:account',
     label: 'app.menu.settings',
   },

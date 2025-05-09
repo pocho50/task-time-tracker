@@ -7,6 +7,8 @@ declare module '#auth-utils' {
     email: string;
     role: UserRole;
     permissions: { entity: string; permission: number }[];
+    locale: 'en' | 'es';
+    theme: 'light' | 'dark';
   }
 }
 

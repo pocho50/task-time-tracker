@@ -1,4 +1,4 @@
-import { PrismaClient, type UserRole } from '@prisma/client';
+import { PrismaClient, type UserRole, type User } from '@prisma/client';
 
 export class UserRepository {
   private prisma: PrismaClient;
@@ -42,6 +42,30 @@ export class UserRepository {
         email: true,
         role: true,
         password: true,
+        locale: true,
+        theme: true,
+      },
+    });
+  }
+
+  // save user
+  async save(user: User) {
+    return this.prisma.user.create({
+      data: user,
+    });
+  }
+
+  // update user
+  async update(id: string, userData: Partial<User>) {
+    return this.prisma.user.update({
+      where: { id },
+      data: userData,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        locale: true,
+        theme: true,
       },
     });
   }
