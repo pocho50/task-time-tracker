@@ -1,5 +1,6 @@
 <template>
   <div
+    data-testid="empty-state"
     class="flex flex-col items-center justify-center py-12 text-center text-base-content/70"
   >
     <Icon
