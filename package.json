@@ -11,7 +11,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "test": "vitest"
+    "test": "vitest",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@nuxt/eslint": "^1.2.0",
@@ -39,6 +40,7 @@
   "devDependencies": {
     "@iconify-json/mdi": "^1.2.3",
     "@nuxt/test-utils": "^3.18.0",
+    "@playwright/test": "^1.52.0",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^22.13.14",
     "@vue/test-utils": "^2.4.6",

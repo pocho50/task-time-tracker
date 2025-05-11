@@ -1,9 +1,10 @@
 import tailwindcss from '@tailwindcss/vite';
+import { TITLE } from './utils/constants';
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {
-      appTitle: 'Task Time Tracker',
+      appTitle: TITLE,
     },
   },
   compatibilityDate: '2024-11-01',
@@ -13,7 +14,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   app: {
     head: {
-      titleTemplate: '%s - Time task tracker',
+      titleTemplate: `%s - ${TITLE}`,
     },
     pageTransition: { name: 'page', mode: 'out-in' },
   },

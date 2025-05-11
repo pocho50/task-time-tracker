@@ -103,9 +103,9 @@ function resetSelection() {
           </label>
         </li>
         <li v-if="options.length === 0">
-          <span class="px-3 py-2 text-sm text-base-content text-opacity-60">{{
-            t('multiSelect.noOptions')
-          }}</span>
+          <span class="px-3 py-2 text-sm text-base-content text-opacity-60">
+            {{ t('multiSelect.noOptions') }}
+          </span>
         </li>
       </ul>
     </div>
