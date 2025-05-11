@@ -46,22 +46,60 @@ Before running the project, copy `.env.example` to `.env` and fill in your own v
 
 See the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) for more information.
 
+## Running Tests
+
+### Unit Tests
+
+This project uses Vitest for unit testing Vue components, composables, and utility functions.
+
+To run all unit tests:
+
+```bash
+npm run test
+```
+
+To run tests in watch mode (tests will re-run when files change):
+
+```bash
+npm run test -- --watch
+```
+
+### End-to-End Tests
+
+For end-to-end testing, we use Playwright to automate browser interactions and verify application behavior.
+
+To run all e2e tests:
+
+```bash
+npm run test:e2e
+```
+
+To run e2e tests with the Playwright UI for debugging:
+
+```bash
+npm run test:e2e -- --ui
+```
+
+To run tests in debug mode:
+
+```bash
+npm run test:e2e -- --debug
+```
+
+#### First Time Setup
+
+If this is your first time running Playwright tests, you may need to install the browser binaries:
+
+```bash
+npx playwright install
+```
+
 ## Setup
 
 Make sure to install dependencies:
 
 ```bash
-# npm
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
 ## Development Server
@@ -69,17 +107,7 @@ bun install
 Start the development server on `http://localhost:3000`:
 
 ```bash
-# npm
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
 ## Production
@@ -87,33 +115,13 @@ bun run dev
 Build the application for production:
 
 ```bash
-# npm
 npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
 ```
 
 Locally preview production build:
 
 ```bash
-# npm
 npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
