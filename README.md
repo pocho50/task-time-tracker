@@ -58,12 +58,6 @@ To run all unit tests:
 npm run test
 ```
 
-To run tests in watch mode (tests will re-run when files change):
-
-```bash
-npm run test -- --watch
-```
-
 ### End-to-End Tests
 
 For end-to-end testing, we use Playwright to automate browser interactions and verify application behavior.
@@ -72,18 +66,6 @@ To run all e2e tests:
 
 ```bash
 npm run test:e2e
-```
-
-To run e2e tests with the Playwright UI for debugging:
-
-```bash
-npm run test:e2e -- --ui
-```
-
-To run tests in debug mode:
-
-```bash
-npm run test:e2e -- --debug
 ```
 
 #### First Time Setup
