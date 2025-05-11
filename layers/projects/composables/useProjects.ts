@@ -1,6 +1,3 @@
-import { ref, computed, watch } from 'vue';
-import { useNuxtApp, useRouteQuery, useAsyncData } from '#imports';
-
 export function useProjects() {
   const { $api } = useNuxtApp();
   const projectRepo = new ProjectsRepo($api);
