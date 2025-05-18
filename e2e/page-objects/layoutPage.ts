@@ -13,4 +13,12 @@ export default class LayoutPage {
   getMobileToggleDrawerButton() {
     return this.page.getByTestId('toggle-drawer-mobile');
   }
+
+  getMenu() {
+    return this.page.getByTestId('menu');
+  }
+
+  getAside() {
+    return this.page.getByTestId('aside');
+  }
 }

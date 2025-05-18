@@ -15,6 +15,7 @@ const handleLogout = async () => {
     ></label>
     <div
       class="bg-base-100 text-base-content min-h-full w-[var(--aside-width)] flex flex-col"
+      data-testid="aside"
     >
       <TheLogo />
 
