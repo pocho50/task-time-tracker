@@ -14,11 +14,16 @@ const isDark = useDark({
   >
     <button
       class="btn btn-ghost hidden lg:inline-flex"
+      data-testid="toggle-drawer"
       @click="$emit('@toogleDrawer')"
     >
       <Icon name="mdi:menu" size="24" />
     </button>
-    <label for="main-drawer" class="btn btn-ghost lg:hidden drawer-button">
+    <label
+      data-testid="toggle-drawer-mobile"
+      for="main-drawer"
+      class="btn btn-ghost lg:hidden drawer-button"
+    >
       <Icon name="mdi:menu" size="24" />
     </label>
     <h1 class="text-xl font-bold flex-1">

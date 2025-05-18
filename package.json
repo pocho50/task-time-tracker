@@ -12,7 +12,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "test": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "BASE_URL=${BASE_URL:-http://localhost:3000} playwright test"
   },
   "dependencies": {
     "@nuxt/eslint": "^1.2.0",
