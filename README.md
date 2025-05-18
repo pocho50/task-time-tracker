@@ -62,10 +62,22 @@ npm run test
 
 For end-to-end testing, we use Playwright to automate browser interactions and verify application behavior.
 
-To run all e2e tests:
+**Important:** Before running tests, you need to start the development server in a separate terminal:
+
+```bash
+npm run dev
+```
+
+Then run all E2E tests:
 
 ```bash
 npm run test:e2e
+```
+
+You can also specify a custom base URL for testing against different environments:
+
+```bash
+BASE_URL=http://localhost:4000 npm run test:e2e
 ```
 
 #### First Time Setup
