@@ -59,7 +59,6 @@ function handleClose() {
     class="alert shadow-lg flex items-start gap-3 min-w-[280px] max-w-xs"
     :class="typeClass"
     role="alert"
-    data-testid="toast"
   >
     <Icon :name="typeIcon" size="28" class="shrink-0 mt-1" />
     <div class="flex-1">

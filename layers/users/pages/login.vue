@@ -20,6 +20,7 @@ const { login, isLoading, credentials } = useLogin();
       <AppFormInput
         type="email"
         name="email"
+        data-testid="login-email"
         :placeholder="$t('login.email')"
         class-input="input input-bordered w-full"
         v-model="credentials.email"
@@ -28,6 +29,7 @@ const { login, isLoading, credentials } = useLogin();
 
       <AppFormPassword
         name="password"
+        data-testid="login-password"
         :placeholder="$t('login.password')"
         class-input="input input-bordered w-full"
         v-model="credentials.password"
@@ -36,6 +38,7 @@ const { login, isLoading, credentials } = useLogin();
       <div class="form-control mt-6">
         <button
           type="submit"
+          data-testid="login-button"
           class="btn btn-primary w-full"
           :disabled="isLoading"
         >
