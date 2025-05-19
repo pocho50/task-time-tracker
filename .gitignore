@@ -27,3 +27,6 @@ logs
 # Prisma
 prisma/db
 prisma/prisma
+
+# E2E testing auth state
+e2e/.auth/
