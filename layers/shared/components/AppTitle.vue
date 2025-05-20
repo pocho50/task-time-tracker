@@ -5,7 +5,7 @@ defineProps<{
 </script>
 
 <template>
-  <h1 class="text-3xl font-bold mb-8 text-base-content">
+  <h3 class="text-3xl font-bold mb-8 text-base-content">
     {{ text }}
-  </h1>
+  </h3>
 </template>

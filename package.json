@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@iconify-json/mdi": "^1.2.3",
-    "@nuxt/test-utils": "^3.18.0",
+    "@nuxt/test-utils": "^3.19.0",
     "@playwright/test": "^1.52.0",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^22.13.14",
