@@ -18,7 +18,7 @@ const { userIsAllowedToWrite } = useUser();
       :key="project.id"
       class="card bg-base-100 shadow-md hover:shadow-2xl relative overflow-hidden transition-transform duration-300 ease-in-out hover:scale-[1.03]"
     >
-      <AppCardAction
+      <AppOptionAction
         v-if="userIsAllowedToWrite(ENTITY)"
         :actions="['edit', 'remove']"
         @@edit="() => typeof project.id === 'string' && onEdit(project.id)"

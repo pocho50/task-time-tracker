@@ -13,7 +13,7 @@ mockNuxtImport('useUser', () => {
   });
 });
 
-mockComponent('AppCardAction', {
+mockComponent('AppOptionAction', {
   props: ['actions'],
   template: '<div class="mock-card-actions"><slot></slot></div>',
   emits: ['edit', 'remove'],
@@ -61,7 +61,7 @@ describe('ProjectList', () => {
     });
 
     // Assert
-    expect(wrapper.findComponent({ name: 'AppCardAction' }).exists()).toBe(
+    expect(wrapper.findComponent({ name: 'AppOptionAction' }).exists()).toBe(
       false
     );
   });

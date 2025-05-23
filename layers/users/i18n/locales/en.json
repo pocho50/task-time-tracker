@@ -26,5 +26,16 @@
     "errorSaving": "Error saving user",
     "errorDeleting": "Error deleting user",
     "errorFetching": "Error fetching users"
+  },
+  "userList": {
+    "title": "Users",
+    "avatar": "Avatar",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "actions": "Actions",
+    "edit": "Edit",
+    "remove": "Remove",
+    "noUsersFound": "No users found"
   }
 }

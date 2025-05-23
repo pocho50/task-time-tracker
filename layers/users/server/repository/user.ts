@@ -17,6 +17,7 @@ export class UserRepository {
         email: true,
         locale: true,
         theme: true,
+        role: true,
       },
     });
   }
@@ -29,6 +30,8 @@ export class UserRepository {
         name: true,
         email: true,
         role: true,
+        locale: true,
+        theme: true,
       },
     });
   }
