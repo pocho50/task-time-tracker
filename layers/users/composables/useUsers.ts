@@ -36,8 +36,9 @@ export function useUsers() {
     refresh();
   }
 
-  function handleRemove(id: string) {
-    // TODO: implement remove logic
+  async function handleRemove(id: string) {
+    await userRepo.remove(id);
+    refresh();
   }
 
   const users = computed(() => data.value?.data ?? []);

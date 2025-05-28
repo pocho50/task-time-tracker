@@ -104,6 +104,19 @@ export class UserRepository {
       },
     });
   }
+
+  // delete user
+  async delete(id: string) {
+    return this.prisma.user.delete({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+      },
+    });
+  }
 }
 
 export class UserPermissionRepository {

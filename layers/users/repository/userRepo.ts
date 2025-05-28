@@ -23,4 +23,10 @@ export class UserRepo<T> extends BaseRepo<T> {
       body: data,
     });
   }
+
+  remove(id: string) {
+    return this.fetch(`${this.basePath}/${id}`, {
+      method: 'DELETE',
+    });
+  }
 }
