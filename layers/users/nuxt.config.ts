@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   extends: ['../shared'],
   imports: {
-    dirs: ['./schemas'],
+    dirs: ['./repository', './schemas'],
   },
   modules: ['@nuxtjs/i18n'],
   i18n: {

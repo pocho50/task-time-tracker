@@ -11,7 +11,6 @@ export default defineEventHandler(async (event) => {
   // Get translation function for server-side
   const t = await useTranslation(event);
 
-  // Permission check (reusable helper)
   assertHasPermissionOrThrow(
     user?.permissions,
     ENTITY,

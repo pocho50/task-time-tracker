@@ -2,8 +2,8 @@
 import type { User } from '../utils/index';
 const props = defineProps<{
   users: User[];
-  onEdit?: (id: string) => void;
-  onRemove?: (id: string) => void;
+  onEdit: (id: string) => void;
+  onRemove: (id: string) => void;
 }>();
 </script>
 
@@ -54,6 +54,7 @@ const props = defineProps<{
               <div>
                 <AppOptionAction
                   :actions="['edit', 'remove']"
+                  @@edit="onEdit(user.id)"
                   class="relative dropdown-top !right-0 !top-0"
                 />
               </div>

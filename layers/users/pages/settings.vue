@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { LOCALES, THEMES } from '#layers/shared/utils/constants';
-import { userSchema, type UserDataForm } from '#layers/users/schemas';
+import { settingsSchema, type SettingsDataForm } from '#layers/users/schemas';
 const { user, fetch: refreshSession } = useUserSession();
-const validationSchema = toTypedSchema(userSchema);
-const initialData: UserDataForm = {
+const validationSchema = toTypedSchema(settingsSchema);
+const initialData: SettingsDataForm = {
   name: user.value?.name ?? '',
   locale: user.value?.locale ?? 'en',
   theme: user.value?.theme ?? 'light',
@@ -11,12 +11,12 @@ const initialData: UserDataForm = {
 
 const { handleSave, loading } = useMe();
 const onSubmit = (values: Record<string, any>) => {
-  const userFormData: UserDataForm = {
+  const settingsData: SettingsDataForm = {
     name: values.name,
     locale: values.locale,
     theme: values.theme,
   };
-  handleSave(userFormData);
+  handleSave(settingsData);
   refreshSession();
 };
 </script>

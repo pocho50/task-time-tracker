@@ -22,9 +22,11 @@ export class UserRepository {
     });
   }
 
-  // find all users
-  async findMany() {
+  // find all users (paginated)
+  async findMany(skip = 0, take = 100) {
     return this.prisma.user.findMany({
+      skip,
+      take,
       select: {
         id: true,
         name: true,
@@ -34,6 +36,11 @@ export class UserRepository {
         theme: true,
       },
     });
+  }
+
+  // count all users
+  async countUsers() {
+    return this.prisma.user.count();
   }
 
   async findByEmail(email: string) {
@@ -52,10 +59,35 @@ export class UserRepository {
   }
 
   // save user
-  async save(user: User) {
-    return this.prisma.user.create({
-      data: user,
-    });
+  async save(data: {
+    id?: string;
+    name: string;
+    email: string;
+    role: UserRole;
+    password?: string;
+  }) {
+    if (data.id) {
+      return this.update(data.id, data);
+    } else {
+      if (!data.password) {
+        throw new Error('Password is required');
+      }
+      const userData = {
+        name: data.name,
+        email: data.email,
+        role: data.role,
+        password: await hashPassword(data.password!),
+      };
+      return this.prisma.user.create({
+        data: userData,
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+        },
+      });
+    }
   }
 
   // update user

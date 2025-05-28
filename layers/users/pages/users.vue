@@ -1,26 +1,65 @@
 <script setup lang="ts">
-const { users, status } = useUsers();
+const {
+  users,
+  refresh,
+  status,
+  openDrawer,
+  selectedUser,
+  isCreate,
+  handleAdd,
+  handleEdit,
+  handleSave,
+  handleRemove,
+} = useUsers();
 
-const handleEdit = (id: string) => {
-  // Implement edit functionality here
-  console.log('Edit user with ID:', id);
-};
-
-const handleRemove = (id: string) => {
-  // Implement remove functionality here
-  console.log('Remove user with ID:', id);
-};
+// form template refs
+const userForm = useTemplateRef('userForm');
 </script>
 
 <template>
   <section class="py-12 px-4 bg-base-100">
     <AppTitle :text="$t('userList.title')" />
-    <UserList :users="users ?? []" />
+    <UserList
+      :users="users ?? []"
+      :onEdit="handleEdit"
+      :onRemove="handleRemove"
+    />
     <AppEmptyState
       v-if="(!users || users.length === 0) && status === 'success'"
     >
       <template #title>{{ $t('userList.noUsersFound') }}</template>
       {{ $t('userList.noUsersFoundDescription') }}
     </AppEmptyState>
+    <AppAddBtn @click="handleAdd" />
+    <AppDrawerRight
+      v-model="openDrawer"
+      :title="isCreate ? $t('userList.addUser') : $t('userList.editUser')"
+    >
+      <LazyUserForm
+        v-if="openDrawer"
+        :initial-data="selectedUser"
+        :is-create="isCreate"
+        @@submit="handleSave"
+        ref="userForm"
+      />
+      <template #actions>
+        <AppButton
+          type="button"
+          variant="default"
+          size="lg"
+          @click="openDrawer = false"
+        >
+          {{ $t('cancel') }}
+        </AppButton>
+        <AppButton
+          type="button"
+          variant="primary"
+          size="lg"
+          @click="userForm?.triggerSubmit()"
+        >
+          {{ $t('save') }}
+        </AppButton>
+      </template>
+    </AppDrawerRight>
   </section>
 </template>

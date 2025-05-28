@@ -7,6 +7,12 @@
     "userTheme": "Theme",
     "save": "Save settings"
   },
+  "zodI18n": {
+    "errors": {
+      "passwords_must_match": "Passwords must match",
+      "invalid_enum_value": "Invalid option"
+    }
+  },
   "login": {
     "title": "Task Time Tracker",
     "email": "Email",
@@ -34,8 +40,18 @@
     "email": "Email",
     "role": "Role",
     "actions": "Actions",
-    "edit": "Edit",
-    "remove": "Remove",
+    "editUser": "Edit user",
+    "addUser": "Add new user",
+    "removeUser": "Remove user",
     "noUsersFound": "No users found"
+  },
+  "userForm": {
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "theme": "Theme",
+    "locale": "Language",
+    "password": "Password",
+    "repeatPassword": "Repeat password"
   }
 }

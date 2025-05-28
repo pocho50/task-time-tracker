@@ -10,10 +10,17 @@ export class UserRepo<T> extends BaseRepo<T> {
     return this.fetch(`${this.basePath}/me`);
   }
 
-  saveMe(user: UserDataForm) {
+  saveMe(settingsData: SettingsDataForm) {
     return this.fetch(`${this.basePath}/save-me`, {
       method: 'POST',
-      body: user,
+      body: settingsData,
+    });
+  }
+
+  save(data: UserDataForm) {
+    return this.fetch(`${this.basePath}/save`, {
+      method: 'POST',
+      body: data,
     });
   }
 }

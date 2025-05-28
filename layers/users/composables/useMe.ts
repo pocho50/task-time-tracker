@@ -5,9 +5,9 @@ export function useMe() {
   const userRepo = new UserRepo($api);
   const loading = ref(false);
 
-  const handleSave = async (user: UserDataForm) => {
+  const handleSave = async (settingsData: SettingsDataForm) => {
     loading.value = true;
-    await userRepo.saveMe(user);
+    await userRepo.saveMe(settingsData);
     loading.value = false;
   };
 
