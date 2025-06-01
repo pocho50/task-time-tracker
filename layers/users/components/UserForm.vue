@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod';
-import { LOCALES, THEMES } from '#layers/shared/utils/constants';
 import { ROLES } from '#layers/users/utils/constants';
 
 const emit = defineEmits<{
