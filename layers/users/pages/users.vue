@@ -52,6 +52,7 @@ const userForm = useTemplateRef('userForm');
           {{ $t('cancel') }}
         </AppButton>
         <AppButton
+          data-testid="user-form-submit"
           type="button"
           variant="primary"
           size="lg"

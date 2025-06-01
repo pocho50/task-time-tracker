@@ -45,7 +45,11 @@ defineExpose({
     class="flex flex-col gap-4"
     as="div"
   >
-    <form @submit="handleSubmit($event, onSubmit)" ref="form">
+    <form
+      @submit="handleSubmit($event, onSubmit)"
+      ref="form"
+      data-testid="user-form"
+    >
       <AppFormInput
         name="name"
         type="text"
