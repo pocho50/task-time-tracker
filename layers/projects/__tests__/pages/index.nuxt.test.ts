@@ -4,7 +4,7 @@ import {
   mockComponent,
   mountSuspended,
 } from '@nuxt/test-utils/runtime';
-import ProjectsIndexPage from '../../pages/projects/index.vue';
+import ProjectsIndexPage from '../../pages/projects.vue';
 import { mockProjects } from '../__mocks__/projectMocks';
 
 // Create shared mock for user permissions
