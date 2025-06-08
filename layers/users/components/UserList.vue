@@ -51,7 +51,7 @@ const props = defineProps<{
             </td>
             <!-- Actions -->
             <td>
-              <div>
+              <div :data-testid="`user-actions-${user.id}`">
                 <AppOptionAction
                   :actions="['edit', 'remove']"
                   @@edit="onEdit(user.id)"

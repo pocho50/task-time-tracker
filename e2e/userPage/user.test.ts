@@ -17,13 +17,16 @@ const dumyUser = {
 } as UserDataForm;
 
 async function removeDumyUser(page: Page) {
-  const usersFromApi = await fetchApiData<User>(page, URL_API);
-  const userDeleted = usersFromApi.find(
-    (user) => user.email === dumyUser.email
-  );
+  const userDeleted = await getUserByEmail(page, dumyUser.email);
   if (userDeleted) {
     await removeItem(page, URL_API, userDeleted.id);
   }
+}
+
+async function getUserByEmail(page: Page, email: String) {
+  const usersFromApi = await fetchApiData<User>(page, URL_API);
+  const user = usersFromApi.find((user) => user.email === email);
+  return user;
 }
 
 test.describe('user', async () => {
@@ -46,7 +49,7 @@ test.describe('user', async () => {
     await expect(userPage.getUsersListItems()).toHaveCount(usersFromApi.length);
   });
 
-  test('add new user', async ({ page }) => {
+  test('add new user and remove', async ({ page }) => {
     const usersFromApi = await fetchApiData(page, URL_API);
     // click add user button
     await userPage.getAddUserButton().click();
@@ -58,5 +61,16 @@ test.describe('user', async () => {
     await expect(userPage.getUsersListItems()).toHaveCount(
       usersFromApi.length + 1
     );
+    // get user added
+    const userAdded = await getUserByEmail(page, dumyUser.email);
+    expect(userAdded).toBeTruthy();
+    // delete user
+    await (await userPage.getDeleteUserButton(userAdded!.id)).click();
+    // check remove modal is open
+    await expect(userPage.getRemoveModal()).toBeVisible();
+    // confirm remove
+    await userPage.getRemoveModalConfirmButton().click();
+    // check user is deleted
+    await expect(userPage.getUsersListItems()).toHaveCount(usersFromApi.length);
   });
 });

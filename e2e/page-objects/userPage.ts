@@ -1,4 +1,5 @@
 import { type Page } from '@playwright/test';
+import en_shared from '#layers/shared/i18n/locales/en.json' assert { type: 'json' };
 
 export default class UserPage {
   page: Page;
@@ -59,5 +60,28 @@ export default class UserPage {
 
   getFormSubmitButton() {
     return this.page.getByTestId('user-form-submit');
+  }
+
+  async getDeleteUserButton(userId: string) {
+    // First click on the dropdown trigger (the dots icon) to open the menu
+    await this.page
+      .getByTestId(`user-actions-${userId}`)
+      .getByRole('button')
+      .first()
+      .click();
+    // Then get the delete option from the dropdown menu
+    return this.page
+      .getByTestId(`user-actions-${userId}`)
+      .getByText(en_shared.common.delete);
+  }
+
+  getRemoveModal() {
+    return this.page.getByRole('dialog');
+  }
+
+  getRemoveModalConfirmButton() {
+    return this.getRemoveModal().getByRole('button', {
+      name: en_shared.common.delete,
+    });
   }
 }

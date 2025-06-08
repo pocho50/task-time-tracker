@@ -45,14 +45,14 @@ function confirmRemove() {
       class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-xl border border-base-200 divide-y divide-base-200"
     >
       <li v-if="actions.includes('edit')">
-        <a @click="handleAction('edit')"
-          ><Icon name="mdi:edit" /> {{ $t('common.edit') }}</a
-        >
+        <a @click="handleAction('edit')">
+          <Icon name="mdi:edit" /> {{ $t('common.edit') }}
+        </a>
       </li>
       <li v-if="actions.includes('remove')">
-        <a @click="handleAction('remove')"
-          ><Icon name="mdi:delete" /> {{ $t('common.delete') }}</a
-        >
+        <a @click="handleAction('remove')">
+          <Icon name="mdi:delete" /> {{ $t('common.delete') }}
+        </a>
       </li>
     </ul>
     <AppModal v-model="showRemoveModal" :title="$t('common.confirmDeletion')">
