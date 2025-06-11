@@ -1,3 +1,5 @@
+import { safeApiCall } from '#layers/shared/utils';
+
 export function useUsers() {
   const { $api } = useNuxtApp();
   const userRepo = new UserRepo($api);
@@ -31,14 +33,18 @@ export function useUsers() {
   }
 
   async function handleSave(userData: UserDataForm) {
-    await userRepo.save(userData);
-    openDrawer.value = false;
-    refresh();
+    const result = await safeApiCall(() => userRepo.save(userData));
+    if (result !== false) {
+      openDrawer.value = false;
+      refresh();
+    }
   }
 
   async function handleRemove(id: string) {
-    await userRepo.remove(id);
-    refresh();
+    const result = await safeApiCall(() => userRepo.remove(id));
+    if (result !== false) {
+      refresh();
+    }
   }
 
   const users = computed(() => data.value?.data ?? []);

@@ -31,7 +31,9 @@
     "invalidId": "Invalid user id",
     "errorSaving": "Error saving user",
     "errorDeleting": "Error deleting user",
-    "errorFetching": "Error fetching users"
+    "errorFetching": "Error fetching users",
+    "succesSaveUser": "User saved successfully",
+    "succesDeleteUser": "User deleted successfully"
   },
   "userList": {
     "title": "Users",

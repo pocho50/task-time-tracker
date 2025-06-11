@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
   const service = new DeleteUserService(new UserRepository());
   try {
     await service.execute(id);
-    return { success: true };
+    return { message: t('server.succesDeleteUser') };
   } catch (error) {
     console.error('Error deleting user:', error);
     throw createError({

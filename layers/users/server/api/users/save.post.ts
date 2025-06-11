@@ -26,7 +26,10 @@ export default defineEventHandler(async (event) => {
   try {
     const service = new SaveUserService(new UserRepository());
     const savedUser = await service.execute(id, name, email, role, password);
-    return savedUser;
+    return {
+      message: t('server.succesSaveUser') || 'User saved successfully',
+      data: savedUser,
+    };
   } catch (error) {
     console.error('Error saving user:', error);
     throw createError({

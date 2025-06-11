@@ -1,4 +1,5 @@
 import { UserRepo } from '~/layers/users/repository/userRepo';
+import { safeApiCall } from '#layers/shared/utils';
 
 export function useMe() {
   const { $api } = useNuxtApp();
@@ -7,8 +8,9 @@ export function useMe() {
 
   const handleSave = async (settingsData: SettingsDataForm) => {
     loading.value = true;
-    await userRepo.saveMe(settingsData);
+    const result = await safeApiCall(() => userRepo.saveMe(settingsData));
     loading.value = false;
+    return result !== false;
   };
 
   return {

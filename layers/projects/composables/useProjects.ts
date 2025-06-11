@@ -1,3 +1,5 @@
+import { safeApiCall } from '#layers/shared/utils';
+
 export function useProjects() {
   const { $api } = useNuxtApp();
   const projectRepo = new ProjectsRepo($api);
@@ -26,16 +28,22 @@ export function useProjects() {
   };
 
   const handleSave = async (projectData: ProjectFormData) => {
-    await projectRepo.save(projectData);
-    refresh();
-    openDrawer.value = false;
+    const result = await safeApiCall(() => projectRepo.save(projectData));
+    if (result !== false) {
+      refresh();
+      openDrawer.value = false;
+    }
+    return result !== false;
   };
 
   const pagination = computed(() => data.value?.pagination);
 
   const handleRemove = async (id: string) => {
-    await projectRepo.delete(id);
-    refresh();
+    const result = await safeApiCall(() => projectRepo.delete(id));
+    if (result !== false) {
+      refresh();
+    }
+    return result !== false;
   };
 
   return {

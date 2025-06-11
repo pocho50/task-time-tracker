@@ -7,7 +7,7 @@ const openSideBar = ref(true);
     <div class="drawer-content">
       <TheNav @@toogleDrawer="openSideBar = !openSideBar" />
       <main class="p-5">
-        <NuxtPage />
+        <slot />
       </main>
     </div>
 

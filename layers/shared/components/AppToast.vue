@@ -2,7 +2,7 @@
 const props = withDefaults(
   defineProps<{
     id: string;
-    title: string;
+    title?: string;
     message?: string;
     type?: 'info' | 'success' | 'warning' | 'error';
     duration?: number;
@@ -56,7 +56,7 @@ function handleClose() {
 
 <template>
   <div
-    class="alert shadow-lg flex items-start gap-3 min-w-[280px] max-w-xs"
+    class="alert shadow-lg flex items-center gap-3 min-w-[280px] max-w-xs"
     :class="typeClass"
     role="alert"
   >
