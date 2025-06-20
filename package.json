@@ -12,7 +12,10 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "test": "vitest",
-    "test:e2e": "BASE_URL=${BASE_URL:-http://localhost:3000} playwright test"
+    "test:e2e": "BASE_URL=http://localhost:3030 playwright test",
+    "setup:test-db": "export DATABASE_URL=file:$(pwd)/prisma/db/time_tracker_test.db && npx prisma db push && npx prisma db seed",
+    "test:server:start": "export DATABASE_URL=file:$(pwd)/prisma/db/time_tracker_test.db && export NODE_ENV=development && export PORT=3030 && export BASE_URL=http://localhost:3030 && npm run setup:test-db && echo 'Starting test server on port 3030...' && nuxt dev --port 3030",
+    "test:e2e:run": "BASE_URL=http://localhost:3030 npx playwright test"
   },
   "dependencies": {
     "@nuxt/eslint": "^1.2.0",
@@ -51,6 +54,7 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",
-    "vitest": "^3.1.3"
+    "vitest": "^3.1.3",
+    "wait-on": "^8.0.3"
   }
 }

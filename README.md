@@ -48,6 +48,39 @@ See the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction)
 
 ## Running Tests
 
+### E2E Tests with Playwright
+
+End-to-end tests use Playwright with a dedicated test database (`time_tracker_test.db`).
+
+#### Test Database Setup
+
+Before running tests, you must create the directory for the test database:
+
+```sh
+mkdir -p prisma/db
+```
+
+#### Running the Tests
+
+To run the tests:
+
+1. **Start the test server** (in one terminal):
+
+   ```sh
+   npm run test:server:start
+   ```
+
+   This will:
+
+   - Reset and seed the test database (`time_tracker_test.db`)
+   - Set up the necessary environment variables
+   - Start the Nuxt server on port 3030
+
+2. **Run the tests** (in another terminal):
+   ```sh
+   npm run test:e2e:run
+   ```
+
 ### Unit Tests
 
 This project uses Vitest for unit testing Vue components, composables, and utility functions.
@@ -56,28 +89,6 @@ To run all unit tests:
 
 ```bash
 npm run test
-```
-
-### End-to-End Tests
-
-For end-to-end testing, we use Playwright to automate browser interactions and verify application behavior.
-
-**Important:** Before running tests, you need to start the development server in a separate terminal:
-
-```bash
-npm run dev
-```
-
-Then run all E2E tests:
-
-```bash
-npm run test:e2e
-```
-
-You can also specify a custom base URL for testing against different environments:
-
-```bash
-BASE_URL=http://localhost:4000 npm run test:e2e
 ```
 
 #### First Time Setup
