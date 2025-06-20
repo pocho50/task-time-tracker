@@ -24,6 +24,8 @@
     "invalidId": "Invalid project id",
     "errorSaving": "Error saving project",
     "errorDeleting": "Error deleting project",
-    "errorFetching": "Error fetching projects"
+    "errorFetching": "Error fetching projects",
+    "succesSaveProject": "Project saved successfully",
+    "succesDeleteProject": "Project deleted successfully"
   }
 }

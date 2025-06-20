@@ -28,7 +28,16 @@ export default defineEventHandler(async (event) => {
     const service = new SaveProjectsService(new ProjectRepository());
     const allUsersId = usersId ?? [];
     if (!usersId?.includes(user.id)) allUsersId.push(user.id);
-    return service.execute(id, name, description, allUsersId);
+    const savedProject = await service.execute(
+      id,
+      name,
+      description,
+      allUsersId
+    );
+    return {
+      message: t('server.succesSaveProject') || 'Project saved successfully',
+      data: savedProject,
+    };
   } catch (error) {
     console.error('Error saving project:', error);
     throw createError({

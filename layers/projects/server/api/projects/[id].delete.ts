@@ -30,5 +30,10 @@ export default defineEventHandler(async (event) => {
 
   const service = new DeleteProjectsService(new ProjectRepository());
 
-  return service.execute(id);
+  const deletedProject = await service.execute(id);
+
+  return {
+    message: t('server.succesDeleteProject') || 'Project deleted successfully',
+    data: deletedProject,
+  };
 });
