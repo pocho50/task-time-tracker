@@ -7,9 +7,10 @@ export function useUsers() {
 
   watch(page, () => refresh());
 
-  const { data, refresh, status } = useAsyncData('users', () =>
-    userRepo.getAll()
-  );
+  const { data, refresh, status } = useAsyncData('users', () => {
+    userRepo.setParams({ page: page.value });
+    return userRepo.getAll();
+  });
 
   const openDrawer = ref(false);
   const selectedUser = ref<UserDataForm | undefined>(undefined);

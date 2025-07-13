@@ -23,12 +23,7 @@ export default defineEventHandler(async (event) => {
   try {
     const service = new GetUsersService(new UserRepository());
 
-    const result = await service.execute({ page, pageSize });
-    // Filter out current user from the data
-    return {
-      ...result,
-      data: result.data.filter((u: { id: string }) => u.id !== user.id),
-    };
+    return await service.execute({ page, pageSize });
   } catch (error) {
     console.error('Error fetching users:', error);
     throw createError({

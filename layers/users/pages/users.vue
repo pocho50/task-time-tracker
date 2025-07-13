@@ -1,7 +1,8 @@
 <script setup lang="ts">
 const {
   users,
-  refresh,
+  pagination,
+  page,
   status,
   openDrawer,
   selectedUser,
@@ -30,6 +31,14 @@ const userForm = useTemplateRef('userForm');
       <template #title>{{ $t('userList.noUsersFound') }}</template>
       {{ $t('userList.noUsersFoundDescription') }}
     </AppEmptyState>
+    <!-- Pagination -->
+    <AppPagination
+      v-if="pagination && pagination.pageCount > 1"
+      :page="page"
+      :totalPages="pagination.pageCount"
+      @@prev="page--"
+      @@next="page++"
+    />
     <AppAddBtn @click="handleAdd" />
     <AppDrawerRight
       v-model="openDrawer"
