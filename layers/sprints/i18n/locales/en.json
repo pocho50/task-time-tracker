@@ -3,5 +3,15 @@
     "errorFetching": "Error fetching sprints. Please try again later.",
     "invalidProjectId": "Invalid project ID provided.",
     "unauthorizedAccess": "You don't have access to this project."
+  },
+  "sprintList": {
+    "title": "Sprints",
+    "name": "Name",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "status": "Status",
+    "actions": "Actions",
+    "noSprintsFound": "No sprints found",
+    "noSprintsFoundDescription": "There are no sprints for this project yet. Create a new one to get started."
   }
 }
