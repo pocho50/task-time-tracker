@@ -38,12 +38,13 @@ const { userIsAllowedToWrite } = useUser();
             <Icon name="mdi:format-list-checkbox" size="20" />
             <span>{{ $t('tasks') }}</span>
           </button>
-          <button
+          <NuxtLink
+            :to="`/sprints/${project.id}`"
             class="btn btn-default grow flex items-center gap-2 hover:btn-accent transition-colors"
           >
             <Icon name="mdi:cog-outline" size="20" />
             <span>{{ $t('configSprints') }}</span>
-          </button>
+          </NuxtLink>
         </div>
       </div>
     </article>
