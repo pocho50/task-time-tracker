@@ -1,1 +1,7 @@
-{}
+{
+  "server": {
+    "errorFetching": "Error fetching sprints. Please try again later.",
+    "invalidProjectId": "Invalid project ID provided.",
+    "unauthorizedAccess": "You don't have access to this project."
+  }
+}
