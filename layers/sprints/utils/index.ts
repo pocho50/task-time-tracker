@@ -1,0 +1,14 @@
+// Use string type to accept any status from the API
+export type SprintStatus = string;
+
+export interface Sprint {
+  id: string;
+  name: string;
+  description?: string; // Making this optional to match the API
+  startDate: string | Date | null;
+  endDate: string | Date | null;
+  status: SprintStatus;
+  projectId: string;
+  createdAt: string | Date;
+  updatedAt?: string | Date; // Making this optional to match the API
+}
