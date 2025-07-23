@@ -12,6 +12,7 @@
     "status": "Status",
     "actions": "Actions",
     "noSprintsFound": "No sprints found",
-    "noSprintsFoundDescription": "There are no sprints for this project yet. Create a new one to get started."
+    "noSprintsFoundDescription": "There are no sprints for this project yet. Create a new one to get started.",
+    "selectProject": "Select Project"
   }
 }

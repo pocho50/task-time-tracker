@@ -1,11 +1,21 @@
+import { SprintsRepo } from '../repository/sprintRepo';
+
 export function useSprints(projectId: string) {
+  const { $api } = useNuxtApp();
+  const sprintRepo = new SprintsRepo($api);
   const page = useRouteQuery('page', 1, { transform: Number });
+  const projectIdRef = ref(projectId);
 
-  watch(page, () => refresh());
-
-  const { data, refresh, status } = useAsyncData(`sprints-${projectId}`, () => {
-    return $fetch(`/api/sprints/${projectId}`);
-  });
+  const { data, refresh, status } = useAsyncData(
+    `sprints-${projectIdRef.value}`,
+    () => {
+      sprintRepo.setParams({ page: page.value });
+      return sprintRepo.getByProjectId(projectIdRef.value);
+    },
+    {
+      watch: [projectIdRef, page], // Auto-refresh when projectId or page changes
+    }
+  );
 
   const sprints = computed(() => data.value?.data ?? []);
   const meta = computed(() => data.value?.meta ?? null);
@@ -28,5 +38,6 @@ export function useSprints(projectId: string) {
     page,
     handleEdit,
     handleRemove,
+    projectIdRef,
   };
 }
