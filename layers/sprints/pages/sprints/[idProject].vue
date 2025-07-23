@@ -7,9 +7,6 @@ const routeProjectId = route.params.idProject;
 const { sprints, meta, status, page, handleEdit, handleRemove, projectIdRef } =
   useSprints(routeProjectId as string);
 
-// Get all projects for selector
-const { projects } = useProjectsForSelector();
-
 // Handle project change from selector
 function handleProjectChange() {
   // Reset to page 1 when switching projects
@@ -25,27 +22,12 @@ function handleProjectChange() {
       <AppTitle :text="$t('sprintList.title')" class="mb-0" />
 
       <!-- Project Selector -->
-      <div class="form-control w-full max-w-xs">
-        <label class="label">
-          <span class="label-text">{{ $t('sprintList.selectProject') }}</span>
-        </label>
-        <select
-          class="select select-bordered w-full"
-          v-model="projectIdRef"
-          @change="handleProjectChange"
-        >
-          <option disabled value="">
-            {{ $t('sprintList.selectProject') }}
-          </option>
-          <option
-            v-for="project in projects"
-            :key="project.id"
-            :value="project.id"
-          >
-            {{ project.name }}
-          </option>
-        </select>
-      </div>
+      <ProjectSelector
+        v-model="projectIdRef"
+        :label="$t('sprintList.selectProject')"
+        :placeholder="$t('sprintList.selectProject')"
+        @change="handleProjectChange"
+      />
     </div>
     <SprintList
       :sprints="sprints ?? []"
