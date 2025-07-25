@@ -54,10 +54,7 @@ const props = defineProps<{
                 :data-testid="`sprint-actions-${sprint.id}`"
               >
                 <AppOptionAction
-                  :actions="[
-                    ...(onEdit ? ['edit' as const] : []),
-                    ...(onRemove ? ['remove' as const] : []),
-                  ]"
+                  :actions="['edit', 'remove']"
                   @edit="onEdit?.(sprint.id)"
                   @remove="onRemove?.(sprint.id)"
                   class="relative dropdown-top !right-0 !top-0"
