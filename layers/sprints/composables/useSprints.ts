@@ -25,6 +25,11 @@ export function useSprints(projectId: string) {
     console.log(`Edit sprint ${id}`);
   }
 
+  function handleAdd() {
+    // Implementation for add functionality will go here
+    console.log(`Add new sprint`);
+  }
+
   async function handleRemove(id: string) {
     // Implementation for remove functionality will go here
     console.log(`Remove sprint ${id}`);
@@ -33,11 +38,12 @@ export function useSprints(projectId: string) {
   return {
     sprints,
     meta,
-    refresh,
-    status,
     page,
-    handleEdit,
-    handleRemove,
+    status,
     projectIdRef,
+    handleEdit,
+    handleAdd,
+    handleRemove,
+    refresh,
   };
 }

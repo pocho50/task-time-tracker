@@ -3,9 +3,17 @@ const route = useRoute();
 
 const routeProjectId = route.params.idProject;
 
-// Get sprints for the current project (will auto-refresh when selectedProjectId changes)
-const { sprints, meta, status, page, handleEdit, handleRemove, projectIdRef } =
-  useSprints(routeProjectId as string);
+// Get sprints for the current project
+const {
+  sprints,
+  meta,
+  status,
+  page,
+  handleEdit,
+  handleRemove,
+  handleAdd,
+  projectIdRef,
+} = useSprints(routeProjectId as string);
 
 // Handle project change from selector
 function handleProjectChange() {
@@ -48,5 +56,7 @@ function handleProjectChange() {
       @change="(newPage: number) => (page = newPage)"
       class="my-4"
     />
+    <!-- Add Sprint Button -->
+    <AppAddBtn @click="handleAdd" />
   </section>
 </template>

@@ -22,12 +22,8 @@ const model = defineModel<string>();
 // Get all projects for selector
 const { projects } = useProjectsForSelector();
 
-function handleChange(event: Event) {
-  const target = event.target as HTMLSelectElement;
-  const value = target.value;
-
-  model.value = value;
-  emit('change', value);
+function handleChange() {
+  emit('change', model.value!);
 }
 </script>
 
