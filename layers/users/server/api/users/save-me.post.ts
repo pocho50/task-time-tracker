@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
 
   // Read the updated user profile from the request body
-  const userData: UserDataForm = await readBody(event);
+  const userData: SettingsDataForm = await readBody(event);
 
   try {
     const service = new SaveMeService(new UserRepository());

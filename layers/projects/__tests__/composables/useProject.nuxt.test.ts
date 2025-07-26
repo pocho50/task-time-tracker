@@ -43,7 +43,7 @@ describe('useProjects', () => {
 
     // Assert
     expect(projects.value).toHaveLength(2);
-    expect(projects.value[0].name).toMatchInlineSnapshot(`"Project 1"`);
+    expect(projects.value[0]?.name).toMatchInlineSnapshot(`"Project 1"`);
   });
 
   it('should call save on repository when handleSave is called', async () => {
