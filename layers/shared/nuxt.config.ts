@@ -3,7 +3,6 @@ export default defineNuxtConfig({
   routeRules: {},
   modules: ['@nuxtjs/i18n'],
   i18n: {
-    lazy: true,
     strategy: 'no_prefix',
     defaultLocale: 'en',
     locales: [
