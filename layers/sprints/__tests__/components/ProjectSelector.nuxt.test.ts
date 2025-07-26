@@ -56,10 +56,19 @@ describe('ProjectSelector', () => {
     // Assert
     const options = wrapper.findAll('select option:not([disabled])');
     expect(options.length).toBe(mockProjects.length);
-    expect(options[0].text()).toBe(mockProjects[0].name);
-    expect(options[1].text()).toBe(mockProjects[1].name);
-    expect(options[0].attributes('value')).toBe(mockProjects[0].id);
-    expect(options[1].attributes('value')).toBe(mockProjects[1].id);
+
+    // Ensure we have the expected options before accessing them
+    expect(options.length).toBeGreaterThanOrEqual(2);
+    const firstOption = options[0];
+    const secondOption = options[1];
+
+    expect(firstOption).toBeDefined();
+    expect(secondOption).toBeDefined();
+
+    expect(firstOption?.text()).toBe(mockProjects[0]!.name);
+    expect(secondOption?.text()).toBe(mockProjects[1]!.name);
+    expect(firstOption?.attributes('value')).toBe(mockProjects[0]!.id);
+    expect(secondOption?.attributes('value')).toBe(mockProjects[1]!.id);
   });
 
   it('sets the correct project as selected based on v-model', async () => {
@@ -81,11 +90,11 @@ describe('ProjectSelector', () => {
 
     // Act
     const select = wrapper.find('select');
-    await select.setValue(mockProjects[1].id);
+    await select.setValue(mockProjects[1]!.id);
 
     // Assert
     expect(wrapper.emitted('change')).toHaveLength(1);
-    expect(wrapper.emitted('change')![0]).toEqual([mockProjects[1].id]);
+    expect(wrapper.emitted('change')![0]).toEqual([mockProjects[1]!.id]);
   });
 
   it('updates v-model when selection changes', async () => {
@@ -94,12 +103,12 @@ describe('ProjectSelector', () => {
 
     // Act
     const select = wrapper.find('select');
-    await select.setValue(mockProjects[0].id);
+    await select.setValue(mockProjects[0]!.id);
 
     // Assert
     expect(wrapper.emitted('update:modelValue')).toHaveLength(1);
     expect(wrapper.emitted('update:modelValue')![0]).toEqual([
-      mockProjects[0].id,
+      mockProjects[0]!.id,
     ]);
   });
 
@@ -156,8 +165,10 @@ describe('ProjectSelector', () => {
     // Assert
     const options = wrapper.findAll('select option:not([disabled])');
     expect(options.length).toBe(1);
-    expect(options[0].text()).toBe(mockProjects.slice(0, 1)[0].name);
-    expect(options[0].attributes('value')).toBe(mockProjects.slice(0, 1)[0].id);
+    expect(options[0]!.text()).toBe(mockProjects.slice(0, 1)[0]!.name);
+    expect(options[0]!.attributes('value')).toBe(
+      mockProjects.slice(0, 1)[0]!.id
+    );
   });
 
   it('maintains proper HTML structure', async () => {

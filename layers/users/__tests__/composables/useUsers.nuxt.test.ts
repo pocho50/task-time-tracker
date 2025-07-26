@@ -40,7 +40,7 @@ describe('useUsers', () => {
   it('should return users from repository', () => {
     const { users } = useUsers();
     expect(users.value).toHaveLength(2);
-    expect(users.value[0].name).toBe('Alice');
+    expect(users.value[0]!.name).toBe('Alice');
   });
 
   it('should call save on repository and close drawer when handleSave is called', async () => {

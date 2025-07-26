@@ -121,9 +121,9 @@ describe('AppMultiSelect', () => {
     // Assert - Check options
     const optionElements = wrapper.findAll('li label span');
     expect(optionElements.length).toBe(3);
-    expect(optionElements[0].text()).toBe('Option 1');
-    expect(optionElements[1].text()).toBe('Option 2');
-    expect(optionElements[2].text()).toBe('Option 3');
+    expect(optionElements[0]!.text()).toBe('Option 1');
+    expect(optionElements[1]!.text()).toBe('Option 2');
+    expect(optionElements[2]!.text()).toBe('Option 3');
   });
 
   it('selects options when checkboxes are clicked', async () => {
@@ -138,8 +138,9 @@ describe('AppMultiSelect', () => {
     // Act - Open dropdown and check options
     await wrapper.find('button').trigger('click');
     const checkboxes = wrapper.findAll('input[type="checkbox"]');
-    await checkboxes[0].setValue(true);
-    await checkboxes[2].setValue(true);
+    expect(checkboxes).toHaveLength(3); // Ensure we have the expected checkboxes
+    await checkboxes[0]!.setValue(true);
+    await checkboxes[2]!.setValue(true);
 
     // Assert
     expect(wrapper.find('button span').text()).toMatchInlineSnapshot(
@@ -147,7 +148,8 @@ describe('AppMultiSelect', () => {
     );
 
     // Act - Check another option
-    await checkboxes[1].setValue(true);
+    expect(checkboxes.length).toBeGreaterThan(1);
+    await checkboxes[1]!.setValue(true);
     expect(wrapper.find('button span').text()).toMatchInlineSnapshot(
       `"Option 1, Option 2, Option 3"`
     );
