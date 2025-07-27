@@ -1,4 +1,6 @@
 import { SprintsRepo } from '../repository/sprintRepo';
+import { safeApiCall } from '#layers/shared/utils';
+import type { SprintFormData } from '../schemas';
 
 export function useSprints(projectId: string) {
   const { $api } = useNuxtApp();
@@ -20,19 +22,55 @@ export function useSprints(projectId: string) {
   const sprints = computed(() => data.value?.data ?? []);
   const meta = computed(() => data.value?.meta ?? null);
 
+  // Drawer state management
+  const openDrawer = ref(false);
+  const selectedSprint = ref<SprintFormData | undefined>(undefined);
+
   function handleEdit(id: string) {
-    // Implementation for edit functionality will go here
-    console.log(`Edit sprint ${id}`);
+    const sprint = sprints.value.find((s) => s.id === id);
+    if (sprint) {
+      selectedSprint.value = {
+        id: sprint.id,
+        name: sprint.name,
+        startDate: sprint.startDate
+          ? new Date(sprint.startDate).toISOString().split('T')[0]
+          : undefined,
+        endDate: sprint.endDate
+          ? new Date(sprint.endDate).toISOString().split('T')[0]
+          : undefined,
+        status: sprint.status,
+        projectId: sprint.projectId,
+      };
+    }
+    openDrawer.value = true;
   }
 
   function handleAdd() {
-    // Implementation for add functionality will go here
-    console.log(`Add new sprint`);
+    selectedSprint.value = undefined;
+    openDrawer.value = true;
   }
 
+  const handleSave = async (sprintData: SprintFormData) => {
+    // Add projectId to the sprint data
+    const dataWithProject = {
+      ...sprintData,
+      projectId: projectIdRef.value,
+    };
+
+    const result = await safeApiCall(() => sprintRepo.save(dataWithProject));
+    if (result !== false) {
+      refresh();
+      openDrawer.value = false;
+    }
+    return result !== false;
+  };
+
   async function handleRemove(id: string) {
-    // Implementation for remove functionality will go here
-    console.log(`Remove sprint ${id}`);
+    const result = await safeApiCall(() => sprintRepo.delete(id));
+    if (result !== false) {
+      refresh();
+    }
+    return result !== false;
   }
 
   return {
@@ -41,8 +79,11 @@ export function useSprints(projectId: string) {
     page,
     status,
     projectIdRef,
+    openDrawer,
+    selectedSprint,
     handleEdit,
     handleAdd,
+    handleSave,
     handleRemove,
     refresh,
   };

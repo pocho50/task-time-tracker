@@ -5,18 +5,20 @@ export class SprintsRepo<T> extends BaseRepo<T> {
 
   async getByProjectId(projectId: string) {
     const query = this.getQueryParams();
-    return this.fetch(`${this.basePath}/${projectId}?${query}`);
+    return this.fetch(
+      `${this.basePath}/by-project?id_project=${projectId}&${query}`
+    );
   }
 
   async delete(id: string) {
     return this.fetch(`${this.basePath}/${id}`, {
-      method: 'DELETE' as any,
+      method: 'DELETE',
     });
   }
 
   async save(data: any) {
     return this.fetch(`${this.basePath}/save`, {
-      method: 'POST' as any,
+      method: 'POST',
       body: data,
     });
   }

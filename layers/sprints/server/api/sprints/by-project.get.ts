@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   const t = await useTranslation(event);
 
   // Get the project ID from the route params
-  const idProject = getRouterParam(event, 'idProject');
+  const idProject = getQuery(event).id_project as string;
 
   if (!idProject) {
     throw createError({
@@ -19,19 +19,19 @@ export default defineEventHandler(async (event) => {
 
   try {
     const repo = new SprintRepository();
-    
+
     // Check if user has access to this project
     const hasAccess = await repo.isUserInProject(user.id, idProject);
-    
+
     if (!hasAccess) {
       throw createError({
         statusCode: 401,
         message: t('server.unauthorizedAccess'),
       });
     }
-    
+
     const service = new GetSprintsService(repo);
-    
+
     return service.execute({
       projectId: idProject,
     });
