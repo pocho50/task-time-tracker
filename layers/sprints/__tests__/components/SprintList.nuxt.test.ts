@@ -1,16 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
-import { mockNuxtImport, mockComponent } from '@nuxt/test-utils/runtime';
+import { mockComponent } from '@nuxt/test-utils/runtime';
 import { mountSuspended } from '@nuxt/test-utils/runtime';
 import SprintList from '../../components/SprintList.vue';
 import { mockSprints } from '../__mocks__/sprintMocks';
-
-// Mock the formatDate utility
-mockNuxtImport('formatDate', () => {
-  return (date: string | Date | null) => {
-    if (!date) return '-';
-    return new Date(date).toLocaleDateString();
-  };
-});
 
 mockComponent('AppOptionAction', {
   props: ['actions'],
