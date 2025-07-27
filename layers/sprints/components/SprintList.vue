@@ -55,8 +55,8 @@ const props = defineProps<{
               >
                 <AppOptionAction
                   :actions="['edit', 'remove']"
-                  @edit="onEdit?.(sprint.id)"
-                  @remove="onRemove?.(sprint.id)"
+                  @@edit="onEdit?.(sprint.id)"
+                  @@remove="onRemove?.(sprint.id)"
                   class="relative dropdown-top !right-0 !top-0"
                 />
               </div>
