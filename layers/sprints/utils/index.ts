@@ -1,6 +1,4 @@
-// Use string type to accept any status from the API
-export type SprintStatus = string;
-
+export type SprintStatus = (typeof SPRINT_STATUSES)[number];
 export interface Sprint {
   id: string;
   name: string;

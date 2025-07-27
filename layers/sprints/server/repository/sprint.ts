@@ -1,4 +1,4 @@
-import { PrismaClient, type Sprint } from '@prisma/client';
+import { PrismaClient, type Sprint, SprintStatus } from '@prisma/client';
 
 export class SprintRepository {
   private prisma: PrismaClient;
@@ -39,5 +39,44 @@ export class SprintRepository {
     });
     
     return count > 0;
+  }
+
+  async save(data: {
+    id?: string;
+    name: string;
+    startDate?: string;
+    endDate?: string;
+    status: SprintStatus;
+    projectId: string;
+  }): Promise<Sprint> {
+    if (data.id) {
+      // Update existing sprint
+      return this.prisma.sprint.update({
+        where: { id: data.id },
+        data: {
+          name: data.name,
+          startDate: data.startDate ? new Date(data.startDate) : null,
+          endDate: data.endDate ? new Date(data.endDate) : null,
+          status: data.status,
+        },
+      });
+    } else {
+      // Create new sprint
+      return this.prisma.sprint.create({
+        data: {
+          name: data.name,
+          startDate: data.startDate ? new Date(data.startDate) : null,
+          endDate: data.endDate ? new Date(data.endDate) : null,
+          status: data.status,
+          projectId: data.projectId,
+        },
+      });
+    }
+  }
+
+  async delete(id: string): Promise<Sprint> {
+    return this.prisma.sprint.delete({
+      where: { id },
+    });
   }
 }

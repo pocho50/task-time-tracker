@@ -12,7 +12,10 @@ const {
   handleEdit,
   handleRemove,
   handleAdd,
+  handleSave,
   projectIdRef,
+  openDrawer,
+  selectedSprint,
 } = useSprints(routeProjectId as string);
 
 // Handle project change from selector
@@ -20,10 +23,13 @@ function handleProjectChange() {
   // Reset to page 1 when switching projects
   page.value = 1;
 }
+
+// form template refs
+const sprintForm = useTemplateRef('sprintForm');
 </script>
 
 <template>
-  <section class="py-12 px-4 bg-base-200">
+  <section class="py-12 px-4 bg-base-100">
     <div
       class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4"
     >
@@ -58,5 +64,36 @@ function handleProjectChange() {
     />
     <!-- Add Sprint Button -->
     <AppAddBtn @click="handleAdd" />
+
+    <!-- Drawer -->
+    <AppDrawerRight
+      v-model="openDrawer"
+      :title="selectedSprint ? $t('editSprint') : $t('addSprint')"
+    >
+      <LazySprintForm
+        v-if="openDrawer"
+        ref="sprintForm"
+        :initial-data="selectedSprint"
+        @@submit="handleSave"
+      />
+      <template #actions>
+        <AppButton
+          type="button"
+          variant="default"
+          size="lg"
+          @click="openDrawer = false"
+        >
+          {{ $t('cancel') }}
+        </AppButton>
+        <AppButton
+          type="button"
+          variant="primary"
+          size="lg"
+          @click="sprintForm?.triggerSubmit()"
+        >
+          {{ $t('save') }}
+        </AppButton>
+      </template>
+    </AppDrawerRight>
   </section>
 </template>
