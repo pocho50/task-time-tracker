@@ -1,7 +1,5 @@
 <script setup lang="ts">
-const route = useRoute();
-
-const routeProjectId = route.params.idProject;
+const routeProjectId = useRouteParams('idProject');
 
 // Get sprints for the current project
 const {
@@ -16,12 +14,14 @@ const {
   projectIdRef,
   openDrawer,
   selectedSprint,
-} = useSprints(routeProjectId as string);
+} = useSprints(routeProjectId.value as string);
 
 // Handle project change from selector
-function handleProjectChange() {
+async function handleProjectChange() {
   // Reset to page 1 when switching projects
   page.value = 1;
+  await nextTick();
+  routeProjectId.value = projectIdRef.value;
 }
 
 // form template refs
@@ -36,7 +36,7 @@ const sprintForm = useTemplateRef('sprintForm');
       <AppTitle :text="$t('sprintList.title')" class="mb-0" />
 
       <!-- Project Selector -->
-      <ProjectSelector
+      <AppProjectSelector
         v-model="projectIdRef"
         :label="$t('sprintList.selectProject')"
         :placeholder="$t('sprintList.selectProject')"

@@ -18,6 +18,10 @@
     "placeholder": "Select options",
     "noOptions": "No options available"
   },
+  "autocomplete": {
+    "placeholder": "Search...",
+    "noOptions": "No options available"
+  },
   "server": {
     "unauthorized": "You do not have permission to perform this action."
   },
