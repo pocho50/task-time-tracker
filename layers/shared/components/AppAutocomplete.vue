@@ -13,7 +13,6 @@ const props = withDefaults(
     placeholder?: string;
     label?: string;
     disabled?: boolean;
-    clearable?: boolean;
     noOptionsText?: string;
     minChars?: number;
   }>(),
@@ -21,7 +20,6 @@ const props = withDefaults(
     placeholder: '',
     label: '',
     disabled: false,
-    clearable: true,
     noOptionsText: '',
     minChars: 0,
   }
@@ -209,7 +207,7 @@ watchEffect(() => {
 
           <div class="absolute inset-y-0 right-0 flex items-center pr-3">
             <Icon
-              v-if="clearable && selectedOption"
+              v-if="selectedOption"
               name="mdi:chevron-down"
               size="18"
               class="cursor-pointer text-base-content text-opacity-50 hover:text-opacity-100 mr-1"
