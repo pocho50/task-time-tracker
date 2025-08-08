@@ -24,6 +24,10 @@ async function handleProjectChange() {
   routeProjectId.value = projectIdRef.value;
 }
 
+definePageMeta({
+  key: (route) => route.name as string,
+});
+
 // form template refs
 const sprintForm = useTemplateRef('sprintForm');
 </script>
