@@ -2,11 +2,21 @@
 import type { Sprint } from '../utils';
 import { formatDate } from '#layers/shared/utils';
 
+const VARIANTS: Record<SprintStatus, 'info' | 'success' | 'warning'> = {
+  PLANNING: 'warning',
+  ACTIVE: 'info',
+  COMPLETED: 'success',
+};
+
 const props = defineProps<{
   sprints: Sprint[];
   onEdit?: (id: string) => void;
   onRemove?: (id: string) => void;
 }>();
+
+const getVariant = (status: SprintStatus) => {
+  return VARIANTS[status];
+};
 </script>
 
 <template>
@@ -42,9 +52,9 @@ const props = defineProps<{
             <!-- Status -->
             <td>
               <div>
-                <span class="badge badge-accent badge-sm">{{
-                  sprint.status
-                }}</span>
+                <AppBadge :variant="getVariant(sprint.status)" :size="'sm'">
+                  {{ sprint.status }}
+                </AppBadge>
               </div>
             </td>
             <!-- Actions -->

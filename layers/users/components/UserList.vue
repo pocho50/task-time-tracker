@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import type { User } from '../utils/index';
+import type { UserRole } from '@prisma/client';
 const props = defineProps<{
   users: User[];
   onEdit: (id: string) => void;
   onRemove: (id: string) => void;
 }>();
+
+const getVariant = (role: UserRole) => {
+  return role === 'ADMIN' ? 'success' : 'info';
+};
 </script>
 
 <template>
@@ -45,9 +50,9 @@ const props = defineProps<{
             </td>
             <!-- Role -->
             <td>
-              <div>
-                <span class="badge badge-accent badge-sm">{{ user.role }}</span>
-              </div>
+              <AppBadge :variant="getVariant(user.role)">
+                {{ user.role }}
+              </AppBadge>
             </td>
             <!-- Actions -->
             <td>
