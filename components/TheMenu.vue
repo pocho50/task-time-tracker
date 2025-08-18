@@ -10,7 +10,7 @@ const rawMenuItems = [
     entity: ALL_ENTITIES.PROJECTS,
   },
   {
-    to: '/tracker',
+    to: '/tasks',
     icon: 'mdi:timer',
     label: 'app.menu.tasks',
   },
