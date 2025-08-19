@@ -10,5 +10,16 @@
       "settings": "Settings",
       "users": "Users"
     }
+  },
+  "taskList": {
+    "title": "Tasks",
+    "name": "Name",
+    "priority": "Priority",
+    "status": "Status",
+    "estimatedHours": "Estimated Hours",
+    "assignedUsers": "Assigned Users",
+    "createdAt": "Created At",
+    "actions": "Actions",
+    "noTasks": "No tasks found"
   }
 }

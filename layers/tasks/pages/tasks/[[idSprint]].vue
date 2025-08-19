@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const routeSprintId = useRouteParams('idSprint');
+const { tasks } = useTasks(routeSprintId.value as string);
 </script>
 
 <template>
@@ -9,5 +10,6 @@ const routeSprintId = useRouteParams('idSprint');
     >
       <AppTitle :text="$t('taskList.title')" class="mb-0" />
     </div>
+    <TaskList v-if="tasks" :tasks="tasks" />
   </section>
 </template>

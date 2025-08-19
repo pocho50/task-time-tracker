@@ -6,7 +6,7 @@ export class TaskRepo<T> extends BaseRepo<T> {
   async getBySprintId(sprintId: string) {
     const query = this.getQueryParams();
     return this.fetch(
-      `${this.basePath}/by-sprint?id_sprint=${sprintId}&${query}`
+      `${this.basePath}/by-sprint?sprintId=${sprintId}&${query}`
     );
   }
 }

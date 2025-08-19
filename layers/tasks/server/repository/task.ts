@@ -1,8 +1,4 @@
-import { PrismaClient, type Task } from '@prisma/client';
-
-export interface TaskWithUsers extends Task {
-  usersId: string[];
-}
+import { PrismaClient } from '@prisma/client';
 
 export class TaskRepository {
   private prisma: PrismaClient;
@@ -62,7 +58,7 @@ export class TaskRepository {
         },
       },
     });
-    
+
     return count > 0;
   }
 }
