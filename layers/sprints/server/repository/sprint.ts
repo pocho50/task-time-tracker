@@ -8,7 +8,9 @@ export class SprintRepository {
   }
 
   async findManyByProjectId(
-    projectId: string
+    projectId: string,
+    page?: number,
+    pageSize?: number
   ): Promise<Sprint[]> {
     const sprints = await this.prisma.sprint.findMany({
       where: {
@@ -16,7 +18,11 @@ export class SprintRepository {
       },
       orderBy: {
         createdAt: 'desc'
-      }
+      },
+      ...(page && pageSize && {
+        skip: (page - 1) * pageSize,
+        take: pageSize
+      })
     });
 
     return sprints;

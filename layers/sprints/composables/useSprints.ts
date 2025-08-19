@@ -19,7 +19,7 @@ export function useSprints(projectId: string) {
   );
 
   const sprints = computed(() => data.value?.data ?? []);
-  const meta = computed(() => data.value?.meta ?? null);
+  const pagination = computed(() => data.value?.pagination ?? null);
 
   // Drawer state management
   const openDrawer = ref(false);
@@ -74,7 +74,7 @@ export function useSprints(projectId: string) {
 
   return {
     sprints,
-    meta,
+    pagination,
     page,
     status,
     projectIdRef,

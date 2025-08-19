@@ -5,6 +5,7 @@ const routeProjectId = useRouteParams('idProject');
 const {
   sprints,
   status,
+  pagination,
   page,
   handleEdit,
   handleRemove,
@@ -57,6 +58,15 @@ const sprintForm = useTemplateRef('sprintForm');
       <template #title>{{ $t('sprintList.noSprintsFound') }}</template>
       {{ $t('sprintList.noSprintsFoundDescription') }}
     </AppEmptyState>
+    <!-- Pagination -->
+    <AppPagination
+      v-if="pagination && pagination.total > 0"
+      :page="page"
+      :totalPages="pagination.pageCount"
+      @@prev="page--"
+      @@next="page++"
+      class="my-4"
+    />
     <!-- Add Sprint Button -->
     <AppAddBtn @click="handleAdd" />
 
