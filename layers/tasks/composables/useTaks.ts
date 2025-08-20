@@ -1,8 +1,10 @@
 export function useTasks(sprintId: string | undefined) {
   const { $api } = useNuxtApp();
   const taskRepo = new TaskRepo($api);
+  const sprintRepo = new SprintsRepo($api);
   const page = useRouteQuery('page', 1, { transform: Number });
   const sprintIdRef = ref(sprintId);
+
   const { data, refresh, status } = useAsyncData(
     `tasks-${sprintId}`,
     async () => {
@@ -22,10 +24,26 @@ export function useTasks(sprintId: string | undefined) {
   );
   const pagination = computed(() => data.value?.pagination ?? null);
 
-  const getProjectId = computed(() => {
-    if (tasks.value.length === 0) return undefined;
+  const { projects } = useProjects();
+  /**
+   * Get the project ID based on current context
+   * Priority: sprint's project > first available project > task's project
+   */
+  const getProjectId = async () => {
+    // If no tasks but sprint is selected, get project from sprint
+    if (tasks.value.length === 0 && sprintIdRef.value) {
+      const sprint = await sprintRepo.getById(sprintIdRef.value as string);
+      return sprint?.projectId;
+    }
+
+    // If no sprint selected, use first available project as fallback
+    if (!sprintIdRef.value) {
+      return projects.value[0]?.id;
+    }
+
+    // Otherwise, use project from first task
     return tasks.value[0]?.projectId;
-  });
+  };
 
   return {
     tasks,

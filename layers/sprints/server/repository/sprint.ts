@@ -28,6 +28,12 @@ export class SprintRepository {
     return sprints;
   }
 
+  async getById(id: string): Promise<Sprint | null> {
+    return this.prisma.sprint.findUnique({
+      where: { id }
+    });
+  }
+
   async countSprintsByProjectId(projectId: string): Promise<number> {
     return this.prisma.sprint.count({
       where: {
