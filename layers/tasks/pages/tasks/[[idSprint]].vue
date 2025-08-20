@@ -10,10 +10,16 @@ const { tasks, getProjectId, sprintIdRef, status } = useTasks(
   selectedSprintId.value
 );
 
-// Set initial project ID from tasks if available
+// Get projects for selector
+const { projects } = useProjects();
+
+// Set initial project ID from tasks if available, or use first available project
 watchEffect(() => {
   if (getProjectId.value && !selectedProjectId.value) {
     selectedProjectId.value = getProjectId.value;
+  } else if (!selectedProjectId.value && projects.value && projects.value.length > 0) {
+    // Auto-select first project if no sprint is selected and no project is set
+    selectedProjectId.value = projects.value[0]?.id;
   }
 });
 
