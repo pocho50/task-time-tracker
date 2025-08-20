@@ -9,7 +9,9 @@ export function useSprints(projectId: string) {
 
   const { data, refresh, status } = useAsyncData(
     `sprints-${projectIdRef.value}`,
-    () => {
+    async () => {
+      if (!projectIdRef.value)
+        return { data: [], pagination: { page: 1, pageCount: 1 } };
       sprintRepo.setParams({ page: page.value });
       return sprintRepo.getByProjectId(projectIdRef.value);
     },

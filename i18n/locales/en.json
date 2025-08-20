@@ -20,6 +20,13 @@
     "assignedUsers": "Assigned Users",
     "createdAt": "Created At",
     "actions": "Actions",
-    "noTasks": "No tasks found"
+    "noTasks": "No tasks found",
+    "selectProject": "Select Project",
+    "selectSprint": "Select Sprint",
+    "selectSprintToView": "Select a sprint to view tasks",
+    "selectSprintDescription": "Choose a project and sprint from the selectors above to see the associated tasks."
+  },
+  "sprintList": {
+    "selectProjectFirst": "Select a project first"
   }
 }

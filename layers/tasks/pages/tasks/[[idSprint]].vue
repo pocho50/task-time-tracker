@@ -1,6 +1,40 @@
 <script setup lang="ts">
 const routeSprintId = useRouteParams('idSprint');
-const { tasks } = useTasks(routeSprintId.value as string);
+
+// Reactive refs for selected project and sprint
+const selectedProjectId = ref<string>();
+const selectedSprintId = ref<string>((routeSprintId.value as string) || '');
+
+// Get tasks based on selected sprint
+const { tasks, getProjectId, sprintIdRef } = useTasks(selectedSprintId.value);
+
+// Set initial project ID from tasks if available
+watchEffect(() => {
+  if (getProjectId.value && !selectedProjectId.value) {
+    selectedProjectId.value = getProjectId.value;
+  }
+});
+
+// Handle project selection change
+function handleProjectChange(projectId: string) {
+  selectedProjectId.value = projectId;
+  selectedSprintId.value = ''; // Clear sprint selection
+}
+
+// Handle sprint selection change
+function handleSprintChange(sprintId: string) {
+  selectedSprintId.value = sprintId;
+}
+
+// Watch for sprint changes to refresh tasks
+watch(selectedSprintId, () => {
+  sprintIdRef.value = selectedSprintId.value;
+  routeSprintId.value = selectedSprintId.value;
+});
+
+definePageMeta({
+  key: (route) => route.name as string,
+});
 </script>
 
 <template>
@@ -9,7 +43,43 @@ const { tasks } = useTasks(routeSprintId.value as string);
       class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4"
     >
       <AppTitle :text="$t('taskList.title')" class="mb-0" />
+
+      <!-- Selectors Container -->
+      <div class="flex flex-col sm:flex-row gap-4">
+        <!-- Project Selector -->
+        <AppProjectSelector
+          v-model="selectedProjectId"
+          :label="$t('taskList.selectProject')"
+          :placeholder="$t('taskList.selectProject')"
+          @change="handleProjectChange"
+        />
+
+        <!-- Sprint Selector -->
+        <AppSprintSelector
+          v-model="selectedSprintId"
+          :project-id="selectedProjectId"
+          :label="$t('taskList.selectSprint')"
+          :placeholder="$t('taskList.selectSprint')"
+          @change="handleSprintChange"
+        />
+      </div>
     </div>
-    <TaskList v-if="tasks" :tasks="tasks" />
+
+    <!-- Tasks List -->
+    <TaskList v-if="tasks && selectedSprintId" :tasks="tasks" />
+
+    <!-- Empty State -->
+    <div v-else-if="!selectedSprintId" class="text-center py-12">
+      <Icon
+        name="mdi:clipboard-list-outline"
+        class="text-6xl text-base-300 mb-4"
+      />
+      <h3 class="text-lg font-medium text-base-content/70 mb-2">
+        {{ $t('taskList.selectSprintToView') }}
+      </h3>
+      <p class="text-base-content/50">
+        {{ $t('taskList.selectSprintDescription') }}
+      </p>
+    </div>
   </section>
 </template>

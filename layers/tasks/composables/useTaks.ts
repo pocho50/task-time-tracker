@@ -22,6 +22,11 @@ export function useTasks(sprintId: string | undefined) {
   );
   const pagination = computed(() => data.value?.pagination ?? null);
 
+  const getProjectId = computed(() => {
+    if (tasks.value.length === 0) return undefined;
+    return tasks.value[0]?.projectId;
+  });
+
   return {
     tasks,
     pagination,
@@ -29,5 +34,6 @@ export function useTasks(sprintId: string | undefined) {
     status,
     sprintIdRef,
     refresh,
+    getProjectId,
   };
 }

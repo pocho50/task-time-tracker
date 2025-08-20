@@ -60,7 +60,7 @@ const sprintForm = useTemplateRef('sprintForm');
     </AppEmptyState>
     <!-- Pagination -->
     <AppPagination
-      v-if="pagination && pagination.total > 0"
+      v-if="pagination"
       :page="page"
       :totalPages="pagination.pageCount"
       @@prev="page--"

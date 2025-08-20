@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { formatDate } from '#layers/shared/utils';
 import type { TaskStatus, TaskPriority } from '@prisma/client';
 
 const STATUS_VARIANTS: Record<
