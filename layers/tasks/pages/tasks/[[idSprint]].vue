@@ -6,7 +6,9 @@ const selectedProjectId = ref<string>();
 const selectedSprintId = ref<string>((routeSprintId.value as string) || '');
 
 // Get tasks based on selected sprint
-const { tasks, getProjectId, sprintIdRef } = useTasks(selectedSprintId.value);
+const { tasks, getProjectId, sprintIdRef, status } = useTasks(
+  selectedSprintId.value
+);
 
 // Set initial project ID from tasks if available
 watchEffect(() => {
@@ -65,11 +67,22 @@ definePageMeta({
       </div>
     </div>
 
+    <!-- Loading State -->
+    <AppLoading
+      v-if="status === 'pending' && selectedSprintId"
+      center
+      :text="$t('taskList.loadingTasks')"
+      size="lg"
+    />
+
     <!-- Tasks List -->
-    <TaskList v-if="tasks && selectedSprintId" :tasks="tasks" />
+    <TaskList
+      v-if="tasks && selectedSprintId && status === 'success'"
+      :tasks="tasks"
+    />
 
     <!-- Empty State -->
-    <div v-else-if="!selectedSprintId" class="text-center py-12">
+    <div v-if="!selectedSprintId" class="text-center py-12">
       <Icon
         name="mdi:clipboard-list-outline"
         class="text-6xl text-base-300 mb-4"
