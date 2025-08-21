@@ -1,5 +1,6 @@
 import { SprintRepository } from '../../repository/sprint';
 import { GetSprintsService } from '../../services/get-sprints';
+import { DEFAULT_PAGE_SIZE } from '../../constants';
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
@@ -7,8 +8,11 @@ export default defineEventHandler(async (event) => {
   // Get translation function for server-side
   const t = await useTranslation(event);
 
-  // Get the project ID from the route params
-  const idProject = getQuery(event).id_project as string;
+  // Get the project ID and pagination params from the query
+  const query = getQuery(event);
+  const idProject = query.id_project as string;
+  const page = Number(query.page) || 1;
+  const pageSize = Number(query.pageSize) || DEFAULT_PAGE_SIZE;
 
   if (!idProject) {
     throw createError({
@@ -34,6 +38,8 @@ export default defineEventHandler(async (event) => {
 
     return service.execute({
       projectId: idProject,
+      page,
+      pageSize,
     });
   } catch (error) {
     console.error('Error fetching sprints:', error);

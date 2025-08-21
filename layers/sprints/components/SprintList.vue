@@ -31,6 +31,7 @@ const getVariant = (status: SprintStatus) => {
           <th>{{ $t('sprintList.startDate') }}</th>
           <th>{{ $t('sprintList.endDate') }}</th>
           <th>{{ $t('sprintList.status') }}</th>
+          <th>{{ $t('sprintList.tasks') }}</th>
           <th class="w-28">{{ $t('sprintList.actions') }}</th>
         </tr>
       </thead>
@@ -56,6 +57,17 @@ const getVariant = (status: SprintStatus) => {
                   {{ sprint.status }}
                 </AppBadge>
               </div>
+            </td>
+            <!-- Tasks -->
+            <td>
+              <NuxtLink
+                :to="{
+                  name: 'tasks-idSprint',
+                  params: { idSprint: sprint.id },
+                }"
+              >
+                <Icon name="mdi:calendar-task" size="24" />
+              </NuxtLink>
             </td>
             <!-- Actions -->
             <td>

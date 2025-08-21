@@ -10,6 +10,11 @@ export class SprintsRepo<T> extends BaseRepo<T> {
     );
   }
 
+  async getById(id: string): Promise<Sprint | null> {
+    // @ts-ignore
+    return this.fetch(`${this.basePath}/${id}`);
+  }
+
   async delete(id: string) {
     return this.fetch(`${this.basePath}/${id}`, {
       method: 'DELETE',

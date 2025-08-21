@@ -1,4 +1,3 @@
-import { SprintsRepo } from '../repository/sprintRepo';
 import { safeApiCall } from '#layers/shared/utils';
 import type { SprintFormData } from '../schemas';
 
@@ -11,16 +10,22 @@ export function useSprints(projectId: string) {
   const { data, refresh, status } = useAsyncData(
     `sprints-${projectIdRef.value}`,
     () => {
+      if (!projectIdRef.value) {
+        return Promise.resolve({
+          data: [] as any[],
+          pagination: { page: 1, pageCount: 1 },
+        });
+      }
       sprintRepo.setParams({ page: page.value });
       return sprintRepo.getByProjectId(projectIdRef.value);
     },
     {
-      watch: [projectIdRef, page], // Auto-refresh when projectId or page changes
+      watch: [page, projectIdRef], // Auto-refresh when projectId or page changes
     }
   );
 
   const sprints = computed(() => data.value?.data ?? []);
-  const meta = computed(() => data.value?.meta ?? null);
+  const pagination = computed(() => data.value?.pagination ?? null);
 
   // Drawer state management
   const openDrawer = ref(false);
@@ -75,7 +80,7 @@ export function useSprints(projectId: string) {
 
   return {
     sprints,
-    meta,
+    pagination,
     page,
     status,
     projectIdRef,

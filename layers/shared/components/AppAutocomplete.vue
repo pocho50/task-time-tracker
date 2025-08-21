@@ -176,6 +176,10 @@ watchEffect(() => {
   if (selectedOption.value && !dropdownOpen.value) {
     searchQuery.value = selectedOption.value.label;
   }
+
+  if (!selectedOption.value) {
+    searchQuery.value = '';
+  }
 });
 </script>
 

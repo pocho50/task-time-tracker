@@ -10,5 +10,25 @@
       "settings": "Settings",
       "users": "Users"
     }
+  },
+  "taskList": {
+    "title": "Tasks",
+    "name": "Name",
+    "priority": "Priority",
+    "status": "Status",
+    "estimatedHours": "Estimated Hours",
+    "assignedUsers": "Assigned Users",
+    "createdAt": "Created At",
+    "actions": "Actions",
+    "noTasks": "No tasks found",
+    "selectProject": "Select Project",
+    "selectSprint": "Select Sprint",
+    "selectSprintToView": "Select a sprint to view tasks",
+    "selectSprintDescription": "Choose a project and sprint from the selectors above to see the associated tasks.",
+    "loadingTasks": "Loading tasks...",
+    "loadingSelectors": "Loading selectors..."
+  },
+  "sprintList": {
+    "selectProjectFirst": "Select a project first"
   }
 }

@@ -1,0 +1,10 @@
+{
+  "taskList": {
+    "title": "Tasks"
+  },
+  "server": {
+    "sprintIdRequired": "Sprint ID is required",
+    "unauthorizedAccess": "You don't have access to this sprint",
+    "errorFetching": "Error fetching tasks"
+  }
+}
