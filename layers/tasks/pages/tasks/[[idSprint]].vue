@@ -11,7 +11,15 @@ const { tasks, getProjectId, sprintIdRef, status } = useTasks(
 );
 
 // Set initial project ID from tasks if available, or use first available project
-selectedProjectId.value = await getProjectId();
+watch(
+  status,
+  async () => {
+    if (status.value === 'success') {
+      selectedProjectId.value = await getProjectId();
+    }
+  },
+  { immediate: true }
+);
 
 // Handle project selection change
 function handleProjectChange(projectId: string) {
@@ -44,23 +52,31 @@ definePageMeta({
 
       <!-- Selectors Container -->
       <div class="flex flex-col sm:flex-row gap-4">
-        <!-- Project Selector -->
-        <AppProjectSelector
-          v-if="selectedProjectId"
-          v-model="selectedProjectId"
-          :label="$t('taskList.selectProject')"
-          :placeholder="$t('taskList.selectProject')"
-          @change="handleProjectChange"
-        />
+        <!-- Loading State -->
+        <div v-if="!selectedProjectId" class="lg:mr-5">
+          <AppLoading size="lg" :text="$t('taskList.loadingSelectors')" />
+        </div>
 
-        <!-- Sprint Selector -->
-        <AppSprintSelector
-          v-model="selectedSprintId"
-          :project-id="selectedProjectId"
-          :label="$t('taskList.selectSprint')"
-          :placeholder="$t('taskList.selectSprint')"
-          @change="handleSprintChange"
-        />
+        <!-- Loaded Selectors -->
+        <template v-else>
+          <!-- Project Selector -->
+          <AppProjectSelector
+            v-if="selectedProjectId"
+            v-model="selectedProjectId"
+            :label="$t('taskList.selectProject')"
+            :placeholder="$t('taskList.selectProject')"
+            @change="handleProjectChange"
+          />
+
+          <!-- Sprint Selector -->
+          <AppSprintSelector
+            v-model="selectedSprintId"
+            :project-id="selectedProjectId"
+            :label="$t('taskList.selectSprint')"
+            :placeholder="$t('taskList.selectSprint')"
+            @change="handleSprintChange"
+          />
+        </template>
       </div>
     </div>
 

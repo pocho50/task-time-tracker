@@ -5,7 +5,11 @@ export function useTasks(sprintId: string | undefined) {
   const page = useRouteQuery('page', 1, { transform: Number });
   const sprintIdRef = ref(sprintId);
 
-  const { data, refresh, status } = useAsyncData(
+  const {
+    data,
+    refresh,
+    status: tasksStatus,
+  } = useAsyncData(
     `tasks-${sprintId}`,
     async () => {
       if (!sprintIdRef.value) {
@@ -24,7 +28,7 @@ export function useTasks(sprintId: string | undefined) {
   );
   const pagination = computed(() => data.value?.pagination ?? null);
 
-  const { projects } = useProjects();
+  const { projects, status: projectsStatus } = useProjects();
   /**
    * Get the project ID based on current context
    * Priority: sprint's project > first available project > task's project
@@ -44,6 +48,13 @@ export function useTasks(sprintId: string | undefined) {
     // Otherwise, use project from first task
     return tasks.value[0]?.projectId;
   };
+
+  const status = computed(() => {
+    if (tasksStatus.value === 'success' && projectsStatus.value === 'success') {
+      return 'success';
+    }
+    return 'pending';
+  });
 
   return {
     tasks,

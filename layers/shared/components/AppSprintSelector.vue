@@ -21,7 +21,7 @@ const emit = defineEmits<{
 const model = defineModel<string>();
 
 // Get sprints for the selected project
-const { sprints, refresh, projectIdRef } = useSprints(props.projectId || '');
+const { sprints, projectIdRef } = useSprints(props.projectId || '');
 
 // Transform sprints to options format for AppAutocomplete
 const sprintOptions = computed(() => {
@@ -49,7 +49,7 @@ function handleChange(sprintId: string | number | null) {
 // Watch for projectId changes to clear selection
 watch(
   () => props.projectId,
-  () => {
+  async () => {
     projectIdRef.value = props.projectId || '';
   }
 );

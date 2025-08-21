@@ -5,7 +5,7 @@ export function useProjects() {
   const projectRepo = new ProjectsRepo($api);
   const page = useRouteQuery('page', 1, { transform: Number });
 
-  const { data, refresh } = useAsyncData(() => {
+  const { data, refresh, status } = useAsyncData(() => {
     projectRepo.setParams({ page: page.value });
     return projectRepo.getAll();
   });
@@ -49,6 +49,7 @@ export function useProjects() {
   return {
     projects,
     pagination,
+    status,
     refresh,
     page,
     openDrawer,

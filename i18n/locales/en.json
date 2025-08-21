@@ -25,7 +25,8 @@
     "selectSprint": "Select Sprint",
     "selectSprintToView": "Select a sprint to view tasks",
     "selectSprintDescription": "Choose a project and sprint from the selectors above to see the associated tasks.",
-    "loadingTasks": "Loading tasks..."
+    "loadingTasks": "Loading tasks...",
+    "loadingSelectors": "Loading selectors..."
   },
   "sprintList": {
     "selectProjectFirst": "Select a project first"

@@ -9,14 +9,18 @@ export function useSprints(projectId: string) {
 
   const { data, refresh, status } = useAsyncData(
     `sprints-${projectIdRef.value}`,
-    async () => {
-      if (!projectIdRef.value)
-        return { data: [], pagination: { page: 1, pageCount: 1 } };
+    () => {
+      if (!projectIdRef.value) {
+        return Promise.resolve({
+          data: [] as any[],
+          pagination: { page: 1, pageCount: 1 },
+        });
+      }
       sprintRepo.setParams({ page: page.value });
       return sprintRepo.getByProjectId(projectIdRef.value);
     },
     {
-      watch: [projectIdRef, page], // Auto-refresh when projectId or page changes
+      watch: [page, projectIdRef], // Auto-refresh when projectId or page changes
     }
   );
 
