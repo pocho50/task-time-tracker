@@ -45,6 +45,7 @@ const getPriorityVariant = (priority: TaskPriority) => {
           <th>{{ $t('taskList.name') }}</th>
           <th>{{ $t('taskList.priority') }}</th>
           <th>{{ $t('taskList.status') }}</th>
+          <th></th>
           <th class="w-28">{{ $t('taskList.actions') }}</th>
         </tr>
       </thead>
@@ -73,7 +74,9 @@ const getPriorityVariant = (priority: TaskPriority) => {
                 {{ task.status }}
               </AppBadge>
             </td>
-
+            <td>
+              <TaskTime />
+            </td>
             <!-- Actions -->
             <td>
               <div
