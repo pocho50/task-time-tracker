@@ -9,4 +9,8 @@ export class TaskRepo<T> extends BaseRepo<T> {
       `${this.basePath}/by-sprint?sprintId=${sprintId}&${query}`
     );
   }
+
+  async getTimeTracks(taskId: string) {
+    return this.fetch(`${this.basePath}/time-tracks-by-task?taskId=${taskId}`);
+  }
 }

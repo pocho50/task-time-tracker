@@ -38,6 +38,10 @@ const getStatusVariant = (status: TaskStatus) => {
 const getPriorityVariant = (priority: TaskPriority) => {
   return PRIORITY_VARIANTS[priority];
 };
+
+const { getTimeTracks, getTimeAccumulatedSeconds } = useTaskTimeTracks(
+  props.task.id
+);
 </script>
 
 <template>
@@ -63,7 +67,7 @@ const getPriorityVariant = (priority: TaskPriority) => {
     </td>
     <td>
       <!-- Task time -->
-      <TaskTime />
+      <TaskTime :accumulatedSeconds="getTimeAccumulatedSeconds" />
     </td>
     <!-- Actions -->
     <td>
