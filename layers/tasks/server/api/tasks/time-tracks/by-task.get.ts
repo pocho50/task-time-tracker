@@ -1,5 +1,5 @@
-import { TimeTrackRepository } from '../../repository/time-track';
-import { GetTimeTracksService } from '../../services/get-time-tracks';
+import { TimeTrackRepository } from '../../../repository/time-track';
+import { GetTimeTracksService } from '../../../services/get-time-tracks';
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);

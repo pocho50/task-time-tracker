@@ -11,6 +11,6 @@ export class TaskRepo<T> extends BaseRepo<T> {
   }
 
   async getTimeTracks(taskId: string) {
-    return this.fetch(`${this.basePath}/time-tracks-by-task?taskId=${taskId}`);
+    return this.fetch(`${this.basePath}/time-tracks/by-task?taskId=${taskId}`);
   }
 }
