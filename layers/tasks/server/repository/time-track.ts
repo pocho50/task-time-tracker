@@ -46,4 +46,86 @@ export class TimeTrackRepository {
 
     return count > 0;
   }
+
+  async create(data: {
+    taskId: string;
+    userId: string;
+    start: Date;
+    end?: Date;
+    notes?: string;
+  }): Promise<TimeTrackWithUser> {
+    const timeTrack = await this.prisma.timeTrack.create({
+      data,
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    return timeTrack;
+  }
+
+  async update(
+    id: string,
+    data: {
+      start?: Date;
+      end?: Date;
+      notes?: string;
+    }
+  ): Promise<TimeTrackWithUser> {
+    const timeTrack = await this.prisma.timeTrack.update({
+      where: { id },
+      data,
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    return timeTrack;
+  }
+
+  async findById(id: string): Promise<TimeTrackWithUser | null> {
+    return this.prisma.timeTrack.findUnique({
+      where: { id },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+  }
+
+  async findActiveByUserAndTask(userId: string, taskId: string): Promise<TimeTrackWithUser | null> {
+    return this.prisma.timeTrack.findFirst({
+      where: {
+        userId,
+        taskId,
+        end: null, // Active session
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+  }
 }

@@ -14,3 +14,12 @@ export interface SerializedTaskWithUsers
 export interface TimeTrackWithUser extends TimeTrack {
   user: Pick<User, 'id' | 'name' | 'email'>;
 }
+
+// Request body for time track operations
+export interface TimeTrackRequestBody {
+  taskId: string;
+  id?: string;
+  start?: string; // Only used for CREATE
+  end?: string; // Only used for UPDATE
+  notes?: string;
+}

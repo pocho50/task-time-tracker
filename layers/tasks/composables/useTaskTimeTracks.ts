@@ -20,7 +20,7 @@ export function useTaskTimeTracks(taskId: string) {
       const startTime = new Date(timeTrack.start).getTime();
       const isLastItem = index === tracks.length - 1;
 
-      // Solo el último item puede tener end nulo (sesión activa)
+      // Only the last item can have end null (active session)
       const endTime = timeTrack.end
         ? new Date(timeTrack.end).getTime()
         : isLastItem
