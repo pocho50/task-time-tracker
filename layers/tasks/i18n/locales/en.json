@@ -5,6 +5,9 @@
   "server": {
     "sprintIdRequired": "Sprint ID is required",
     "unauthorizedAccess": "You don't have access to this sprint",
-    "errorFetching": "Error fetching tasks"
+    "errorFetching": "Error fetching tasks",
+    "taskIdRequired": "Task ID is required",
+    "invalidTimeTrackData": "Invalid time tracking data provided",
+    "errorProcessing": "Error processing request"
   }
 }
