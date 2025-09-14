@@ -2,15 +2,17 @@
 const props = withDefaults(
   defineProps<{
     accumulatedSeconds?: number;
+    startInmediate?: boolean;
   }>(),
   {
     accumulatedSeconds: 0,
+    startInmediate: false,
   }
 );
 
 const emit = defineEmits<{
-  start: [];
-  pause: [totalSeconds: number];
+  '@start': [];
+  '@end': [totalSeconds: number];
 }>();
 
 const accumulatedSeconds = toRef(props, 'accumulatedSeconds');
@@ -38,14 +40,18 @@ const formattedTime = computed(() => {
 
 const handleStart = () => {
   resumeCounter();
-  emit('start');
+  emit('@start');
 };
 
 const handlePause = () => {
   const totalSeconds = accumulatedSeconds.value + counter.value;
   pauseCounter();
-  emit('pause', totalSeconds);
+  emit('@end', totalSeconds);
 };
+
+if (props.startInmediate) {
+  handleStart();
+}
 </script>
 
 <template>

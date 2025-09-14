@@ -13,4 +13,27 @@ export class TaskRepo<T> extends BaseRepo<T> {
   async getTimeTracks(taskId: string) {
     return this.fetch(`${this.basePath}/time-tracks/by-task?taskId=${taskId}`);
   }
+
+  async startSession(taskId: string, notes?: string) {
+    return this.fetch(`${this.basePath}/time-tracks`, {
+      method: 'POST',
+      body: {
+        taskId,
+        start: Date.now(),
+        notes,
+      },
+    });
+  }
+
+  async endSession(id: string, taskId: string, notes?: string) {
+    return this.fetch(`${this.basePath}/time-tracks`, {
+      method: 'POST',
+      body: {
+        id,
+        end: Date.now(),
+        taskId,
+        notes,
+      },
+    });
+  }
 }

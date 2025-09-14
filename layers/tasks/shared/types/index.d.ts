@@ -15,6 +15,14 @@ export interface TimeTrackWithUser extends TimeTrack {
   user: Pick<User, 'id' | 'name' | 'email'>;
 }
 
+// Serialized version for client-side (dates become strings)
+export interface SerializedTimeTrackWithUser extends Omit<TimeTrackWithUser, 'start' | 'end' | 'createdAt' | 'updatedAt'> {
+  start: string;
+  end: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // Request body for time track operations
 export interface TimeTrackRequestBody {
   taskId: string;

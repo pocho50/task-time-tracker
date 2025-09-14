@@ -39,9 +39,21 @@ const getPriorityVariant = (priority: TaskPriority) => {
   return PRIORITY_VARIANTS[priority];
 };
 
-const { getTimeTracks, getTimeAccumulatedSeconds } = useTaskTimeTracks(
-  props.task.id
+const {
+  currentTimeTrackSession,
+  getTimeAccumulatedSeconds,
+  handleStart,
+  handleEnd,
+} = await useTaskTimeTracks(props.task.id);
+
+const timeAccumulateSeconds = useState<number>(
+  `timeAccumulateSeconds-${props.task.id}`,
+  () => getTimeAccumulatedSeconds.value
 );
+
+onMounted(() => {
+  timeAccumulateSeconds.value = getTimeAccumulatedSeconds.value;
+});
 </script>
 
 <template>
@@ -67,7 +79,12 @@ const { getTimeTracks, getTimeAccumulatedSeconds } = useTaskTimeTracks(
     </td>
     <td>
       <!-- Task time -->
-      <TaskTime :accumulatedSeconds="getTimeAccumulatedSeconds" />
+      <TaskTime
+        :accumulatedSeconds="timeAccumulateSeconds"
+        :startInmediate="currentTimeTrackSession !== null"
+        @@start="handleStart"
+        @@end="handleEnd"
+      />
     </td>
     <!-- Actions -->
     <td>
