@@ -23,7 +23,6 @@ const PRIORITY_VARIANTS: Record<
 const props = defineProps<{
   task: SerializedTaskWithUsers;
   onEdit?: (id: string) => void;
-  onRemove?: (id: string) => void;
 }>();
 
 const emit = defineEmits<{
@@ -88,11 +87,10 @@ onMounted(() => {
     </td>
     <!-- Actions -->
     <td>
-      <div v-if="onEdit || onRemove" :data-testid="`task-actions-${task.id}`">
+      <div v-if="onEdit" :data-testid="`task-actions-${task.id}`">
         <AppOptionAction
-          :actions="['edit', 'remove']"
-          @edit="onEdit?.(task.id)"
-          @remove="onRemove?.(task.id)"
+          :actions="['edit']"
+          @@edit="onEdit?.(task.id)"
           class="relative dropdown-top !right-0 !top-0"
         />
       </div>

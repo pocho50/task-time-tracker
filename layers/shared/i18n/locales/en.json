@@ -47,5 +47,8 @@
     "validations": {
       "email": "Please enter a valid email address"
     }
+  },
+  "sprintList": {
+    "selectProjectFirst": "Select a project first"
   }
 }

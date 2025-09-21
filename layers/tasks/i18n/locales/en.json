@@ -1,6 +1,31 @@
 {
   "taskList": {
-    "title": "Tasks"
+    "title": "Tasks",
+    "name": "Name",
+    "priority": "Priority",
+    "status": "Status",
+    "estimatedHours": "Estimated Hours",
+    "assignedUsers": "Assigned Users",
+    "createdAt": "Created At",
+    "actions": "Actions",
+    "noTasks": "No tasks found",
+    "selectProject": "Select Project",
+    "selectSprint": "Select Sprint",
+    "selectSprintToView": "Select a sprint to view tasks",
+    "selectSprintDescription": "Choose a project and sprint from the selectors above to see the associated tasks.",
+    "loadingTasks": "Loading tasks...",
+    "loadingSelectors": "Loading selectors...",
+    "addTask": "Add Task",
+    "editTask": "Edit Task"
+  },
+  "taskForm": {
+    "name": "Task Name",
+    "description": "Description",
+    "priority": "Priority",
+    "status": "Status",
+    "estimatedHours": "Estimated Hours",
+    "assignedUsers": "Assigned Users",
+    "selectUsers": "Select Users"
   },
   "server": {
     "sprintIdRequired": "Sprint ID is required",
@@ -8,6 +33,9 @@
     "errorFetching": "Error fetching tasks",
     "taskIdRequired": "Task ID is required",
     "invalidTimeTrackData": "Invalid time tracking data provided",
-    "errorProcessing": "Error processing request"
+    "errorProcessing": "Error processing request",
+    "unauthorized": "You do not have permission to add or edit tasks.",
+    "errorSaving": "Error saving task",
+    "successSaveTask": "Task saved successfully"
   }
 }

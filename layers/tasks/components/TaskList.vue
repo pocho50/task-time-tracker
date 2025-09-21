@@ -2,7 +2,6 @@
 const props = defineProps<{
   tasks: SerializedTaskWithUsers[];
   onEdit?: (id: string) => void;
-  onRemove?: (id: string) => void;
 }>();
 </script>
 <template>
@@ -27,7 +26,6 @@ const props = defineProps<{
             :key="task.id"
             :task="task"
             :on-edit="onEdit"
-            :on-remove="onRemove"
           />
         </template>
         <template v-else>

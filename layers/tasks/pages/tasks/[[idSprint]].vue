@@ -6,9 +6,17 @@ const selectedProjectId = ref<string>();
 const selectedSprintId = ref<string>((routeSprintId.value as string) || '');
 
 // Get tasks based on selected sprint
-const { tasks, getProjectId, sprintIdRef, status } = useTasks(
-  selectedSprintId.value
-);
+const {
+  tasks,
+  getProjectId,
+  sprintIdRef,
+  status,
+  openDrawer,
+  selectedTask,
+  handleEdit,
+  handleAdd,
+  handleSave,
+} = useTasks(selectedSprintId.value);
 
 // Set initial project ID from tasks if available, or use first available project
 watch(
@@ -37,6 +45,9 @@ watch(selectedSprintId, () => {
   sprintIdRef.value = selectedSprintId.value;
   routeSprintId.value = selectedSprintId.value;
 });
+
+// Form template refs
+const taskForm = useTemplateRef('taskForm');
 
 definePageMeta({
   key: (route) => route.name as string,
@@ -92,6 +103,7 @@ definePageMeta({
     <TaskList
       v-if="tasks && selectedSprintId && status === 'success'"
       :tasks="tasks"
+      :onEdit="handleEdit"
     />
 
     <!-- Empty State -->
@@ -107,5 +119,39 @@ definePageMeta({
         {{ $t('taskList.selectSprintDescription') }}
       </p>
     </div>
+
+    <!-- Floating Add Button -->
+    <AppAddBtn v-if="selectedSprintId" @click="handleAdd" />
+
+    <!-- Drawer -->
+    <AppDrawerRight
+      v-model="openDrawer"
+      :title="selectedTask ? $t('taskList.editTask') : $t('taskList.addTask')"
+    >
+      <LazyTaskForm
+        v-if="openDrawer"
+        ref="taskForm"
+        :initial-data="selectedTask"
+        @@submit="handleSave"
+      />
+      <template #actions>
+        <AppButton
+          type="button"
+          variant="default"
+          size="lg"
+          @click="openDrawer = false"
+        >
+          {{ $t('cancel') }}
+        </AppButton>
+        <AppButton
+          type="button"
+          variant="primary"
+          size="lg"
+          @click="taskForm?.triggerSubmit()"
+        >
+          {{ $t('save') }}
+        </AppButton>
+      </template>
+    </AppDrawerRight>
   </section>
 </template>
