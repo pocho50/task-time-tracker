@@ -2,6 +2,7 @@ import type { SerializedTimeTrackWithUser } from '../shared/types';
 export async function useTaskTimeTracks(taskId: string) {
   const { $api } = useNuxtApp();
   const taskRepo = new TaskRepo($api);
+  const { user } = useUser();
   const currentTimeTrackSession = ref<SerializedTimeTrackWithUser | null>(null);
 
   const { data, refresh, status } = await useAsyncData(
@@ -12,10 +13,12 @@ export async function useTaskTimeTracks(taskId: string) {
   );
   const getTimeTracks = computed(() => data.value?.data ?? []);
 
-  // Check for active session on initialization
+  // Check for active session on initialization (only for current user)
   const checkActiveSession = () => {
     const tracks = getTimeTracks.value;
-    const lastTrack = tracks[0];
+    // Filter tracks for current user only
+    const userTracks = tracks.filter(track => track.user.id === user.value?.id);
+    const lastTrack = userTracks[0];
 
     // If the last track has no end time, it's an active session that needs to be recovered
     if (lastTrack && lastTrack.start && !lastTrack.end) {
@@ -29,8 +32,10 @@ export async function useTaskTimeTracks(taskId: string) {
 
   const getTimeAccumulatedSeconds = computed(() => {
     const tracks = getTimeTracks.value;
+    // Filter tracks for current user only
+    const userTracks = tracks.filter(track => track.user.id === user.value?.id);
 
-    return tracks.reduce((acc, timeTrack, index) => {
+    return userTracks.reduce((acc, timeTrack, index) => {
       if (!timeTrack.start) return acc;
 
       const startTime = new Date(timeTrack.start).getTime();
