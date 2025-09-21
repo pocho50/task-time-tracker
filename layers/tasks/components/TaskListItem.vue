@@ -45,6 +45,7 @@ const {
   handleEnd,
 } = await useTaskTimeTracks(props.task.id);
 
+
 const timeAccumulateSeconds = useState<number>(
   `timeAccumulateSeconds-${props.task.id}`,
   () => getTimeAccumulatedSeconds.value
@@ -75,6 +76,10 @@ onMounted(() => {
       <AppBadge :variant="getStatusVariant(task.status)" :size="'sm'">
         {{ task.status }}
       </AppBadge>
+    </td>
+    <!-- Assigned Users -->
+    <td>
+      <TaskAssignedUsers :users-id="task.usersId" />
     </td>
     <td>
       <!-- Task time -->

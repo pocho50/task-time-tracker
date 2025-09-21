@@ -9,6 +9,7 @@
     "createdAt": "Created At",
     "actions": "Actions",
     "noTasks": "No tasks found",
+    "noUsersAssigned": "No users assigned",
     "selectProject": "Select Project",
     "selectSprint": "Select Sprint",
     "selectSprintToView": "Select a sprint to view tasks",

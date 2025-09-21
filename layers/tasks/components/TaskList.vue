@@ -15,6 +15,7 @@ const props = defineProps<{
           <th>{{ $t('taskList.name') }}</th>
           <th>{{ $t('taskList.priority') }}</th>
           <th>{{ $t('taskList.status') }}</th>
+          <th>{{ $t('taskList.assignedUsers') }}</th>
           <th></th>
           <th class="w-28">{{ $t('taskList.actions') }}</th>
         </tr>
@@ -30,7 +31,7 @@ const props = defineProps<{
         </template>
         <template v-else>
           <tr>
-            <td colspan="7" class="text-center py-8 text-gray-500">
+            <td colspan="6" class="text-center py-8 text-gray-500">
               <Icon
                 name="mdi:clipboard-list-outline"
                 size="48"
