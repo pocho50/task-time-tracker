@@ -1,4 +1,5 @@
 import { TaskPriority, TaskStatus, UserRole } from '@prisma/client';
+import type { SerializedTaskWithUsersData } from '../shared/types';
 
 export function useTasks(sprintId: string | undefined) {
   const { $api } = useNuxtApp();
@@ -27,7 +28,7 @@ export function useTasks(sprintId: string | undefined) {
   );
 
   const tasks = computed(
-    () => data.value?.data ?? ([] as SerializedTaskWithUsers[])
+    () => data.value?.data ?? ([] as SerializedTaskWithUsersData[])
   );
   const pagination = computed(() => data.value?.pagination ?? null);
 

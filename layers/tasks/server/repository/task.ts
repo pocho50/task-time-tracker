@@ -1,5 +1,5 @@
 import { PrismaClient, TaskPriority, TaskStatus } from '@prisma/client';
-import type { TaskWithUsers } from '../../shared/types';
+import type { TaskWithUsers, TaskWithUsersData } from '../../shared/types';
 
 export class TaskRepository {
   private prisma: PrismaClient;
@@ -42,6 +42,45 @@ export class TaskRepository {
         ...task,
         users: undefined,
         usersId: task.users.map((user) => user.userId),
+      };
+    });
+  }
+
+  async findManyForSprintWithUserData(
+    sprintId: string,
+    skip: number,
+    take: number
+  ): Promise<TaskWithUsersData[]> {
+    const tasks = await this.prisma.task.findMany({
+      skip,
+      take,
+      where: {
+        sprintId,
+      },
+      include: {
+        users: {
+          include: {
+            user: {
+              select: { 
+                id: true, 
+                name: true, 
+                email: true 
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return tasks.map((task) => {
+      const { users: taskUsers, ...taskData } = task;
+      return {
+        ...taskData,
+        usersId: taskUsers.map((tu) => tu.userId),
+        users: taskUsers.map((tu) => tu.user),
       };
     });
   }

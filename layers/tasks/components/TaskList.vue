@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { SerializedTaskWithUsersData } from '../shared/types';
+
 const props = defineProps<{
-  tasks: SerializedTaskWithUsers[];
+  tasks: SerializedTaskWithUsersData[];
   onEdit?: (id: string) => void;
 }>();
 </script>

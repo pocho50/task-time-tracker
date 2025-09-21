@@ -1,19 +1,13 @@
 <script setup lang="ts">
+import type { User } from '@prisma/client';
+
 const props = defineProps<{
-  usersId: string[];
+  users: Pick<User, 'id' | 'name' | 'email'>[];
 }>();
 
-// Get users data to display assigned users
-const { users } = useUsers();
-
-// Compute assigned users names
+// Extract user names directly from the provided users data
 const assignedUsers = computed(() => {
-  if (!props.usersId || props.usersId.length === 0) {
-    return [];
-  }
-  return users.value
-    ?.filter(user => props.usersId.includes(user.id))
-    .map(user => user.name) ?? [];
+  return props.users?.map(user => user.name) ?? [];
 });
 </script>
 

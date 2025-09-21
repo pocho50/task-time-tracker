@@ -4,9 +4,21 @@ export interface TaskWithUsers extends Task {
   usersId: string[];
 }
 
+// Task with full user data (name, email, etc.)
+export interface TaskWithUsersData extends Task {
+  usersId: string[];
+  users: Pick<User, 'id' | 'name' | 'email'>[];
+}
+
 // Serialized version for client-side (dates become strings)
 export interface SerializedTaskWithUsers
   extends Omit<TaskWithUsers, 'createdAt'> {
+  createdAt: string;
+}
+
+// Serialized version with user data for client-side
+export interface SerializedTaskWithUsersData
+  extends Omit<TaskWithUsersData, 'createdAt'> {
   createdAt: string;
 }
 

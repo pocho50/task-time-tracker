@@ -13,7 +13,7 @@ export class GetTasksService {
     const skip = (page - 1) * pageSize;
     const [total, tasks] = await Promise.all([
       this.repo.countTasksForSprint(sprintId),
-      this.repo.findManyForSprint(sprintId, skip, pageSize),
+      this.repo.findManyForSprintWithUserData(sprintId, skip, pageSize),
     ]);
     return {
       data: tasks,
