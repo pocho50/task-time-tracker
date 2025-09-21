@@ -1,21 +1,23 @@
-import type { SerializedTimeTrackWithUser } from '../shared/types';
-export async function useTaskTimeTracks(taskId: string) {
+import type { SerializedTimeTrackWithUser, SerializedTaskWithUsersAndTimeTracks } from '../shared/types';
+
+export function useTaskTimeTracks(
+  task: SerializedTaskWithUsersAndTimeTracks, 
+  refreshTasks?: () => Promise<void>
+) {
   const { $api } = useNuxtApp();
   const taskRepo = new TaskRepo($api);
+  const { user } = useUser();
   const currentTimeTrackSession = ref<SerializedTimeTrackWithUser | null>(null);
 
-  const { data, refresh, status } = await useAsyncData(
-    `task-time-tracks-${taskId}`,
-    async () => {
-      return await taskRepo.getTimeTracks(taskId);
-    }
-  );
-  const getTimeTracks = computed(() => data.value?.data ?? []);
+  // Use embedded time tracking data instead of making a separate API call
+  const getTimeTracks = computed(() => task.timeTracking ?? []);
 
-  // Check for active session on initialization
+  // Check for active session on initialization (only for current user)
   const checkActiveSession = () => {
     const tracks = getTimeTracks.value;
-    const lastTrack = tracks[0];
+    // Filter tracks for current user only
+    const userTracks = tracks.filter(track => track.user.id === user.value?.id);
+    const lastTrack = userTracks[0];
 
     // If the last track has no end time, it's an active session that needs to be recovered
     if (lastTrack && lastTrack.start && !lastTrack.end) {
@@ -23,14 +25,15 @@ export async function useTaskTimeTracks(taskId: string) {
     }
   };
 
-  if (status.value === 'success') {
-    checkActiveSession();
-  }
+  // Initialize active session check
+  checkActiveSession();
 
   const getTimeAccumulatedSeconds = computed(() => {
     const tracks = getTimeTracks.value;
+    // Filter tracks for current user only
+    const userTracks = tracks.filter(track => track.user.id === user.value?.id);
 
-    return tracks.reduce((acc, timeTrack, index) => {
+    return userTracks.reduce((acc, timeTrack, index) => {
       if (!timeTrack.start) return acc;
 
       const startTime = new Date(timeTrack.start).getTime();
@@ -59,20 +62,25 @@ export async function useTaskTimeTracks(taskId: string) {
       return;
     }
 
-    const response = await taskRepo.startSession(taskId);
+    const response = await taskRepo.startSession(task.id);
     currentTimeTrackSession.value = response.data;
-    await refresh();
+    // Refresh the parent task list to get updated time tracking data
+    if (refreshTasks) {
+      await refreshTasks();
+    }
   };
 
   const handleEnd = async () => {
     if (!currentTimeTrackSession.value) return;
-    await taskRepo.endSession(currentTimeTrackSession.value.id, taskId);
+    await taskRepo.endSession(currentTimeTrackSession.value.id, task.id);
     currentTimeTrackSession.value = null;
+    // Refresh the parent task list to get updated time tracking data
+    if (refreshTasks) {
+      await refreshTasks();
+    }
   };
 
   return {
-    refresh,
-    status,
     getTimeTracks,
     getTimeAccumulatedSeconds,
     handleStart,

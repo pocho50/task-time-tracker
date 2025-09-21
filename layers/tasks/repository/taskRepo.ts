@@ -3,6 +3,19 @@ import { BaseRepo } from '#layers/shared/repository/baseRepo';
 export class TaskRepo<T> extends BaseRepo<T> {
   readonly basePath = '/api/tasks';
 
+  async save(data: any) {
+    return this.fetch(`${this.basePath}/save`, {
+      method: 'POST',
+      body: data,
+    });
+  }
+
+  async delete(id: string) {
+    return this.fetch(`${this.basePath}/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
   async getBySprintId(sprintId: string) {
     const query = this.getQueryParams();
     return this.fetch(

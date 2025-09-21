@@ -4,11 +4,21 @@ const routeSprintId = useRouteParams('idSprint');
 // Reactive refs for selected project and sprint
 const selectedProjectId = ref<string>();
 const selectedSprintId = ref<string>((routeSprintId.value as string) || '');
+const loadingProjectId = ref<boolean>(true);
 
 // Get tasks based on selected sprint
-const { tasks, getProjectId, sprintIdRef, status } = useTasks(
-  selectedSprintId.value
-);
+const {
+  tasks,
+  getProjectId,
+  sprintIdRef,
+  status,
+  refresh,
+  openDrawer,
+  selectedTask,
+  handleEdit,
+  handleAdd,
+  handleSave,
+} = useTasks(selectedSprintId.value);
 
 // Set initial project ID from tasks if available, or use first available project
 watch(
@@ -16,6 +26,7 @@ watch(
   async () => {
     if (status.value === 'success') {
       selectedProjectId.value = await getProjectId();
+      loadingProjectId.value = false;
     }
   },
   { immediate: true }
@@ -38,6 +49,9 @@ watch(selectedSprintId, () => {
   routeSprintId.value = selectedSprintId.value;
 });
 
+// Form template refs
+const taskForm = useTemplateRef('taskForm');
+
 definePageMeta({
   key: (route) => route.name as string,
 });
@@ -53,7 +67,7 @@ definePageMeta({
       <!-- Selectors Container -->
       <div class="flex flex-col sm:flex-row gap-4">
         <!-- Loading State -->
-        <div v-if="!selectedProjectId" class="lg:mr-5">
+        <div v-if="!selectedProjectId && loadingProjectId" class="lg:mr-5">
           <AppLoading size="lg" :text="$t('taskList.loadingSelectors')" />
         </div>
 
@@ -61,7 +75,6 @@ definePageMeta({
         <template v-else>
           <!-- Project Selector -->
           <AppProjectSelector
-            v-if="selectedProjectId"
             v-model="selectedProjectId"
             :label="$t('taskList.selectProject')"
             :placeholder="$t('taskList.selectProject')"
@@ -71,6 +84,7 @@ definePageMeta({
           <!-- Sprint Selector -->
           <AppSprintSelector
             v-model="selectedSprintId"
+            v-if="selectedProjectId"
             :project-id="selectedProjectId"
             :label="$t('taskList.selectSprint')"
             :placeholder="$t('taskList.selectSprint')"
@@ -92,6 +106,8 @@ definePageMeta({
     <TaskList
       v-if="tasks && selectedSprintId && status === 'success'"
       :tasks="tasks"
+      :onEdit="handleEdit"
+      :onRefresh="refresh"
     />
 
     <!-- Empty State -->
@@ -107,5 +123,39 @@ definePageMeta({
         {{ $t('taskList.selectSprintDescription') }}
       </p>
     </div>
+
+    <!-- Floating Add Button -->
+    <AppAddBtn v-if="selectedSprintId" @click="handleAdd" />
+
+    <!-- Drawer -->
+    <AppDrawerRight
+      v-model="openDrawer"
+      :title="selectedTask ? $t('taskList.editTask') : $t('taskList.addTask')"
+    >
+      <LazyTaskForm
+        v-if="openDrawer"
+        ref="taskForm"
+        :initial-data="selectedTask"
+        @@submit="handleSave"
+      />
+      <template #actions>
+        <AppButton
+          type="button"
+          variant="default"
+          size="lg"
+          @click="openDrawer = false"
+        >
+          {{ $t('cancel') }}
+        </AppButton>
+        <AppButton
+          type="button"
+          variant="primary"
+          size="lg"
+          @click="taskForm?.triggerSubmit()"
+        >
+          {{ $t('save') }}
+        </AppButton>
+      </template>
+    </AppDrawerRight>
   </section>
 </template>

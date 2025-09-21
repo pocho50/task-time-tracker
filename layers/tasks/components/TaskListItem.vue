@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { TaskStatus, TaskPriority } from '@prisma/client';
+import type { SerializedTaskWithUsersAndTimeTracks } from '../shared/types';
 
 const STATUS_VARIANTS: Record<
   TaskStatus,
@@ -21,9 +22,9 @@ const PRIORITY_VARIANTS: Record<
 };
 
 const props = defineProps<{
-  task: SerializedTaskWithUsers;
+  task: SerializedTaskWithUsersAndTimeTracks;
   onEdit?: (id: string) => void;
-  onRemove?: (id: string) => void;
+  onRefresh?: () => Promise<void>;
 }>();
 
 const emit = defineEmits<{
@@ -44,7 +45,7 @@ const {
   getTimeAccumulatedSeconds,
   handleStart,
   handleEnd,
-} = await useTaskTimeTracks(props.task.id);
+} = useTaskTimeTracks(props.task, props.onRefresh);
 
 const timeAccumulateSeconds = useState<number>(
   `timeAccumulateSeconds-${props.task.id}`,
@@ -77,6 +78,10 @@ onMounted(() => {
         {{ task.status }}
       </AppBadge>
     </td>
+    <!-- Assigned Users -->
+    <td>
+      <TaskAssignedUsers :users="task.users" />
+    </td>
     <td>
       <!-- Task time -->
       <TaskTime
@@ -88,11 +93,10 @@ onMounted(() => {
     </td>
     <!-- Actions -->
     <td>
-      <div v-if="onEdit || onRemove" :data-testid="`task-actions-${task.id}`">
+      <div v-if="onEdit" :data-testid="`task-actions-${task.id}`">
         <AppOptionAction
-          :actions="['edit', 'remove']"
-          @edit="onEdit?.(task.id)"
-          @remove="onRemove?.(task.id)"
+          :actions="['edit']"
+          @@edit="onEdit?.(task.id)"
           class="relative dropdown-top !right-0 !top-0"
         />
       </div>
