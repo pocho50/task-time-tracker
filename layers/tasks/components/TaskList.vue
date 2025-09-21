@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import type { SerializedTaskWithUsersData } from '../shared/types';
+import type { SerializedTaskWithUsersAndTimeTracks } from '../shared/types';
 
 const props = defineProps<{
-  tasks: SerializedTaskWithUsersData[];
+  tasks: SerializedTaskWithUsersAndTimeTracks[];
   onEdit?: (id: string) => void;
+  onRefresh?: () => Promise<void>;
 }>();
 </script>
 <template>
@@ -29,6 +30,7 @@ const props = defineProps<{
             :key="task.id"
             :task="task"
             :on-edit="onEdit"
+            :on-refresh="onRefresh"
           />
         </template>
         <template v-else>

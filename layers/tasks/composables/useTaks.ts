@@ -1,5 +1,5 @@
 import { TaskPriority, TaskStatus, UserRole } from '@prisma/client';
-import type { SerializedTaskWithUsersData } from '../shared/types';
+import type { SerializedTaskWithUsersAndTimeTracks } from '../shared/types';
 
 export function useTasks(sprintId: string | undefined) {
   const { $api } = useNuxtApp();
@@ -28,7 +28,7 @@ export function useTasks(sprintId: string | undefined) {
   );
 
   const tasks = computed(
-    () => data.value?.data ?? ([] as SerializedTaskWithUsersData[])
+    () => data.value?.data ?? ([] as SerializedTaskWithUsersAndTimeTracks[])
   );
   const pagination = computed(() => data.value?.pagination ?? null);
 
@@ -59,12 +59,13 @@ export function useTasks(sprintId: string | undefined) {
   const handleAdd = async () => {
     // Pre-populate with current context for new tasks
     const projectId = await getProjectId();
-    
+
     // Auto-assign to current user if they have USER role
-    const defaultUsersId = user.value?.role === UserRole.USER && user.value?.id 
-      ? [user.value.id] 
-      : [];
-    
+    const defaultUsersId =
+      user.value?.role === UserRole.USER && user.value?.id
+        ? [user.value.id]
+        : [];
+
     selectedTask.value = {
       projectId: projectId || '', // Fallback to empty string if no project
       sprintId: sprintIdRef.value || undefined,

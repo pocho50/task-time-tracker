@@ -22,6 +22,18 @@ export interface SerializedTaskWithUsersData
   createdAt: string;
 }
 
+// Task with users and time tracking data
+export interface TaskWithUsersAndTimeTracks extends TaskWithUsersData {
+  timeTracking: TimeTrackWithUser[];
+}
+
+// Serialized version with users and time tracking data for client-side
+export interface SerializedTaskWithUsersAndTimeTracks
+  extends Omit<TaskWithUsersAndTimeTracks, 'createdAt' | 'timeTracking'> {
+  createdAt: string;
+  timeTracking: SerializedTimeTrackWithUser[];
+}
+
 // TimeTrack with included user information
 export interface TimeTrackWithUser extends TimeTrack {
   user: Pick<User, 'id' | 'name' | 'email'>;

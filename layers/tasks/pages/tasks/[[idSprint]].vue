@@ -4,6 +4,7 @@ const routeSprintId = useRouteParams('idSprint');
 // Reactive refs for selected project and sprint
 const selectedProjectId = ref<string>();
 const selectedSprintId = ref<string>((routeSprintId.value as string) || '');
+const loadingProjectId = ref<boolean>(true);
 
 // Get tasks based on selected sprint
 const {
@@ -11,6 +12,7 @@ const {
   getProjectId,
   sprintIdRef,
   status,
+  refresh,
   openDrawer,
   selectedTask,
   handleEdit,
@@ -24,6 +26,7 @@ watch(
   async () => {
     if (status.value === 'success') {
       selectedProjectId.value = await getProjectId();
+      loadingProjectId.value = false;
     }
   },
   { immediate: true }
@@ -64,7 +67,7 @@ definePageMeta({
       <!-- Selectors Container -->
       <div class="flex flex-col sm:flex-row gap-4">
         <!-- Loading State -->
-        <div v-if="!selectedProjectId && status === 'pending'" class="lg:mr-5">
+        <div v-if="!selectedProjectId && loadingProjectId" class="lg:mr-5">
           <AppLoading size="lg" :text="$t('taskList.loadingSelectors')" />
         </div>
 
@@ -72,7 +75,6 @@ definePageMeta({
         <template v-else>
           <!-- Project Selector -->
           <AppProjectSelector
-            v-if="selectedProjectId"
             v-model="selectedProjectId"
             :label="$t('taskList.selectProject')"
             :placeholder="$t('taskList.selectProject')"
@@ -82,6 +84,7 @@ definePageMeta({
           <!-- Sprint Selector -->
           <AppSprintSelector
             v-model="selectedSprintId"
+            v-if="selectedProjectId"
             :project-id="selectedProjectId"
             :label="$t('taskList.selectSprint')"
             :placeholder="$t('taskList.selectSprint')"
@@ -104,6 +107,7 @@ definePageMeta({
       v-if="tasks && selectedSprintId && status === 'success'"
       :tasks="tasks"
       :onEdit="handleEdit"
+      :onRefresh="refresh"
     />
 
     <!-- Empty State -->

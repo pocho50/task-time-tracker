@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TaskStatus, TaskPriority } from '@prisma/client';
-import type { SerializedTaskWithUsersData } from '../shared/types';
+import type { SerializedTaskWithUsersAndTimeTracks } from '../shared/types';
 
 const STATUS_VARIANTS: Record<
   TaskStatus,
@@ -22,8 +22,9 @@ const PRIORITY_VARIANTS: Record<
 };
 
 const props = defineProps<{
-  task: SerializedTaskWithUsersData;
+  task: SerializedTaskWithUsersAndTimeTracks;
   onEdit?: (id: string) => void;
+  onRefresh?: () => Promise<void>;
 }>();
 
 const emit = defineEmits<{
@@ -44,7 +45,7 @@ const {
   getTimeAccumulatedSeconds,
   handleStart,
   handleEnd,
-} = await useTaskTimeTracks(props.task.id);
+} = useTaskTimeTracks(props.task, props.onRefresh);
 
 const timeAccumulateSeconds = useState<number>(
   `timeAccumulateSeconds-${props.task.id}`,
