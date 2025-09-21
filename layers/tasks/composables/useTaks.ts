@@ -1,4 +1,4 @@
-import { TaskPriority, TaskStatus } from '@prisma/client';
+import { TaskPriority, TaskStatus, UserRole } from '@prisma/client';
 
 export function useTasks(sprintId: string | undefined) {
   const { $api } = useNuxtApp();
@@ -6,6 +6,7 @@ export function useTasks(sprintId: string | undefined) {
   const sprintRepo = new SprintsRepo($api);
   const page = useRouteQuery('page', 1, { transform: Number });
   const sprintIdRef = ref(sprintId);
+  const { user } = useUser();
 
   const {
     data,
@@ -57,6 +58,12 @@ export function useTasks(sprintId: string | undefined) {
   const handleAdd = async () => {
     // Pre-populate with current context for new tasks
     const projectId = await getProjectId();
+    
+    // Auto-assign to current user if they have USER role
+    const defaultUsersId = user.value?.role === UserRole.USER && user.value?.id 
+      ? [user.value.id] 
+      : [];
+    
     selectedTask.value = {
       projectId: projectId || '', // Fallback to empty string if no project
       sprintId: sprintIdRef.value || undefined,
@@ -64,7 +71,7 @@ export function useTasks(sprintId: string | undefined) {
       description: '',
       priority: TaskPriority.MEDIUM, // Default priority
       status: TaskStatus.ANALYZING, // Default status
-      usersId: [],
+      usersId: defaultUsersId,
     };
     openDrawer.value = true;
   };

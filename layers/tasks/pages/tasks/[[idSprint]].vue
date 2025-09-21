@@ -64,7 +64,7 @@ definePageMeta({
       <!-- Selectors Container -->
       <div class="flex flex-col sm:flex-row gap-4">
         <!-- Loading State -->
-        <div v-if="!selectedProjectId" class="lg:mr-5">
+        <div v-if="!selectedProjectId && status === 'pending'" class="lg:mr-5">
           <AppLoading size="lg" :text="$t('taskList.loadingSelectors')" />
         </div>
 

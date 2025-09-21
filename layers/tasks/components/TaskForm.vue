@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod';
-import { TaskStatus, TaskPriority } from '@prisma/client';
+import { TaskStatus, TaskPriority, UserRole } from '@prisma/client';
 
 const validationSchema = toTypedSchema(taskSchema);
 
@@ -9,6 +9,11 @@ const props = defineProps<{
 }>();
 
 const form = useTemplateRef('form');
+
+const { user } = useUser();
+
+// Check if current user is USER role (not ADMIN)
+const isUserRole = computed(() => user.value?.role === UserRole.USER);
 
 const selectedUsers = ref<string[]>([]);
 selectedUsers.value = props.initialData?.usersId ?? [];
@@ -108,7 +113,8 @@ defineExpose({
         min="0"
       />
 
-      <TaskFormMultiSelectUsers />
+      <!-- User assignment - only show for ADMIN users -->
+      <TaskFormMultiSelectUsers v-if="!isUserRole" />
     </form>
   </VeeForm>
 </template>
