@@ -18,19 +18,20 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  const repo = new TimeTrackRepository();
+
+  // Check if user has access to this task (admins always have access)
+  const hasAccess =
+    user.role === 'ADMIN' || (await repo.isUserInTask(user.id, taskId));
+
+  if (!hasAccess) {
+    throw createError({
+      statusCode: 403,
+      message: t('server.unauthorizedAccess'),
+    });
+  }
+
   try {
-    const repo = new TimeTrackRepository();
-
-    // Check if user has access to this task
-    const hasAccess = await repo.isUserInTask(user.id, taskId);
-
-    if (!hasAccess) {
-      throw createError({
-        statusCode: 401,
-        message: t('server.unauthorizedAccess'),
-      });
-    }
-
     const service = new GetTimeTracksService(repo);
     return service.execute({
       taskId,

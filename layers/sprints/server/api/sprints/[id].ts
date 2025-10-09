@@ -16,35 +16,29 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  try {
-    const repo = new SprintRepository();
+  const repo = new SprintRepository();
 
-    // Get the sprint by ID
-    const sprint = await repo.getById(sprintId);
+  // Get the sprint by ID
+  const sprint = await repo.getById(sprintId);
 
-    if (!sprint) {
-      throw createError({
-        statusCode: 404,
-        message: t('server.sprintNotFound'),
-      });
-    }
-
-    // Check if user has access to this sprint's project
-    const hasAccess = await repo.isUserInProject(user.id, sprint.projectId);
-
-    if (!hasAccess) {
-      throw createError({
-        statusCode: 401,
-        message: t('server.unauthorizedAccess'),
-      });
-    }
-
-    return sprint;
-  } catch (error) {
-    console.error('Error fetching sprint:', error);
+  if (!sprint) {
     throw createError({
-      statusCode: 500,
-      message: t('server.errorFetching'),
+      statusCode: 404,
+      message: t('server.sprintNotFound'),
     });
   }
+
+  // Check if user has access to this sprint's project (admins always have access)
+  const hasAccess =
+    user.role === 'ADMIN' ||
+    (await repo.isUserInProject(user.id, sprint.projectId));
+
+  if (!hasAccess) {
+    throw createError({
+      statusCode: 403,
+      message: t('server.unauthorizedAccess'),
+    });
+  }
+
+  return sprint;
 });

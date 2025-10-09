@@ -1,7 +1,10 @@
-import type { SerializedTimeTrackWithUser, SerializedTaskWithUsersAndTimeTracks } from '../shared/types';
+import type {
+  SerializedTimeTrackWithUser,
+  SerializedTaskWithUsersAndTimeTracks,
+} from '../shared/types';
 
 export function useTaskTimeTracks(
-  task: SerializedTaskWithUsersAndTimeTracks, 
+  task: SerializedTaskWithUsersAndTimeTracks,
   refreshTasks?: () => Promise<void>
 ) {
   const { $api } = useNuxtApp();
@@ -16,7 +19,9 @@ export function useTaskTimeTracks(
   const checkActiveSession = () => {
     const tracks = getTimeTracks.value;
     // Filter tracks for current user only
-    const userTracks = tracks.filter(track => track.user.id === user.value?.id);
+    const userTracks = tracks.filter(
+      (track) => track.user.id === user.value?.id
+    );
     const lastTrack = userTracks[0];
 
     // If the last track has no end time, it's an active session that needs to be recovered
@@ -31,7 +36,9 @@ export function useTaskTimeTracks(
   const getTimeAccumulatedSeconds = computed(() => {
     const tracks = getTimeTracks.value;
     // Filter tracks for current user only
-    const userTracks = tracks.filter(track => track.user.id === user.value?.id);
+    const userTracks = tracks.filter(
+      (track) => track.user.id === user.value?.id
+    );
 
     return userTracks.reduce((acc, timeTrack, index) => {
       if (!timeTrack.start) return acc;

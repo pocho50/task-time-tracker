@@ -1,5 +1,8 @@
 import { TimeTrackRepository } from '../../../repository/time-track';
-import { CreateUpdateTimeTrackService, TimeTrackError } from '../../../services/save-time-track';
+import {
+  CreateUpdateTimeTrackService,
+  TimeTrackError,
+} from '../../../services/save-time-track';
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
@@ -17,8 +20,20 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  const repo = new TimeTrackRepository();
+
+  // Check if user has access to this task (admins always have access)
+  const hasAccess =
+    user.role === 'ADMIN' || (await repo.isUserInTask(user.id, body.taskId));
+
+  if (!hasAccess) {
+    throw createError({
+      statusCode: 403,
+      message: t('server.unauthorizedAccess'),
+    });
+  }
+
   try {
-    const repo = new TimeTrackRepository();
     const service = new CreateUpdateTimeTrackService(repo);
 
     // Determine if this is create or update based on provided fields

@@ -9,7 +9,7 @@ export class GetTimeTracksService {
 
   async execute({ taskId }: GetTimeTracksInput) {
     const timeTracks = await this.repo.findManyByTaskId(taskId);
-    
+
     return {
       data: timeTracks,
       total: timeTracks.length,

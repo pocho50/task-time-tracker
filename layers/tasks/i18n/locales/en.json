@@ -30,13 +30,18 @@
   },
   "server": {
     "sprintIdRequired": "Sprint ID is required",
-    "unauthorizedAccess": "You don't have access to this sprint",
+    "projectIdRequired": "Project ID is required",
+    "unauthorizedAccess": "You don't have access to this task or project",
     "errorFetching": "Error fetching tasks",
     "taskIdRequired": "Task ID is required",
     "invalidTimeTrackData": "Invalid time tracking data provided",
     "errorProcessing": "Error processing request",
     "unauthorized": "You do not have permission to add or edit tasks.",
     "errorSaving": "Error saving task",
-    "successSaveTask": "Task saved successfully"
+    "successSaveTask": "Task saved successfully",
+    "invalidId": "Invalid task ID provided",
+    "taskNotFound": "Task not found",
+    "errorDeleting": "Error deleting task",
+    "succesDeleteTask": "Task deleted successfully"
   }
 }

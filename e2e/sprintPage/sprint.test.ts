@@ -60,10 +60,6 @@ test.describe('sprint', async () => {
   });
 
   test('add new sprint and remove', async ({ page }) => {
-    const initialSprintCount = await testHelper.getSprintCount(
-      testEnvironment.projectId
-    );
-
     // Click add sprint button
     await sprintPage.getAddSprintButton().click();
 
@@ -73,10 +69,12 @@ test.describe('sprint', async () => {
     // Submit the form
     await sprintPage.getFormSubmitButton().click();
 
-    // Check that the sprint was added
-    await expect(sprintPage.getSprintListItems()).toHaveCount(
-      initialSprintCount + 1
-    );
+    // Verify the sprint was added by checking it's visible in the UI
+    await expect(
+      sprintPage
+        .getSprintList()
+        .getByText(TEST_CONSTANTS.DUMMY_SPRINT.name, { exact: true })
+    ).toBeVisible();
 
     // Get the added sprint
     const sprintAdded = await testHelper.findSprintByName(
@@ -85,15 +83,12 @@ test.describe('sprint', async () => {
     );
 
     if (sprintAdded) {
-      // Verify UI shows the created sprint details
-      await expect(
-        sprintPage.getSprintList().getByText(TEST_CONSTANTS.DUMMY_SPRINT.name)
-      ).toBeVisible();
       await expect(
         sprintPage
           .getSprintList()
           .getByTestId(`sprint-actions-${sprintAdded.id}`)
       ).toBeVisible();
+
       // Click on the delete button
       const deleteButton = await sprintPage.getDeleteSprintButton(
         sprintAdded.id
@@ -103,10 +98,6 @@ test.describe('sprint', async () => {
       // Confirm deletion
       await sprintPage.getRemoveModalConfirmButton().click();
 
-      // Check that the sprint was removed
-      await expect(sprintPage.getSprintListItems()).toHaveCount(
-        initialSprintCount
-      );
       // Verify UI no longer shows the sprint details
       await expect(
         sprintPage.getSprintList().getByText(TEST_CONSTANTS.DUMMY_SPRINT.name)

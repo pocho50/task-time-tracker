@@ -2,6 +2,8 @@
   "server": {
     "errorFetching": "Error fetching sprints. Please try again later.",
     "invalidProjectId": "Invalid project ID provided.",
+    "invalidSprintId": "Invalid sprint ID provided.",
+    "sprintNotFound": "Sprint not found.",
     "unauthorizedAccess": "You don't have access to this project.",
     "errorSaving": "Error saving sprint",
     "succesSaveSprint": "Sprint saved successfully",
