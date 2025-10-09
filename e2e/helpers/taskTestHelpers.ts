@@ -1,14 +1,14 @@
 import type { Page } from '@playwright/test';
-import type { Task } from '@prisma/client';
-import { fetchApiData, removeItem, createItem } from './api';
+import { removeItem, createItem } from './api';
 import type { TaskDataForm } from '../types/task';
+import { BaseTestHelper } from './baseTestHelper';
+import { SHARED_TEST_URLS } from './testConstants';
 
 // Test constants
 export const TEST_CONSTANTS = {
   URLS: {
     TASKS_API: '/api/tasks',
-    SPRINTS_API: '/api/sprints',
-    PROJECTS_API: '/api/projects',
+    ...SHARED_TEST_URLS,
   },
   DUMMY_TASK: {
     name: 'Test Task E2E',
@@ -31,23 +31,17 @@ export const TEST_CONSTANTS = {
   },
 };
 
-export class TaskTestHelper {
-  constructor(private page: Page) {}
+export class TaskTestHelper extends BaseTestHelper {
+  constructor(page: Page) {
+    super(page);
+  }
 
   // Project management
-  async getProjects() {
-    return await fetchApiData<any>(this.page, TEST_CONSTANTS.URLS.PROJECTS_API);
-  }
-
-  async getFirstProject() {
-    const projects = await this.getProjects();
-    return projects && projects.length > 0 ? projects[0] : null;
-  }
 
   async ensureProjectExists() {
     // Check if a project already exists
     const existingProject = await this.getFirstProject();
-    
+
     if (existingProject) {
       return existingProject;
     }
@@ -74,13 +68,6 @@ export class TaskTestHelper {
   }
 
   // Sprint management
-  async getSprintsByProject(projectId: string) {
-    return await fetchApiData<any>(
-      this.page,
-      `${TEST_CONSTANTS.URLS.SPRINTS_API}/by-project?id_project=${projectId}`
-    );
-  }
-
   async getFirstSprintForProject(projectId: string) {
     const sprints = await this.getSprintsByProject(projectId);
     return sprints && sprints.length > 0 ? sprints[0] : null;
@@ -89,7 +76,7 @@ export class TaskTestHelper {
   async ensureSprintExists(projectId: string) {
     // Check if a sprint already exists for this project
     const existingSprint = await this.getFirstSprintForProject(projectId);
-    
+
     if (existingSprint) {
       return existingSprint;
     }
