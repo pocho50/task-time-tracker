@@ -37,7 +37,12 @@ const getVariant = (status: SprintStatus) => {
       </thead>
       <tbody>
         <template v-if="sprints && sprints.length">
-          <tr v-for="sprint in sprints" :key="sprint.id" class="hover">
+          <tr
+            v-for="sprint in sprints"
+            :key="sprint.id"
+            class="hover"
+            data-testid="sprint-list-item"
+          >
             <!-- Name -->
             <td>
               <div class="font-bold">{{ sprint.name }}</div>
