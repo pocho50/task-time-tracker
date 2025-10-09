@@ -26,19 +26,20 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  const repo = new TaskRepository();
+
+  // Check if user has access to this sprint (admins always have access)
+  const hasAccess =
+    user.role === 'ADMIN' || (await repo.isUserInSprint(user.id, sprintId));
+
+  if (!hasAccess) {
+    throw createError({
+      statusCode: 403,
+      message: t('server.unauthorizedAccess'),
+    });
+  }
+
   try {
-    const repo = new TaskRepository();
-
-    // Check if user has access to this sprint
-    const hasAccess = await repo.isUserInSprint(user.id, sprintId);
-
-    if (!hasAccess) {
-      throw createError({
-        statusCode: 401,
-        message: t('server.unauthorizedAccess'),
-      });
-    }
-
     const service = new GetTasksService(repo);
     return service.execute({
       sprintId,

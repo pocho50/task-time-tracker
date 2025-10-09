@@ -8,21 +8,23 @@ export default defineEventHandler(async (event) => {
   // Get translation function for server-side
   const t = await useTranslation(event);
 
-  const { id, name, startDate, endDate, status, projectId } = await readValidatedBody(event, sprintSchema.parse);
+  const { id, name, startDate, endDate, status, projectId } =
+    await readValidatedBody(event, sprintSchema.parse);
+
+  const repo = new SprintRepository();
+
+  // Check if user has access to this project (admins always have access)
+  const hasAccess =
+    user.role === 'ADMIN' || (await repo.isUserInProject(user.id, projectId!));
+
+  if (!hasAccess) {
+    throw createError({
+      statusCode: 403,
+      message: t('server.unauthorizedAccess'),
+    });
+  }
 
   try {
-    const repo = new SprintRepository();
-
-    // Check if user has access to this project
-    const hasAccess = await repo.isUserInProject(user.id, projectId!);
-
-    if (!hasAccess) {
-      throw createError({
-        statusCode: 401,
-        message: t('server.unauthorizedAccess'),
-      });
-    }
-
     const service = new SaveSprintService(repo);
     const savedSprint = await service.execute(
       id,

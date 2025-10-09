@@ -1,5 +1,9 @@
 import { PrismaClient, TaskPriority, TaskStatus } from '@prisma/client';
-import type { TaskWithUsers, TaskWithUsersData, TaskWithUsersAndTimeTracks } from '../../shared/types';
+import type {
+  TaskWithUsers,
+  TaskWithUsersData,
+  TaskWithUsersAndTimeTracks,
+} from '../../shared/types';
 
 export class TaskRepository {
   private prisma: PrismaClient;
@@ -61,10 +65,10 @@ export class TaskRepository {
         users: {
           include: {
             user: {
-              select: { 
-                id: true, 
-                name: true, 
-                email: true 
+              select: {
+                id: true,
+                name: true,
+                email: true,
               },
             },
           },
@@ -100,10 +104,10 @@ export class TaskRepository {
         users: {
           include: {
             user: {
-              select: { 
-                id: true, 
-                name: true, 
-                email: true 
+              select: {
+                id: true,
+                name: true,
+                email: true,
               },
             },
           },
@@ -180,6 +184,24 @@ export class TaskRepository {
     });
 
     return count > 0;
+  }
+
+  async hasAccessToTask(
+    userId: string,
+    userRole: string,
+    taskId: string | undefined,
+    projectId: string
+  ): Promise<boolean> {
+    // Admins always have access
+    if (userRole === 'ADMIN') return true;
+
+    if (taskId) {
+      // Updating existing task - check if user is assigned to this task
+      return await this.isUserInTask(userId, taskId);
+    } else {
+      // Creating new task - check if user has access to the project
+      return await this.isUserInProject(userId, projectId);
+    }
   }
 
   async save(
@@ -261,5 +283,20 @@ export class TaskRepository {
         usersId,
       };
     }
+  }
+
+  async delete(id: string) {
+    // First check if the task exists
+    const task = await this.prisma.task.findUnique({
+      where: { id },
+    });
+
+    if (!task) {
+      return null;
+    }
+
+    return this.prisma.task.delete({
+      where: { id },
+    });
   }
 }

@@ -110,7 +110,10 @@ export class TimeTrackRepository {
     });
   }
 
-  async findActiveByUserAndTask(userId: string, taskId: string): Promise<TimeTrackWithUser | null> {
+  async findActiveByUserAndTask(
+    userId: string,
+    taskId: string
+  ): Promise<TimeTrackWithUser | null> {
     return this.prisma.timeTrack.findFirst({
       where: {
         userId,

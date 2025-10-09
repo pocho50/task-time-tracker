@@ -40,7 +40,8 @@ export interface TimeTrackWithUser extends TimeTrack {
 }
 
 // Serialized version for client-side (dates become strings)
-export interface SerializedTimeTrackWithUser extends Omit<TimeTrackWithUser, 'start' | 'end' | 'createdAt' | 'updatedAt'> {
+export interface SerializedTimeTrackWithUser
+  extends Omit<TimeTrackWithUser, 'start' | 'end' | 'createdAt' | 'updatedAt'> {
   start: string;
   end: string | null;
   createdAt: string;

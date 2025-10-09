@@ -19,7 +19,7 @@ export function useTasks(sprintId: string | undefined) {
       if (!sprintIdRef.value) {
         return { data: [], pagination: {} };
       }
-      taskRepo.setParams({ page: page.value });
+      taskRepo.setParams({ page: page.value, pageSize: Infinity });
       return await taskRepo.getBySprintId(sprintIdRef.value);
     },
     {

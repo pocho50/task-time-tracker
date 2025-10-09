@@ -21,28 +21,32 @@ export default defineEventHandler(async (event) => {
     usersId,
   } = await readValidatedBody(event, taskSchema.parse);
 
+  // Validate projectId is provided
+  if (!projectId) {
+    throw createError({
+      statusCode: 400,
+      message: t('server.projectIdRequired') || 'Project ID is required',
+    });
+  }
+
+  const repo = new TaskRepository();
+
+  // Check user access
+  const hasAccess = await repo.hasAccessToTask(
+    user.id,
+    user.role,
+    id,
+    projectId
+  );
+
+  if (!hasAccess) {
+    throw createError({
+      statusCode: 403,
+      message: t('server.unauthorizedAccess'),
+    });
+  }
+
   try {
-    const repo = new TaskRepository();
-
-    // Check user access: for existing tasks, check if user is assigned to the task
-    // For new tasks, check if user has access to the project
-    let hasAccess = false;
-    
-    if (id) {
-      // Updating existing task - check if user is assigned to this task
-      hasAccess = await repo.isUserInTask(user.id, id);
-    } else {
-      // Creating new task - check if user has access to the project
-      hasAccess = await repo.isUserInProject(user.id, projectId);
-    }
-
-    if (!hasAccess) {
-      throw createError({
-        statusCode: 401,
-        message: t('server.unauthorizedAccess'),
-      });
-    }
-
     const service = new SaveTasksService(repo);
     const allUsersId = usersId ?? [];
 

@@ -19,7 +19,7 @@ export default class SprintPage {
   }
 
   public getSprintListItems() {
-    return this.getSprintList().locator('tbody tr');
+    return this.getSprintList().getByTestId('sprint-list-item');
   }
 
   public getProjectSelector() {

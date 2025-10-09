@@ -3,7 +3,11 @@ import type { TimeTrackWithUser } from '../../shared/types';
 
 // Custom error class for time tracking operations
 export class TimeTrackError extends Error {
-  constructor(message: string, public code: string, public statusCode: number = 400) {
+  constructor(
+    message: string,
+    public code: string,
+    public statusCode: number = 400
+  ) {
     super(message);
     this.name = 'TimeTrackError';
   }
@@ -31,13 +35,24 @@ export class CreateUpdateTimeTrackService {
     // Check if user has access to the task
     const hasAccess = await this.repo.isUserInTask(input.userId, input.taskId);
     if (!hasAccess) {
-      throw new TimeTrackError('server.unauthorizedAccess', 'UNAUTHORIZED_ACCESS', 403);
+      throw new TimeTrackError(
+        'server.unauthorizedAccess',
+        'UNAUTHORIZED_ACCESS',
+        403
+      );
     }
 
     // Check if user already has an active session for this task
-    const activeSession = await this.repo.findActiveByUserAndTask(input.userId, input.taskId);
+    const activeSession = await this.repo.findActiveByUserAndTask(
+      input.userId,
+      input.taskId
+    );
     if (activeSession && !input.end) {
-      throw new TimeTrackError('server.activeSessionExists', 'ACTIVE_SESSION_EXISTS', 409);
+      throw new TimeTrackError(
+        'server.activeSessionExists',
+        'ACTIVE_SESSION_EXISTS',
+        409
+      );
     }
 
     return this.repo.create(input);
@@ -47,7 +62,11 @@ export class CreateUpdateTimeTrackService {
     // Check if time track exists
     const existing = await this.repo.findById(input.id);
     if (!existing) {
-      throw new TimeTrackError('server.timeTrackNotFound', 'TIME_TRACK_NOT_FOUND', 404);
+      throw new TimeTrackError(
+        'server.timeTrackNotFound',
+        'TIME_TRACK_NOT_FOUND',
+        404
+      );
     }
 
     return this.repo.update(input.id, {
@@ -57,7 +76,11 @@ export class CreateUpdateTimeTrackService {
     });
   }
 
-  async startSession(taskId: string, userId: string, notes?: string): Promise<TimeTrackWithUser> {
+  async startSession(
+    taskId: string,
+    userId: string,
+    notes?: string
+  ): Promise<TimeTrackWithUser> {
     return this.create({
       taskId,
       userId,
@@ -66,10 +89,21 @@ export class CreateUpdateTimeTrackService {
     });
   }
 
-  async stopSession(userId: string, taskId: string, notes?: string): Promise<TimeTrackWithUser> {
-    const activeSession = await this.repo.findActiveByUserAndTask(userId, taskId);
+  async stopSession(
+    userId: string,
+    taskId: string,
+    notes?: string
+  ): Promise<TimeTrackWithUser> {
+    const activeSession = await this.repo.findActiveByUserAndTask(
+      userId,
+      taskId
+    );
     if (!activeSession) {
-      throw new TimeTrackError('server.noActiveSession', 'NO_ACTIVE_SESSION', 404);
+      throw new TimeTrackError(
+        'server.noActiveSession',
+        'NO_ACTIVE_SESSION',
+        404
+      );
     }
 
     return this.update({

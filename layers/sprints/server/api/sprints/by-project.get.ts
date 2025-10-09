@@ -21,19 +21,20 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  const repo = new SprintRepository();
+
+  // Check if user has access to this project (admins always have access)
+  const hasAccess =
+    user.role === 'ADMIN' || (await repo.isUserInProject(user.id, idProject));
+
+  if (!hasAccess) {
+    throw createError({
+      statusCode: 403,
+      message: t('server.unauthorizedAccess'),
+    });
+  }
+
   try {
-    const repo = new SprintRepository();
-
-    // Check if user has access to this project
-    const hasAccess = await repo.isUserInProject(user.id, idProject);
-
-    if (!hasAccess) {
-      throw createError({
-        statusCode: 401,
-        message: t('server.unauthorizedAccess'),
-      });
-    }
-
     const service = new GetSprintsService(repo);
 
     return service.execute({
