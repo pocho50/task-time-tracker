@@ -23,6 +23,21 @@ test.describe('task', async () => {
     });
   });
 
+  test.afterEach(async ({ page }) => {
+    // Clean up dummy tasks created during tests
+    if (testEnvironment?.sprintId) {
+      await testHelper.removeDummyTask(testEnvironment.sprintId);
+      // Also clean up the "Updated name" task from edit test
+      const updatedTask = await testHelper.findTaskByName(
+        testEnvironment.sprintId,
+        'Updated name for e2e test'
+      );
+      if (updatedTask) {
+        await page.request.delete(`/api/tasks/${updatedTask.id}`);
+      }
+    }
+  });
+
   test('check heading', async () => {
     await expect(taskPage.getHeading()).toHaveText(en.taskList.title);
   });
