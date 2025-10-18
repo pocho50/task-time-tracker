@@ -127,7 +127,7 @@ definePageMeta({
     <!-- Floating Add Button -->
     <AppAddBtn v-if="selectedSprintId" @click="handleAdd" />
 
-    <!-- Drawer -->
+    <!-- Drawer for edit or add task -->
     <AppDrawerRight
       v-model="openDrawer"
       :title="selectedTask ? $t('taskList.editTask') : $t('taskList.addTask')"

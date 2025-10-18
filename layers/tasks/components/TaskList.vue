@@ -6,6 +6,14 @@ const props = defineProps<{
   onEdit?: (id: string) => void;
   onRefresh?: () => Promise<void>;
 }>();
+
+const showTimetrackHistory = ref(false);
+const selectedTask = ref<SerializedTaskWithUsersAndTimeTracks | null>(null);
+
+const handleHistory = (task: SerializedTaskWithUsersAndTimeTracks) => {
+  showTimetrackHistory.value = true;
+  selectedTask.value = task;
+};
 </script>
 <template>
   <div
@@ -31,6 +39,7 @@ const props = defineProps<{
             :task="task"
             :on-edit="onEdit"
             :on-refresh="onRefresh"
+            @@history="handleHistory"
           />
         </template>
         <template v-else>
@@ -48,4 +57,9 @@ const props = defineProps<{
       </tbody>
     </table>
   </div>
+
+  <!--  Drawer for view history -->
+  <AppDrawerRight v-model="showTimetrackHistory" size="lg">
+    <TaskHistory v-if="selectedTask" :task="selectedTask" />
+  </AppDrawerRight>
 </template>

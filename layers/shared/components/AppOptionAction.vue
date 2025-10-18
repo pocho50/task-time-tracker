@@ -14,7 +14,7 @@ const emit = defineEmits<{
   (event: '@remove'): void;
 }>();
 
-const dropDown = ref<HTMLDivElement>();
+const dropDown = ref<HTMLUListElement>();
 const showRemoveModal = ref(false);
 
 const handleAction = (action: Action) => {
@@ -54,6 +54,7 @@ function confirmRemove() {
           <Icon name="mdi:delete" /> {{ $t('common.delete') }}
         </a>
       </li>
+      <slot name="moreActions" :dropDown="dropDown" />
     </ul>
     <AppModal v-model="showRemoveModal" :title="$t('common.confirmDeletion')">
       <template #default>

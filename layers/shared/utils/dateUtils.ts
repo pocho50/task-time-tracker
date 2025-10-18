@@ -28,3 +28,16 @@ export function formatDate(
     return fallback;
   }
 }
+
+/**
+ * Calculates the difference between two dates in hours and minutes
+ * @param start Start date string
+ * @param end End date string
+ * @returns String representing the difference in hours and minutes
+ */
+export const getDiffTime = (start: string, end: string) => {
+  const diff = new Date(end).getTime() - new Date(start).getTime();
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  return `${hours}h ${minutes}m`;
+};
