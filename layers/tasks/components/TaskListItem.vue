@@ -28,8 +28,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  edit: [id: string];
-  remove: [id: string];
+  '@history': [task: SerializedTaskWithUsersAndTimeTracks];
 }>();
 
 const getStatusVariant = (status: TaskStatus) => {
@@ -94,9 +93,9 @@ onMounted(() => {
     <!-- Actions -->
     <td>
       <div v-if="onEdit" :data-testid="`task-actions-${task.id}`">
-        <AppOptionAction
-          :actions="['edit']"
+        <TaskOptionActions
           @@edit="onEdit?.(task.id)"
+          @@history="$emit('@history', task)"
           class="relative dropdown-top !right-0 !top-0"
         />
       </div>

@@ -17,7 +17,20 @@
     "loadingTasks": "Loading tasks...",
     "loadingSelectors": "Loading selectors...",
     "addTask": "Add Task",
-    "editTask": "Edit Task"
+    "editTask": "Edit Task",
+    "history": "History"
+  },
+  "taskHistory": {
+    "noHistory": "No History",
+    "noHistoryDescription": "No time tracking history available for this task",
+    "active": "Active",
+    "completed": "Completed",
+    "start": "Start",
+    "end": "End",
+    "inProgress": "In progress...",
+    "duration": "Duration",
+    "notes": "Notes",
+    "noNotesAdded": "No notes added"
   },
   "taskForm": {
     "name": "Task Name",

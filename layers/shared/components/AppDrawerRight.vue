@@ -1,7 +1,12 @@
 <script setup lang="ts">
 const open = defineModel<boolean>();
 
-defineProps<{ title?: string }>();
+const props = withDefaults(
+  defineProps<{ title?: string; size?: 'sm' | 'md' | 'lg' | 'xl' }>(),
+  {
+    size: 'sm',
+  }
+);
 const closeDrawer = () => {
   open.value = false;
 };
@@ -20,6 +25,18 @@ function handleKeyDown(event: KeyboardEvent) {
     closeDrawer();
   }
 }
+
+const getDimensions = computed(() => {
+  if (props.size === 'sm') {
+    return 'sm:w-[300px] lg:w-[450px]';
+  } else if (props.size === 'md') {
+    return 'sm:w-[450px] lg:w-[700px]';
+  } else if (props.size === 'lg') {
+    return 'sm:w-[450px] lg:w-[1000px]';
+  } else {
+    return 'w-full';
+  }
+});
 </script>
 
 <template>
@@ -34,8 +51,14 @@ function handleKeyDown(event: KeyboardEvent) {
 
     <!-- Drawer -->
     <aside
-      class="fixed top-0 right-0 h-full w-full sm:w-[300px] lg:w-[450px] bg-base-100 shadow-lg transition-transform duration-300 ease-in-out z-50"
-      :class="open ? 'translate-x-0' : 'translate-x-full'"
+      class="fixed top-0 right-0 h-full w-full bg-base-100 shadow-lg transition-transform duration-300 ease-in-out z-50"
+      :class="[
+        {
+          'translate-x-0': open,
+          'translate-x-full': !open,
+        },
+        getDimensions,
+      ]"
     >
       <div class="flex flex-col h-full">
         <p class="text-lg font-bold p-4" v-if="title">{{ title }}</p>
