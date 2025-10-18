@@ -42,7 +42,6 @@ const getPriorityVariant = (priority: TaskPriority) => {
 const {
   currentTimeTrackSession,
   getTimeAccumulatedSeconds,
-  getTimeTracks,
   handleStart,
   handleEnd,
 } = useTaskTimeTracks(props.task, props.onRefresh);

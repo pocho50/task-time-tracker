@@ -5,6 +5,7 @@ const routeSprintId = useRouteParams('idSprint');
 const selectedProjectId = ref<string>();
 const selectedSprintId = ref<string>((routeSprintId.value as string) || '');
 const loadingProjectId = ref<boolean>(true);
+const renderTasks = ref<boolean>(false);
 
 // Get tasks based on selected sprint
 const {
@@ -27,6 +28,7 @@ watch(
     if (status.value === 'success') {
       selectedProjectId.value = await getProjectId();
       loadingProjectId.value = false;
+      renderTasks.value = true;
     }
   },
   { immediate: true }
@@ -45,6 +47,7 @@ function handleSprintChange(sprintId: string) {
 
 // Watch for sprint changes to refresh tasks
 watch(selectedSprintId, () => {
+  renderTasks.value = false; // Reset to show loading when changing sprint
   sprintIdRef.value = selectedSprintId.value;
   routeSprintId.value = selectedSprintId.value;
 });
@@ -96,7 +99,7 @@ definePageMeta({
 
     <!-- Loading State -->
     <AppLoading
-      v-if="status === 'pending' && selectedSprintId"
+      v-if="status === 'pending' && selectedSprintId && !renderTasks"
       center
       :text="$t('taskList.loadingTasks')"
       size="lg"
@@ -104,7 +107,7 @@ definePageMeta({
 
     <!-- Tasks List -->
     <TaskList
-      v-if="tasks && selectedSprintId && status === 'success'"
+      v-if="renderTasks"
       :tasks="tasks"
       :onEdit="handleEdit"
       :onRefresh="refresh"
