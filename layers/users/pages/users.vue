@@ -13,6 +13,12 @@ const {
   handleRemove,
 } = useUsers();
 
+// Provide context to child components
+provideUsersContext({
+  handleEdit,
+  handleRemove,
+});
+
 // form template refs
 const userForm = useTemplateRef('userForm');
 </script>
@@ -20,11 +26,7 @@ const userForm = useTemplateRef('userForm');
 <template>
   <section class="py-12 px-4 bg-base-100">
     <AppTitle :text="$t('userList.title')" />
-    <UserList
-      :users="users ?? []"
-      :onEdit="handleEdit"
-      :onRemove="handleRemove"
-    />
+    <UserList :users="users ?? []" />
     <AppEmptyState
       v-if="(!users || users.length === 0) && status === 'success'"
     >
