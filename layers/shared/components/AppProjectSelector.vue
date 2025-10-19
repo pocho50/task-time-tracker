@@ -20,7 +20,7 @@ const emit = defineEmits<{
 const model = defineModel<string>();
 
 // Get all projects for selector
-const { projects } = useProjectsForSelector();
+const { projects } = useProjects(true);
 
 // Transform projects to options format for AppAutocomplete
 const projectOptions = computed(() => {

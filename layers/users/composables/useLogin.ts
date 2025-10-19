@@ -12,19 +12,19 @@ export function useLogin() {
 
   async function login() {
     isLoading.value = true;
-    
-    const result = await safeApiCall<void>(() =>
-      $api('/login', {
+
+    const result = await safeApiCall(() =>
+      $api<void>('/login', {
         method: 'POST',
         body: credentials.value,
       })
     );
-    
+
     if (result !== false) {
       await refreshSession();
       await navigateTo('/');
     }
-    
+
     isLoading.value = false;
   }
 

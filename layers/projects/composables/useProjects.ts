@@ -1,12 +1,20 @@
 import { safeApiCall } from '#layers/shared/utils';
 
-export function useProjects() {
+export function useProjects(allProjects = false) {
   const { $api } = useNuxtApp();
   const projectRepo = new ProjectsRepo($api);
   const page = useRouteQuery('page', 1, { transform: Number });
 
-  const { data, refresh, status } = useAsyncData(() => {
-    projectRepo.setParams({ page: page.value });
+  const key = allProjects
+    ? ProjectsRepo.keys.allProjects
+    : ProjectsRepo.keys.projects;
+
+  const { data, refresh, status } = useAsyncData(key, () => {
+    const params: { page: number; pageSize?: number } = { page: page.value };
+    if (allProjects) {
+      params.pageSize = Infinity;
+    }
+    projectRepo.setParams(params);
     return projectRepo.getAll();
   });
 

@@ -5,9 +5,10 @@ export function useTasks(sprintId: string | undefined) {
   const { $api } = useNuxtApp();
   const taskRepo = new TaskRepo($api);
   const sprintRepo = new SprintsRepo($api);
-  const page = useRouteQuery('page', 1, { transform: Number });
   const sprintIdRef = ref(sprintId);
   const { user } = useUser();
+
+  const { projects, status: projectsStatus } = useProjects(true);
 
   const {
     data,
@@ -19,11 +20,11 @@ export function useTasks(sprintId: string | undefined) {
       if (!sprintIdRef.value) {
         return { data: [], pagination: {} };
       }
-      taskRepo.setParams({ page: page.value, pageSize: Infinity });
+      taskRepo.setParams({ pageSize: Infinity });
       return await taskRepo.getBySprintId(sprintIdRef.value);
     },
     {
-      watch: [sprintIdRef, page],
+      watch: [sprintIdRef],
     }
   );
 
@@ -31,8 +32,6 @@ export function useTasks(sprintId: string | undefined) {
     () => data.value?.data ?? ([] as SerializedTaskWithUsersAndTimeTracks[])
   );
   const pagination = computed(() => data.value?.pagination ?? null);
-
-  const { projects, status: projectsStatus } = useProjects();
 
   // Edit functionality
   const openDrawer = ref(false);
@@ -127,6 +126,21 @@ export function useTasks(sprintId: string | undefined) {
     return tasks.value[0]?.projectId;
   };
 
+  async function getLastSprintFromProject() {
+    const projectId = await getProjectId();
+    if (projectId) {
+      const result = await safeApiCall(() =>
+        sprintRepo.getByProjectId(projectId)
+      );
+      const sprint = result !== false ? result : null;
+      if (sprint?.data?.[0]) {
+        return sprint.data[0].id;
+      }
+    }
+
+    return undefined;
+  }
+
   const status = computed(() => {
     if (tasksStatus.value === 'success' && projectsStatus.value === 'success') {
       return 'success';
@@ -137,11 +151,11 @@ export function useTasks(sprintId: string | undefined) {
   return {
     tasks,
     pagination,
-    page,
     status,
     sprintIdRef,
     refresh,
     getProjectId,
+    getLastSprintFromProject,
     openDrawer,
     selectedTask,
     handleEdit,

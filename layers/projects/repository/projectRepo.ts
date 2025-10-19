@@ -2,6 +2,11 @@ import { BaseRepo } from '#layers/shared/repository/baseRepo';
 
 export class ProjectsRepo<T> extends BaseRepo<T> {
   readonly basePath = '/api/projects';
+  static readonly keys = {
+    allProjects: 'all-projects',
+    projects: 'projects',
+  };
+
   async getAll() {
     const query = this.getQueryParams();
     return this.fetch(`${this.basePath}?${query}`);

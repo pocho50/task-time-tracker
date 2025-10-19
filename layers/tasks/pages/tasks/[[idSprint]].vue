@@ -6,6 +6,7 @@ const selectedProjectId = ref<string>();
 const selectedSprintId = ref<string>((routeSprintId.value as string) || '');
 const loadingProjectId = ref<boolean>(true);
 const renderTasks = ref<boolean>(false);
+const initialLoad = ref<boolean>(true);
 
 // Get tasks based on selected sprint
 const {
@@ -19,16 +20,23 @@ const {
   handleEdit,
   handleAdd,
   handleSave,
+  getLastSprintFromProject,
 } = useTasks(selectedSprintId.value);
 
-// Set initial project ID from tasks if available, or use first available project
 watch(
   status,
   async () => {
     if (status.value === 'success') {
+      if (!selectedSprintId.value && initialLoad.value) {
+        const sprintId = await getLastSprintFromProject();
+        if (sprintId) {
+          handleSprintChange(sprintId);
+        }
+      }
       selectedProjectId.value = await getProjectId();
       loadingProjectId.value = false;
       renderTasks.value = true;
+      initialLoad.value = false;
     }
   },
   { immediate: true }
@@ -78,6 +86,7 @@ definePageMeta({
         <template v-else>
           <!-- Project Selector -->
           <AppProjectSelector
+            v-if="status === 'success'"
             v-model="selectedProjectId"
             :label="$t('taskList.selectProject')"
             :placeholder="$t('taskList.selectProject')"
@@ -107,7 +116,7 @@ definePageMeta({
 
     <!-- Tasks List -->
     <TaskList
-      v-if="renderTasks"
+      v-if="renderTasks && selectedSprintId"
       :tasks="tasks"
       :onEdit="handleEdit"
       :onRefresh="refresh"
