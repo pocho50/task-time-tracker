@@ -1,9 +1,10 @@
 <script setup lang="ts">
 defineProps<{
   projects: ProjectFormData[];
-  onEdit: (id: string) => void;
-  onRemove: (id: string) => void;
 }>();
+
+// Inject handlers from parent context
+const { handleEdit, handleRemove } = useProjectsContext();
 
 const { userIsAllowedToWrite } = useUser();
 </script>
@@ -21,8 +22,10 @@ const { userIsAllowedToWrite } = useUser();
       <AppOptionAction
         v-if="userIsAllowedToWrite(ENTITY)"
         :actions="['edit', 'remove']"
-        @@edit="() => typeof project.id === 'string' && onEdit(project.id)"
-        @@remove="() => typeof project.id === 'string' && onRemove(project.id)"
+        @@edit="() => typeof project.id === 'string' && handleEdit(project.id)"
+        @@remove="
+          () => typeof project.id === 'string' && handleRemove(project.id)
+        "
       />
       <div class="card-body">
         <h2 class="card-title">
@@ -32,12 +35,13 @@ const { userIsAllowedToWrite } = useUser();
           {{ project.description }}
         </p>
         <div class="flex gap-2 mt-4">
-          <button
+          <NuxtLink
+            :to="{ name: 'tasks-idSprint', query: { idProject: project.id } }"
             class="btn btn-default grow flex items-center gap-2 hover:btn-primary transition-colors"
           >
             <Icon name="mdi:format-list-checkbox" size="20" />
             <span>{{ $t('tasks') }}</span>
-          </button>
+          </NuxtLink>
           <NuxtLink
             :to="`/sprints/${project.id}`"
             class="btn btn-default grow flex items-center gap-2 hover:btn-accent transition-colors"

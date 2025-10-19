@@ -13,17 +13,19 @@ const {
 
 const { userIsAllowedToWrite } = useUser();
 
+// Provide context to child components
+provideProjectsContext({
+  handleEdit,
+  handleRemove,
+});
+
 // form template refs
 const projectForm = useTemplateRef('projectForm');
 </script>
 <template>
   <section class="py-12 px-4 bg-base-200">
     <AppTitle :text="$t('title')" />
-    <ProjectList
-      :projects="projects ?? []"
-      :onRemove="handleRemove"
-      :onEdit="handleEdit"
-    />
+    <ProjectList :projects="projects ?? []" />
     <AppEmptyState v-if="!projects || projects.length === 0">
       <template #title>{{ $t('emptyState.noProjects') }}</template>
       {{ $t('emptyState.noProjectsDescription') }}

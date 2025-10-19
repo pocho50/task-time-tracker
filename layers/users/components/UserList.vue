@@ -3,9 +3,10 @@ import type { User } from '../utils/index';
 import type { UserRole } from '@prisma/client';
 const props = defineProps<{
   users: User[];
-  onEdit: (id: string) => void;
-  onRemove: (id: string) => void;
 }>();
+
+// Inject handlers from parent context
+const { handleEdit, handleRemove } = useUsersContext();
 
 const getVariant = (role: UserRole) => {
   return role === 'ADMIN' ? 'success' : 'info';
@@ -59,8 +60,8 @@ const getVariant = (role: UserRole) => {
               <div :data-testid="`user-actions-${user.id}`">
                 <AppOptionAction
                   :actions="['edit', 'remove']"
-                  @@edit="onEdit(user.id)"
-                  @@remove="onRemove(user.id)"
+                  @@edit="handleEdit(user.id)"
+                  @@remove="handleRemove(user.id)"
                   class="relative dropdown-top !right-0 !top-0"
                 />
               </div>

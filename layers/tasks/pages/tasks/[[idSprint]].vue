@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const routeSprintId = useRouteParams('idSprint');
+const routeProjectId = useRouteQuery('idProject');
 
 // Reactive refs for selected project and sprint
 const selectedProjectId = ref<string>();
@@ -13,6 +14,7 @@ const {
   tasks,
   getProjectId,
   sprintIdRef,
+  projectsStatus,
   status,
   refresh,
   openDrawer,
@@ -23,12 +25,20 @@ const {
   getLastSprintFromProject,
 } = useTasks(selectedSprintId.value);
 
+// Provide context to child components
+provideTasksContext({
+  handleEdit,
+  handleRefresh: refresh,
+});
+
 watch(
   status,
   async () => {
     if (status.value === 'success') {
       if (!selectedSprintId.value && initialLoad.value) {
-        const sprintId = await getLastSprintFromProject();
+        const sprintId = await getLastSprintFromProject(
+          routeProjectId.value as string
+        );
         if (sprintId) {
           handleSprintChange(sprintId);
         }
@@ -86,7 +96,7 @@ definePageMeta({
         <template v-else>
           <!-- Project Selector -->
           <AppProjectSelector
-            v-if="status === 'success'"
+            v-if="projectsStatus === 'success'"
             v-model="selectedProjectId"
             :label="$t('taskList.selectProject')"
             :placeholder="$t('taskList.selectProject')"
@@ -115,12 +125,7 @@ definePageMeta({
     />
 
     <!-- Tasks List -->
-    <TaskList
-      v-if="renderTasks && selectedSprintId"
-      :tasks="tasks"
-      :onEdit="handleEdit"
-      :onRefresh="refresh"
-    />
+    <TaskList v-if="renderTasks && selectedSprintId" :tasks="tasks" />
 
     <!-- Empty State -->
     <div v-if="!selectedSprintId" class="text-center py-12">

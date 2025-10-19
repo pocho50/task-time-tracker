@@ -16,6 +16,12 @@ const {
   selectedSprint,
 } = useSprints(routeProjectId.value as string);
 
+// Provide context to child components
+provideSprintsContext({
+  handleEdit,
+  handleRemove,
+});
+
 // Handle project change from selector
 async function handleProjectChange() {
   // Reset to page 1 when switching projects
@@ -47,11 +53,7 @@ const sprintForm = useTemplateRef('sprintForm');
         @change="handleProjectChange"
       />
     </div>
-    <SprintList
-      :sprints="sprints ?? []"
-      :onEdit="handleEdit"
-      :onRemove="handleRemove"
-    />
+    <SprintList :sprints="sprints ?? []" />
     <AppEmptyState
       v-if="(!sprints || sprints.length === 0) && status === 'success'"
     >
@@ -63,8 +65,8 @@ const sprintForm = useTemplateRef('sprintForm');
       v-if="pagination"
       :page="page"
       :totalPages="pagination.pageCount"
-      @@prev="page--"
-      @@next="page++"
+      @prev="page--"
+      @next="page++"
       class="my-4"
     />
     <!-- Add Sprint Button -->

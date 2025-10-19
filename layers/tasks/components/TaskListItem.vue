@@ -23,9 +23,10 @@ const PRIORITY_VARIANTS: Record<
 
 const props = defineProps<{
   task: SerializedTaskWithUsersAndTimeTracks;
-  onEdit?: (id: string) => void;
-  onRefresh?: () => Promise<void>;
 }>();
+
+// Inject handlers from parent context
+const { handleEdit, handleRefresh } = useTasksContext();
 
 const emit = defineEmits<{
   '@history': [task: SerializedTaskWithUsersAndTimeTracks];
@@ -44,7 +45,7 @@ const {
   getTimeAccumulatedSeconds,
   handleStart,
   handleEnd,
-} = useTaskTimeTracks(props.task, props.onRefresh);
+} = useTaskTimeTracks(props.task, handleRefresh);
 
 const timeAccumulateSeconds = useState<number>(
   `timeAccumulateSeconds-${props.task.id}`,
@@ -92,9 +93,9 @@ onMounted(() => {
     </td>
     <!-- Actions -->
     <td>
-      <div v-if="onEdit" :data-testid="`task-actions-${task.id}`">
+      <div :data-testid="`task-actions-${task.id}`">
         <TaskOptionActions
-          @@edit="onEdit?.(task.id)"
+          @@edit="handleEdit(task.id)"
           @@history="$emit('@history', task)"
           class="relative dropdown-top !right-0 !top-0"
         />

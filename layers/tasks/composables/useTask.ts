@@ -126,8 +126,8 @@ export function useTasks(sprintId: string | undefined) {
     return tasks.value[0]?.projectId;
   };
 
-  async function getLastSprintFromProject() {
-    const projectId = await getProjectId();
+  async function getLastSprintFromProject(idProject?: string) {
+    const projectId = idProject || (await getProjectId());
     if (projectId) {
       const result = await safeApiCall(() =>
         sprintRepo.getByProjectId(projectId)
@@ -152,6 +152,7 @@ export function useTasks(sprintId: string | undefined) {
     tasks,
     pagination,
     status,
+    projectsStatus,
     sprintIdRef,
     refresh,
     getProjectId,

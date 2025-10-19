@@ -4,6 +4,17 @@ import { mountSuspended } from '@nuxt/test-utils/runtime';
 import TaskListItem from '../../components/TaskListItem.vue';
 import { mockTasks } from '../__mocks__/taskMocks';
 
+// Mock useTasksContext composable
+const mockHandleEdit = vi.fn();
+const mockHandleRefresh = vi.fn();
+
+mockNuxtImport('useTasksContext', () => {
+  return () => ({
+    handleEdit: mockHandleEdit,
+    handleRefresh: mockHandleRefresh,
+  });
+});
+
 // Mock useTaskTimeTracks composable
 const mockHandleStart = vi.fn();
 const mockHandleEnd = vi.fn();
@@ -47,13 +58,11 @@ describe('TaskListItem', () => {
   it('renders task information correctly', async () => {
     // Arrange
     const task = mockTasks[0]!;
-    const onEditMock = vi.fn();
 
     // Act
     const wrapper = await mountSuspended(TaskListItem, {
       props: {
         task,
-        onEdit: onEditMock,
       },
     });
 
@@ -67,13 +76,11 @@ describe('TaskListItem', () => {
   it('renders task without description', async () => {
     // Arrange
     const task = mockTasks[2]!; // Task 3 has no description
-    const onEditMock = vi.fn();
 
     // Act
     const wrapper = await mountSuspended(TaskListItem, {
       props: {
         task,
-        onEdit: onEditMock,
       },
     });
 
@@ -90,13 +97,13 @@ describe('TaskListItem', () => {
 
     // Act
     const highWrapper = await mountSuspended(TaskListItem, {
-      props: { task: highPriorityTask, onEdit: vi.fn() },
+      props: { task: highPriorityTask },
     });
     const mediumWrapper = await mountSuspended(TaskListItem, {
-      props: { task: mediumPriorityTask, onEdit: vi.fn() },
+      props: { task: mediumPriorityTask },
     });
     const lowWrapper = await mountSuspended(TaskListItem, {
-      props: { task: lowPriorityTask, onEdit: vi.fn() },
+      props: { task: lowPriorityTask },
     });
 
     // Assert
@@ -118,13 +125,13 @@ describe('TaskListItem', () => {
 
     // Act
     const inProgressWrapper = await mountSuspended(TaskListItem, {
-      props: { task: inProgressTask, onEdit: vi.fn() },
+      props: { task: inProgressTask },
     });
     const analyzingWrapper = await mountSuspended(TaskListItem, {
-      props: { task: analyzingTask, onEdit: vi.fn() },
+      props: { task: analyzingTask },
     });
     const approvedWrapper = await mountSuspended(TaskListItem, {
-      props: { task: approvedTask, onEdit: vi.fn() },
+      props: { task: approvedTask },
     });
 
     // Assert
@@ -144,7 +151,7 @@ describe('TaskListItem', () => {
 
     // Act
     const wrapper = await mountSuspended(TaskListItem, {
-      props: { task, onEdit: vi.fn() },
+      props: { task },
     });
 
     // Assert
@@ -158,7 +165,7 @@ describe('TaskListItem', () => {
 
     // Act
     const wrapper = await mountSuspended(TaskListItem, {
-      props: { task, onEdit: vi.fn() },
+      props: { task },
     });
 
     // Assert
@@ -166,16 +173,14 @@ describe('TaskListItem', () => {
     expect(wrapper.find('.mock-task-time').text()).toContain('10800s');
   });
 
-  it('shows edit action when onEdit prop is provided', async () => {
+  it('shows edit action', async () => {
     // Arrange
     const task = mockTasks[0]!;
-    const onEditMock = vi.fn();
 
     // Act
     const wrapper = await mountSuspended(TaskListItem, {
       props: {
         task,
-        onEdit: onEditMock,
       },
     });
 
@@ -184,35 +189,18 @@ describe('TaskListItem', () => {
     expect(wrapper.find('.mock-option-action').exists()).toBe(true);
   });
 
-  it('hides edit action when onEdit prop is not provided', async () => {
-    // Arrange
-    const task = mockTasks[0]!;
-
-    // Act
-    const wrapper = await mountSuspended(TaskListItem, {
-      props: {
-        task,
-      },
-    });
-
-    // Assert
-    expect(wrapper.find('[data-testid="task-actions-1"]').exists()).toBe(false);
-  });
-
   it('calls useTaskTimeTracks with correct parameters', async () => {
     // Arrange
     const task = mockTasks[0]!;
-    const onRefreshMock = vi.fn();
 
     // Act
     await mountSuspended(TaskListItem, {
       props: {
         task,
-        onRefresh: onRefreshMock,
       },
     });
 
-    // Assert - useTaskTimeTracks should be called with task and onRefresh
+    // Assert - useTaskTimeTracks should be called with task and handleRefresh from context
     // This is implicitly tested by the component mounting successfully
     expect(true).toBe(true);
   });
