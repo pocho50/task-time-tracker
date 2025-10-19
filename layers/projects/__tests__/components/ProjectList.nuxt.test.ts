@@ -7,9 +7,20 @@ import { mockProjects } from '../__mocks__/projectMocks';
 // Create shared mock for user permissions
 const userAllowedMock = vi.fn().mockReturnValue(true);
 
+// Create shared mocks for context handlers
+const handleEditMock = vi.fn();
+const handleRemoveMock = vi.fn();
+
 mockNuxtImport('useUser', () => {
   return () => ({
     userIsAllowedToWrite: userAllowedMock,
+  });
+});
+
+mockNuxtImport('useProjectsContext', () => {
+  return () => ({
+    handleEdit: handleEditMock,
+    handleRemove: handleRemoveMock,
   });
 });
 
@@ -26,16 +37,10 @@ mockComponent('Icon', {
 
 describe('ProjectList', () => {
   it('renders the correct number of project cards', async () => {
-    // Arrange
-    const onEditMock = vi.fn();
-    const onRemoveMock = vi.fn();
-
     // Act
     const wrapper = await mountSuspended(ProjectList, {
       props: {
         projects: mockProjects,
-        onEdit: onEditMock,
-        onRemove: onRemoveMock,
       },
     });
 
@@ -55,8 +60,6 @@ describe('ProjectList', () => {
     const wrapper = await mountSuspended(ProjectList, {
       props: {
         projects: mockProjects,
-        onEdit: vi.fn(),
-        onRemove: vi.fn(),
       },
     });
 
@@ -71,8 +74,6 @@ describe('ProjectList', () => {
     const wrapper = await mountSuspended(ProjectList, {
       props: {
         projects: [],
-        onEdit: vi.fn(),
-        onRemove: vi.fn(),
       },
     });
 

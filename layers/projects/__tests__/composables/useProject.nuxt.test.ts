@@ -3,17 +3,32 @@ import { useProjects } from '../../composables/useProjects';
 import { mockNuxtImport } from '@nuxt/test-utils/runtime';
 import { mockProjects } from '../__mocks__/projectMocks';
 
-// Mock dependencies
-const mockProjectsRepo = {
+// Create mock methods using vi.hoisted to avoid hoisting issues
+const mockProjectsRepo = vi.hoisted(() => ({
   setParams: vi.fn(),
   getAll: vi.fn(),
   save: vi.fn(),
   delete: vi.fn(),
-};
-
-vi.mock('#layers/projects/repository/projectRepo', () => ({
-  ProjectsRepo: vi.fn().mockImplementation(() => mockProjectsRepo),
 }));
+
+// Mock ProjectsRepo with static keys property
+vi.mock('#layers/projects/repository/projectRepo', () => {
+  class MockProjectsRepo {
+    static keys = {
+      allProjects: 'all-projects',
+      projects: 'projects',
+    };
+
+    setParams = mockProjectsRepo.setParams;
+    getAll = mockProjectsRepo.getAll;
+    save = mockProjectsRepo.save;
+    delete = mockProjectsRepo.delete;
+  }
+
+  return {
+    ProjectsRepo: MockProjectsRepo,
+  };
+});
 
 const page = ref(1);
 

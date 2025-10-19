@@ -1,9 +1,10 @@
 <script setup lang="ts">
 defineProps<{
   projects: ProjectFormData[];
-  onEdit: (id: string) => void;
-  onRemove: (id: string) => void;
 }>();
+
+// Inject handlers from parent context
+const { handleEdit, handleRemove } = useProjectsContext();
 
 const { userIsAllowedToWrite } = useUser();
 </script>
@@ -21,8 +22,10 @@ const { userIsAllowedToWrite } = useUser();
       <AppOptionAction
         v-if="userIsAllowedToWrite(ENTITY)"
         :actions="['edit', 'remove']"
-        @@edit="() => typeof project.id === 'string' && onEdit(project.id)"
-        @@remove="() => typeof project.id === 'string' && onRemove(project.id)"
+        @edit="() => typeof project.id === 'string' && handleEdit(project.id)"
+        @remove="
+          () => typeof project.id === 'string' && handleRemove(project.id)
+        "
       />
       <div class="card-body">
         <h2 class="card-title">
