@@ -2,6 +2,7 @@ import type {
   SerializedTimeTrackWithUser,
   SerializedTaskWithUsersAndTimeTracks,
 } from '../shared/types';
+import { safeApiCall } from '#layers/shared/utils';
 
 export function useTaskTimeTracks(
   task: SerializedTaskWithUsersAndTimeTracks,
@@ -69,21 +70,29 @@ export function useTaskTimeTracks(
       return;
     }
 
-    const response = await taskRepo.startSession(task.id);
-    currentTimeTrackSession.value = response.data;
-    // Refresh the parent task list to get updated time tracking data
-    if (refreshTasks) {
-      await refreshTasks();
+    const response = await safeApiCall(() => taskRepo.startSession(task.id));
+    if (response !== false) {
+      currentTimeTrackSession.value = response.data;
+      // Refresh the parent task list to get updated time tracking data
+      if (refreshTasks) {
+        await refreshTasks();
+      }
     }
   };
 
   const handleEnd = async () => {
     if (!currentTimeTrackSession.value) return;
-    await taskRepo.endSession(currentTimeTrackSession.value.id, task.id);
-    currentTimeTrackSession.value = null;
-    // Refresh the parent task list to get updated time tracking data
-    if (refreshTasks) {
-      await refreshTasks();
+
+    const result = await safeApiCall(() =>
+      taskRepo.endSession(currentTimeTrackSession.value!.id, task.id)
+    );
+
+    if (result !== false) {
+      currentTimeTrackSession.value = null;
+      // Refresh the parent task list to get updated time tracking data
+      if (refreshTasks) {
+        await refreshTasks();
+      }
     }
   };
 

@@ -110,8 +110,12 @@ export function useTasks(sprintId: string | undefined) {
   const getProjectId = async () => {
     // If no tasks but sprint is selected, get project from sprint
     if (tasks.value.length === 0 && sprintIdRef.value) {
-      const sprint = await sprintRepo.getById(sprintIdRef.value as string);
-      return sprint?.projectId;
+      const sprint = await safeApiCall(() =>
+        sprintRepo.getById(sprintIdRef.value as string)
+      );
+      if (sprint !== false) {
+        return sprint?.projectId;
+      }
     }
 
     // If no sprint selected, use first available project as fallback

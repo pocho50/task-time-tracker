@@ -1,3 +1,5 @@
+import { safeApiCall } from '#layers/shared/utils';
+
 export function useLogin() {
   const isLoading = ref(false);
   const { fetch: refreshSession } = useUserSession();
@@ -9,19 +11,21 @@ export function useLogin() {
   });
 
   async function login() {
-    try {
-      isLoading.value = true;
-      await $api('/login', {
+    isLoading.value = true;
+    
+    const result = await safeApiCall<void>(() =>
+      $api('/login', {
         method: 'POST',
         body: credentials.value,
-      });
+      })
+    );
+    
+    if (result !== false) {
       await refreshSession();
       await navigateTo('/');
-    } catch (error) {
-      console.error('Login error');
-    } finally {
-      isLoading.value = false;
     }
+    
+    isLoading.value = false;
   }
 
   return {
