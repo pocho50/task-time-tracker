@@ -25,6 +25,12 @@ const {
   getLastSprintFromProject,
 } = useTasks(selectedSprintId.value);
 
+// Provide context to child components
+provideTasksContext({
+  handleEdit,
+  handleRefresh: refresh,
+});
+
 watch(
   status,
   async () => {
@@ -119,12 +125,7 @@ definePageMeta({
     />
 
     <!-- Tasks List -->
-    <TaskList
-      v-if="renderTasks && selectedSprintId"
-      :tasks="tasks"
-      :onEdit="handleEdit"
-      :onRefresh="refresh"
-    />
+    <TaskList v-if="renderTasks && selectedSprintId" :tasks="tasks" />
 
     <!-- Empty State -->
     <div v-if="!selectedSprintId" class="text-center py-12">

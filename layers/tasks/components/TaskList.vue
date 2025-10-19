@@ -3,8 +3,6 @@ import type { SerializedTaskWithUsersAndTimeTracks } from '../shared/types';
 
 const props = defineProps<{
   tasks: SerializedTaskWithUsersAndTimeTracks[];
-  onEdit?: (id: string) => void;
-  onRefresh?: () => Promise<void>;
 }>();
 
 const showTimetrackHistory = ref(false);
@@ -37,8 +35,6 @@ const handleHistory = (task: SerializedTaskWithUsersAndTimeTracks) => {
             v-for="task in tasks"
             :key="task.id"
             :task="task"
-            :on-edit="onEdit"
-            :on-refresh="onRefresh"
             @@history="handleHistory"
           />
         </template>
