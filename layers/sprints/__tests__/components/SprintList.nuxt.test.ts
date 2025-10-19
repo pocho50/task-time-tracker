@@ -1,8 +1,19 @@
 import { describe, it, expect, vi } from 'vitest';
-import { mockComponent } from '@nuxt/test-utils/runtime';
+import { mockComponent, mockNuxtImport } from '@nuxt/test-utils/runtime';
 import { mountSuspended } from '@nuxt/test-utils/runtime';
 import SprintList from '../../components/SprintList.vue';
 import { mockSprints } from '../__mocks__/sprintMocks';
+
+// Create shared mocks for context handlers
+const handleEditMock = vi.fn();
+const handleRemoveMock = vi.fn();
+
+mockNuxtImport('useSprintsContext', () => {
+  return () => ({
+    handleEdit: handleEditMock,
+    handleRemove: handleRemoveMock,
+  });
+});
 
 mockComponent('AppOptionAction', {
   props: ['actions'],
@@ -12,16 +23,10 @@ mockComponent('AppOptionAction', {
 
 describe('SprintList', () => {
   it('renders the correct number of sprint rows', async () => {
-    // Arrange
-    const onEditMock = vi.fn();
-    const onRemoveMock = vi.fn();
-
     // Act
     const wrapper = await mountSuspended(SprintList, {
       props: {
         sprints: mockSprints,
-        onEdit: onEditMock,
-        onRemove: onRemoveMock,
       },
     });
 
@@ -40,8 +45,6 @@ describe('SprintList', () => {
     const wrapper = await mountSuspended(SprintList, {
       props: {
         sprints: [],
-        onEdit: vi.fn(),
-        onRemove: vi.fn(),
       },
     });
 

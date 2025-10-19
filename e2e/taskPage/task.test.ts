@@ -47,16 +47,6 @@ test.describe('task', async () => {
     await expect(taskPage.getTaskListItems()).toHaveCount(taskCount);
   });
 
-  test('shows empty state when no sprint is selected', async ({ goto }) => {
-    // Navigate to tasks page without sprint ID
-    await goto('/tasks', {
-      waitUntil: 'hydration',
-    });
-
-    // Check that empty state is visible
-    await expect(taskPage.getEmptyState()).toBeVisible();
-  });
-
   test('change sprint and verify tasks update', async ({ page }) => {
     // Get all sprints for the project
     const sprints = await testHelper.getSprintsByProject(

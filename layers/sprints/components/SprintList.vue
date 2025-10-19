@@ -10,9 +10,10 @@ const VARIANTS: Record<SprintStatus, 'info' | 'success' | 'warning'> = {
 
 const props = defineProps<{
   sprints: Sprint[];
-  onEdit?: (id: string) => void;
-  onRemove?: (id: string) => void;
 }>();
+
+// Inject handlers from parent context
+const { handleEdit, handleRemove } = useSprintsContext();
 
 const getVariant = (status: SprintStatus) => {
   return VARIANTS[status];
@@ -76,14 +77,11 @@ const getVariant = (status: SprintStatus) => {
             </td>
             <!-- Actions -->
             <td>
-              <div
-                v-if="onEdit || onRemove"
-                :data-testid="`sprint-actions-${sprint.id}`"
-              >
+              <div :data-testid="`sprint-actions-${sprint.id}`">
                 <AppOptionAction
                   :actions="['edit', 'remove']"
-                  @@edit="onEdit?.(sprint.id)"
-                  @@remove="onRemove?.(sprint.id)"
+                  @@edit="handleEdit(sprint.id)"
+                  @@remove="handleRemove(sprint.id)"
                   class="relative dropdown-top !right-0 !top-0"
                 />
               </div>

@@ -22,8 +22,8 @@ const { userIsAllowedToWrite } = useUser();
       <AppOptionAction
         v-if="userIsAllowedToWrite(ENTITY)"
         :actions="['edit', 'remove']"
-        @edit="() => typeof project.id === 'string' && handleEdit(project.id)"
-        @remove="
+        @@edit="() => typeof project.id === 'string' && handleEdit(project.id)"
+        @@remove="
           () => typeof project.id === 'string' && handleRemove(project.id)
         "
       />
