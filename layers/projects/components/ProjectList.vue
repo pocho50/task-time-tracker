@@ -32,12 +32,13 @@ const { userIsAllowedToWrite } = useUser();
           {{ project.description }}
         </p>
         <div class="flex gap-2 mt-4">
-          <button
+          <NuxtLink
+            :to="{ name: 'tasks-idSprint', query: { idProject: project.id } }"
             class="btn btn-default grow flex items-center gap-2 hover:btn-primary transition-colors"
           >
             <Icon name="mdi:format-list-checkbox" size="20" />
             <span>{{ $t('tasks') }}</span>
-          </button>
+          </NuxtLink>
           <NuxtLink
             :to="`/sprints/${project.id}`"
             class="btn btn-default grow flex items-center gap-2 hover:btn-accent transition-colors"
