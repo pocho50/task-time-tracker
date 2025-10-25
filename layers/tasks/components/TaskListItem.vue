@@ -45,7 +45,7 @@ const {
   getTimeAccumulatedSeconds,
   handleStart,
   handleEnd,
-} = useTaskTimeTracks(props.task, handleRefresh);
+} = useTaskTimeTracks(toRef(props, 'task'), handleRefresh);
 
 const timeAccumulateSeconds = useState<number>(
   `timeAccumulateSeconds-${props.task.id}`,

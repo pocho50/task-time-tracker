@@ -5,7 +5,7 @@ import type {
 import { safeApiCall } from '#layers/shared/utils';
 
 export function useTaskTimeTracks(
-  task: SerializedTaskWithUsersAndTimeTracks,
+  task: Ref<SerializedTaskWithUsersAndTimeTracks>,
   refreshTasks?: () => Promise<void>
 ) {
   const { $api } = useNuxtApp();
@@ -14,16 +14,11 @@ export function useTaskTimeTracks(
   const currentTimeTrackSession = ref<SerializedTimeTrackWithUser | null>(null);
 
   // Use embedded time tracking data instead of making a separate API call
-  const getTimeTracks = computed(() => task.timeTracking ?? []);
+  const getTimeTracks = computed(() => task.value.timeTracking ?? []);
 
   // Check for active session on initialization (only for current user)
-  const checkActiveSession = () => {
-    const tracks = getTimeTracks.value;
-    // Filter tracks for current user only
-    const userTracks = tracks.filter(
-      (track) => track.user.id === user.value?.id
-    );
-    const lastTrack = userTracks[0];
+  const checkActiveSessionAndSetLastSession = () => {
+    const lastTrack = getLastSession.value;
 
     // If the last track has no end time, it's an active session that needs to be recovered
     if (lastTrack && lastTrack.start && !lastTrack.end) {
@@ -31,8 +26,17 @@ export function useTaskTimeTracks(
     }
   };
 
+  const getLastSession = computed(() => {
+    const tracks = getTimeTracks.value;
+    // Filter tracks for current user only
+    const userTracks = tracks.filter(
+      (track) => track.user.id === user.value?.id
+    );
+    return userTracks?.[0] ?? null;
+  });
+
   // Initialize active session check
-  checkActiveSession();
+  checkActiveSessionAndSetLastSession();
 
   const getTimeAccumulatedSeconds = computed(() => {
     const tracks = getTimeTracks.value;
@@ -70,7 +74,9 @@ export function useTaskTimeTracks(
       return;
     }
 
-    const response = await safeApiCall(() => taskRepo.startSession(task.id));
+    const response = await safeApiCall(() =>
+      taskRepo.startSession(task.value.id)
+    );
     if (response !== false) {
       currentTimeTrackSession.value = response.data;
       // Refresh the parent task list to get updated time tracking data
@@ -84,7 +90,7 @@ export function useTaskTimeTracks(
     if (!currentTimeTrackSession.value) return;
 
     const result = await safeApiCall(() =>
-      taskRepo.endSession(currentTimeTrackSession.value!.id, task.id)
+      taskRepo.endSession(currentTimeTrackSession.value!.id, task.value.id)
     );
 
     if (result !== false) {
@@ -102,5 +108,6 @@ export function useTaskTimeTracks(
     handleStart,
     handleEnd,
     currentTimeTrackSession,
+    getLastSession,
   };
 }
