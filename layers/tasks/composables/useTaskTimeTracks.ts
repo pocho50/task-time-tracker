@@ -102,11 +102,41 @@ export function useTaskTimeTracks(
     }
   };
 
+  const handleUpdateSession = async (data: {
+    start: string;
+    end: string | null;
+    notes: string | null;
+  }) => {
+    if (!getLastSession.value) return false;
+
+    const response = await safeApiCall(() =>
+      taskRepo.updateSession({
+        id: getLastSession.value!.id,
+        taskId: task.value.id,
+        start: data.start,
+        end: data.end,
+        notes: data.notes,
+        fullUpdate: true, // Explicitly mark as full session edit
+      })
+    );
+
+    if (response !== false) {
+      // Refresh the parent task list to get updated time tracking data
+      if (refreshTasks) {
+        await refreshTasks();
+      }
+      return true;
+    }
+
+    return false;
+  };
+
   return {
     getTimeTracks,
     getTimeAccumulatedSeconds,
     handleStart,
     handleEnd,
+    handleUpdateSession,
     currentTimeTrackSession,
     getLastSession,
   };

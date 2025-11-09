@@ -27,26 +27,34 @@ export class TaskRepo<T> extends BaseRepo<T> {
     return this.fetch(`${this.basePath}/time-tracks/by-task?taskId=${taskId}`);
   }
 
-  async startSession(taskId: string, notes?: string) {
+  async updateSession(data: {
+    id?: string;
+    taskId: string;
+    start?: string;
+    end?: string | null;
+    notes?: string | null;
+    fullUpdate?: boolean;
+  }) {
     return this.fetch(`${this.basePath}/time-tracks`, {
       method: 'POST',
-      body: {
-        taskId,
-        start: Date.now(),
-        notes,
-      },
+      body: data,
+    });
+  }
+
+  async startSession(taskId: string, notes?: string) {
+    return this.updateSession({
+      taskId,
+      start: new Date().toISOString(),
+      notes,
     });
   }
 
   async endSession(id: string, taskId: string, notes?: string) {
-    return this.fetch(`${this.basePath}/time-tracks`, {
-      method: 'POST',
-      body: {
-        id,
-        end: Date.now(),
-        taskId,
-        notes,
-      },
+    return this.updateSession({
+      id,
+      taskId,
+      end: new Date().toISOString(),
+      notes,
     });
   }
 }

@@ -45,12 +45,38 @@ const {
   getTimeAccumulatedSeconds,
   handleStart,
   handleEnd,
+  handleUpdateSession,
+  getLastSession,
 } = useTaskTimeTracks(toRef(props, 'task'), handleRefresh);
 
 const timeAccumulateSeconds = useState<number>(
   `timeAccumulateSeconds-${props.task.id}`,
   () => getTimeAccumulatedSeconds.value
 );
+
+const isEditSessionModalOpen = ref(false);
+
+const handleOpenEditSession = () => {
+  if (getLastSession.value) {
+    isEditSessionModalOpen.value = true;
+  }
+};
+
+const handleSaveSession = async (data: {
+  start: string;
+  end: string | null;
+  notes: string | null;
+}) => {
+  const success = await handleUpdateSession(data);
+  if (success) {
+    isEditSessionModalOpen.value = false;
+    timeAccumulateSeconds.value = getTimeAccumulatedSeconds.value;
+  }
+};
+
+const handleCancelEditSession = () => {
+  isEditSessionModalOpen.value = false;
+};
 
 onMounted(() => {
   timeAccumulateSeconds.value = getTimeAccumulatedSeconds.value;
@@ -84,12 +110,23 @@ onMounted(() => {
     </td>
     <td>
       <!-- Task time -->
-      <TaskTime
-        :accumulatedSeconds="timeAccumulateSeconds"
-        :startInmediate="currentTimeTrackSession !== null"
-        @@start="handleStart"
-        @@end="handleEnd"
-      />
+      <div class="flex items-center gap-2">
+        <TaskTime
+          :accumulatedSeconds="timeAccumulateSeconds"
+          :startInmediate="currentTimeTrackSession !== null"
+          @@start="handleStart"
+          @@end="handleEnd"
+        />
+        <button
+          v-if="getLastSession"
+          type="button"
+          @click="handleOpenEditSession"
+          class="btn btn-ghost btn-xs"
+          :aria-label="$t('common.edit')"
+        >
+          <Icon name="mdi:pencil" size="16" />
+        </button>
+      </div>
     </td>
     <!-- Actions -->
     <td>
@@ -102,4 +139,16 @@ onMounted(() => {
       </div>
     </td>
   </tr>
+
+  <!-- Edit Session Modal -->
+  <AppModal
+    v-model="isEditSessionModalOpen"
+    :title="$t('taskHistory.editSession')"
+  >
+    <TaskTimeTrackEditForm
+      :session="getLastSession"
+      @@save="handleSaveSession"
+      @@cancel="handleCancelEditSession"
+    />
+  </AppModal>
 </template>

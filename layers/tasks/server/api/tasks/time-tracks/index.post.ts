@@ -50,8 +50,20 @@ export default defineEventHandler(async (event) => {
       return { data: result };
     }
 
+    if (body.id && body.fullUpdate) {
+      // FULL UPDATE: Edit entire session from edit form
+      const result = await service.update({
+        id: body.id,
+        start: body.start ? new Date(body.start) : undefined,
+        end: body.end ? new Date(body.end) : undefined,
+        notes: body.notes,
+      });
+
+      return { data: result };
+    }
+
     if (body.id && body.end) {
-      // UPDATE: taskId, id, and end provided
+      // UPDATE END: Stop session from time tracker button
       const result = await service.update({
         id: body.id,
         end: new Date(body.end),

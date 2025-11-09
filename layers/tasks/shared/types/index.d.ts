@@ -52,7 +52,8 @@ export interface SerializedTimeTrackWithUser
 export interface TimeTrackRequestBody {
   taskId: string;
   id?: string;
-  start?: string; // Only used for CREATE
-  end?: string; // Only used for UPDATE
+  start?: string; // Only used for CREATE or FULL UPDATE
+  end?: string; // Only used for UPDATE or FULL UPDATE
   notes?: string;
+  fullUpdate?: boolean; // Flag to indicate full session edit (start + end + notes)
 }

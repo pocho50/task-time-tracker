@@ -30,7 +30,8 @@
     "inProgress": "In progress...",
     "duration": "Duration",
     "notes": "Notes",
-    "noNotesAdded": "No notes added"
+    "noNotesAdded": "No notes added",
+    "editSession": "Edit Time Session"
   },
   "taskForm": {
     "name": "Task Name",
