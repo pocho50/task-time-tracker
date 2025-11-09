@@ -40,12 +40,13 @@ const getPriorityVariant = (priority: TaskPriority) => {
   return PRIORITY_VARIANTS[priority];
 };
 
+const editSessionModal = useTemplateRef('editSessionModal');
+
 const {
   currentTimeTrackSession,
   getTimeAccumulatedSeconds,
   handleStart,
   handleEnd,
-  handleUpdateSession,
   getLastSession,
 } = useTaskTimeTracks(toRef(props, 'task'), handleRefresh);
 
@@ -54,33 +55,14 @@ const timeAccumulateSeconds = useState<number>(
   () => getTimeAccumulatedSeconds.value
 );
 
-const isEditSessionModalOpen = ref(false);
-
-const handleOpenEditSession = () => {
-  if (getLastSession.value) {
-    isEditSessionModalOpen.value = true;
-  }
-};
-
-const handleSaveSession = async (data: {
-  start: string;
-  end: string | null;
-  notes: string | null;
-}) => {
-  const success = await handleUpdateSession(data);
-  if (success) {
-    isEditSessionModalOpen.value = false;
-    timeAccumulateSeconds.value = getTimeAccumulatedSeconds.value;
-  }
-};
-
-const handleCancelEditSession = () => {
-  isEditSessionModalOpen.value = false;
-};
-
-onMounted(() => {
-  timeAccumulateSeconds.value = getTimeAccumulatedSeconds.value;
-});
+// Watch for changes in accumulated time and update the state
+watch(
+  getTimeAccumulatedSeconds,
+  (newValue) => {
+    timeAccumulateSeconds.value = newValue;
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
@@ -120,7 +102,7 @@ onMounted(() => {
         <button
           v-if="getLastSession"
           type="button"
-          @click="handleOpenEditSession"
+          @click="editSessionModal?.handleOpenEditSession"
           class="btn btn-ghost btn-xs"
           :aria-label="$t('common.edit')"
         >
@@ -141,14 +123,10 @@ onMounted(() => {
   </tr>
 
   <!-- Edit Session Modal -->
-  <AppModal
-    v-model="isEditSessionModalOpen"
-    :title="$t('taskHistory.editSession')"
-  >
-    <TaskTimeTrackEditForm
-      :session="getLastSession"
-      @@save="handleSaveSession"
-      @@cancel="handleCancelEditSession"
-    />
-  </AppModal>
+  <TaskTimeTrackEdit
+    ref="editSessionModal"
+    v-if="getLastSession"
+    :task="task"
+    :session="getLastSession"
+  />
 </template>

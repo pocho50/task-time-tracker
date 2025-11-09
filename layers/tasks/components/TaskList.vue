@@ -6,11 +6,27 @@ const props = defineProps<{
 }>();
 
 const showTimetrackHistory = ref(false);
-const selectedTask = ref<SerializedTaskWithUsersAndTimeTracks | null>(null);
+const selectedTaskId = ref<string | null>(null);
+
+const editSessionModal = useTemplateRef('editSessionModal');
+
+// Get the updated task from props.tasks to reflect changes
+const selectedTask = computed(() => {
+  if (!selectedTaskId.value) return null;
+  return props.tasks.find(task => task.id === selectedTaskId.value) || null;
+});
 
 const handleHistory = (task: SerializedTaskWithUsersAndTimeTracks) => {
   showTimetrackHistory.value = true;
-  selectedTask.value = task;
+  selectedTaskId.value = task.id;
+};
+
+const session = ref<SerializedTimeTrackWithUser | null>(null);
+
+const handleEditTimeTrack = async (timeTrack: SerializedTimeTrackWithUser) => {
+  session.value = timeTrack;
+  await nextTick();
+  editSessionModal.value?.handleOpenEditSession();
 };
 </script>
 <template>
@@ -56,6 +72,17 @@ const handleHistory = (task: SerializedTaskWithUsersAndTimeTracks) => {
 
   <!--  Drawer for view history -->
   <AppDrawerRight v-model="showTimetrackHistory" size="lg">
-    <TaskHistory v-if="selectedTask" :task="selectedTask" />
+    <TaskHistory
+      v-if="selectedTask"
+      :task="selectedTask"
+      @@edit="handleEditTimeTrack"
+    />
   </AppDrawerRight>
+
+  <TaskTimeTrackEdit
+    ref="editSessionModal"
+    v-if="session && selectedTask"
+    :task="selectedTask"
+    :session="session"
+  />
 </template>

@@ -6,10 +6,18 @@ const props = defineProps<{
   task: SerializedTaskWithUsersAndTimeTracks | null;
 }>();
 
+const emit = defineEmits<{
+  '@edit': [timeTrack: SerializedTimeTrackWithUser];
+}>();
+
 const getTimeTracksNotes = computed(() => {
   if (!props.task) return [];
   return props.task.timeTracking;
 });
+
+const handleEdit = (timeTrack: SerializedTimeTrackWithUser) => {
+  emit('@edit', timeTrack);
+};
 </script>
 <template>
   <div>
@@ -35,8 +43,8 @@ const getTimeTracksNotes = computed(() => {
                 {{ timeTrack.user.email }}
               </p>
             </div>
-            <!-- Status badge -->
-            <div>
+            <!-- Status badge and actions -->
+            <div class="flex items-center gap-2">
               <span
                 v-if="!timeTrack.end"
                 class="badge badge-success badge-sm gap-1"
@@ -48,6 +56,15 @@ const getTimeTracksNotes = computed(() => {
                 <Icon name="mdi:check-circle-outline" class="text-xs" />
                 {{ $t('taskHistory.completed') }}
               </span>
+              <!-- Edit button -->
+              <button
+                type="button"
+                class="btn btn-ghost btn-xs btn-square"
+                :title="$t('taskHistory.editSession')"
+                @click="handleEdit(timeTrack)"
+              >
+                <Icon name="mdi:pencil" class="text-base" />
+              </button>
             </div>
           </div>
 
@@ -84,13 +101,12 @@ const getTimeTracksNotes = computed(() => {
           </div>
 
           <!-- Duration section (only for completed sessions) -->
-          <div
-            v-if="timeTrack.end"
-            class="alert alert-info py-2 px-3 mb-3"
-          >
+          <div v-if="timeTrack.end" class="alert alert-info py-2 px-3 mb-3">
             <Icon name="mdi:timer-outline" class="text-lg" />
             <div class="flex-1">
-              <span class="text-xs font-medium">{{ $t('taskHistory.duration') }}:</span>
+              <span class="text-xs font-medium"
+                >{{ $t('taskHistory.duration') }}:</span
+              >
               <span class="text-sm font-bold ml-2">
                 {{ getDiffTime(timeTrack.start, timeTrack.end) }}
               </span>
@@ -108,7 +124,9 @@ const getTimeTracksNotes = computed(() => {
                 class="text-base text-base-content/60 mt-0.5"
               />
               <div class="flex-1">
-                <p class="text-xs text-base-content/60 mb-1">{{ $t('taskHistory.notes') }}</p>
+                <p class="text-xs text-base-content/60 mb-1">
+                  {{ $t('taskHistory.notes') }}
+                </p>
                 <p class="text-sm">{{ timeTrack.notes }}</p>
               </div>
             </div>
