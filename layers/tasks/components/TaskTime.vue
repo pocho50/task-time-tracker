@@ -21,6 +21,7 @@ const {
   counter,
   pause: pauseCounter,
   resume: resumeCounter,
+  reset: resetCounter,
   isActive,
 } = useInterval(1000, {
   controls: true,
@@ -44,9 +45,10 @@ const handleStart = () => {
 };
 
 const handlePause = () => {
-  const totalSeconds = accumulatedSeconds.value + counter.value;
+  accumulatedSeconds.value += counter.value;
+  resetCounter();
   pauseCounter();
-  emit('@end', totalSeconds);
+  emit('@end', accumulatedSeconds.value);
 };
 
 if (props.startInmediate) {

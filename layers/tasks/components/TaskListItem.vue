@@ -69,7 +69,9 @@ watch(
   <tr class="hover">
     <!-- Name -->
     <td>
-      <div class="font-bold">{{ task.name }}</div>
+      <div class="font-bold">
+        {{ task.name }}
+      </div>
       <div v-if="task.description" class="text-sm text-gray-500">
         {{ task.description }}
       </div>

@@ -52,10 +52,16 @@ export function formatDateForInput(isoString: string | null): string {
   if (!isoString) return '';
 
   try {
-    const date = new Date(isoString);
+    const utcDate = new Date(isoString);
+
+    // Adjust to local time by subtracting the timezone offset (in minutes) converted to milliseconds
+    const localDate = new Date(
+      utcDate.getTime() - utcDate.getTimezoneOffset() * 60000
+    );
+
     // toISOString gives us YYYY-MM-DDTHH:mm:ss.sssZ
     // We need YYYY-MM-DDTHH:mm:ss (first 19 characters with seconds, without milliseconds)
-    return date.toISOString().slice(0, 19);
+    return localDate.toISOString().slice(0, 19);
   } catch (error) {
     console.error('Error formatting date for input:', error);
     return '';
