@@ -222,7 +222,7 @@ watchEffect(() => {
 
         <ul
           v-show="dropdownOpen"
-          class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full max-h-60 overflow-y-auto z-[1] mt-1"
+          class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full max-h-80 overflow-y-auto z-[1] mt-1"
         >
           <li
             v-for="(option, index) in filteredOptions"

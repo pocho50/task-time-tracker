@@ -12,7 +12,17 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event);
   const idProject = query.id_project as string;
   const page = Number(query.page) || 1;
-  const pageSize = Number(query.pageSize) || DEFAULT_PAGE_SIZE;
+  // Handle pageSize parameter
+  // - If not provided: use DEFAULT_PAGE_SIZE
+  // - If Infinity: use undefined to fetch all records
+  // - Otherwise: use the provided value
+  const rawPageSize = query.pageSize ? Number(query.pageSize) : null;
+  const pageSize =
+    rawPageSize === null
+      ? DEFAULT_PAGE_SIZE
+      : !isFinite(rawPageSize)
+        ? undefined
+        : rawPageSize;
 
   if (!idProject) {
     throw createError({

@@ -1,7 +1,7 @@
 import { safeApiCall } from '#layers/shared/utils';
 import type { SprintFormData } from '../schemas';
 
-export function useSprints(projectId: string) {
+export function useSprints(projectId: string, allSprints = false) {
   const { $api } = useNuxtApp();
   const sprintRepo = new SprintsRepo($api);
   const page = useRouteQuery('page', 1, { transform: Number });
@@ -16,7 +16,12 @@ export function useSprints(projectId: string) {
           pagination: { page: 1, pageCount: 1 },
         });
       }
-      sprintRepo.setParams({ page: page.value });
+      const params: { page: number; pageSize?: number } = { page: page.value };
+      if (allSprints) {
+        params.pageSize = Infinity;
+        params.page = 1;
+      }
+      sprintRepo.setParams(params);
       return sprintRepo.getByProjectId(projectIdRef.value);
     },
     {
