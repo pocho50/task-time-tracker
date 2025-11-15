@@ -13,12 +13,17 @@ export function useProjects(allProjects = false) {
     const params: { page: number; pageSize?: number } = { page: page.value };
     if (allProjects) {
       params.pageSize = Infinity;
+      params.page = 1;
     }
     projectRepo.setParams(params);
     return projectRepo.getAll();
   });
 
-  watch(page, () => refresh());
+  watch(page, () => {
+    if (!allProjects) {
+      refresh();
+    }
+  });
 
   const openDrawer = ref(false);
 

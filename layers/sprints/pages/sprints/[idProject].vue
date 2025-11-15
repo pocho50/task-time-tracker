@@ -65,8 +65,8 @@ const sprintForm = useTemplateRef('sprintForm');
       v-if="pagination"
       :page="page"
       :totalPages="pagination.pageCount"
-      @prev="page--"
-      @next="page++"
+      @@prev="page--"
+      @@next="page++"
       class="my-4"
     />
     <!-- Add Sprint Button -->
