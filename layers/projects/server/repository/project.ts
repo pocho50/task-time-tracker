@@ -83,7 +83,7 @@ export class ProjectRepository {
   async findManyForUser(
     userId: string,
     skip: number,
-    take: number
+    take?: number
   ): Promise<ProjectWithIdUsers[]> {
     const projects = await this.prisma.project.findMany({
       skip,

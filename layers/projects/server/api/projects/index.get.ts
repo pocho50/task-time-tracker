@@ -10,12 +10,18 @@ export default defineEventHandler(async (event) => {
 
   const query = getQuery(event);
   const page = Number(query.page) || 1;
-  const pageSizeParam = Number(query.pageSize);
-  // Handle Infinity pageSize to fetch all projects
+
+  // Handle pageSize parameter
+  // - If not provided: use DEFAULT_PAGE_SIZE
+  // - If Infinity: use undefined to fetch all records
+  // - Otherwise: use the provided value
+  const rawPageSize = query.pageSize ? Number(query.pageSize) : null;
   const pageSize =
-    pageSizeParam === Infinity
-      ? Number.MAX_SAFE_INTEGER
-      : pageSizeParam || DEFAULT_PAGE_SIZE;
+    rawPageSize === null
+      ? DEFAULT_PAGE_SIZE
+      : !isFinite(rawPageSize)
+        ? undefined
+        : rawPageSize;
 
   try {
     const repo = new ProjectRepository();
