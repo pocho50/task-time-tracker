@@ -40,7 +40,8 @@
     "status": "Status",
     "estimatedHours": "Estimated Hours",
     "assignedUsers": "Assigned Users",
-    "selectUsers": "Select Users"
+    "selectUsers": "Select Users",
+    "sprint": "Sprint"
   },
   "server": {
     "sprintIdRequired": "Sprint ID is required",

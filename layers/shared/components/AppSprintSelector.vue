@@ -57,26 +57,28 @@ watch(
 
 <template>
   <div class="form-control" :class="props.class">
-    <AppAutocomplete
-      v-if="props.projectId"
-      :options="sprintOptions"
-      :label="label"
-      :placeholder="placeholder"
-      :disabled="disabled || !props.projectId"
-      :model-value="selectedSprint?.value"
-      @update:model-value="handleChange"
-      clearable
-    />
-    <div v-else class="form-control" :class="props.class">
-      <label class="label">
-        <span class="label-text">{{ label }}</span>
-      </label>
-      <input
-        type="text"
-        :placeholder="$t('sprintList.selectProjectFirst')"
-        class="input input-bordered"
-        disabled
+    <fieldset class="fieldset">
+      <AppAutocomplete
+        v-if="props.projectId"
+        :options="sprintOptions"
+        :label="label"
+        :placeholder="placeholder"
+        :disabled="disabled || !props.projectId"
+        :model-value="selectedSprint?.value"
+        @update:model-value="handleChange"
+        clearable
       />
-    </div>
+      <div v-else class="form-control" :class="props.class">
+        <label class="label">
+          <span class="label-text">{{ label }}</span>
+        </label>
+        <input
+          type="text"
+          :placeholder="$t('sprintList.selectProjectFirst')"
+          class="input input-bordered"
+          disabled
+        />
+      </div>
+    </fieldset>
   </div>
 </template>

@@ -20,6 +20,8 @@ selectedUsers.value = props.initialData?.usersId ?? [];
 
 provide('selectedUsers', selectedUsers);
 
+const selectedSprintId = ref<string | undefined>(props.initialData?.sprintId);
+
 const emit = defineEmits<{
   (e: '@submit', data: TaskFormData): void;
 }>();
@@ -43,7 +45,7 @@ const onSubmit = (values: Record<string, any>) => {
     name: values.name,
     description: values.description,
     projectId: values.projectId,
-    sprintId: values.sprintId,
+    sprintId: selectedSprintId.value ?? values.sprintId,
     priority: values.priority,
     status: values.status,
     estimatedHours: values.estimatedHours
@@ -85,6 +87,14 @@ defineExpose({
         class-input="w-full"
         :placeholder="$t('taskForm.description')"
         :label="$t('taskForm.description')"
+      />
+
+      <AppSprintSelector
+        v-if="initialData?.projectId"
+        v-model="selectedSprintId"
+        :project-id="initialData.projectId"
+        :label="$t('taskForm.sprint')"
+        :placeholder="$t('taskForm.sprint')"
       />
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
