@@ -26,7 +26,7 @@ const props = defineProps<{
 }>();
 
 // Inject handlers from parent context
-const { handleEdit, handleRefresh } = useTasksContext();
+const { handleEdit, handleRefresh, handleRemove } = useTasksContext();
 
 const emit = defineEmits<{
   '@history': [task: SerializedTaskWithUsersAndTimeTracks];
@@ -117,6 +117,7 @@ watch(
       <div :data-testid="`task-actions-${task.id}`">
         <TaskOptionActions
           @@edit="handleEdit(task.id)"
+          @@remove="handleRemove(task.id)"
           @@history="$emit('@history', task)"
           class="relative dropdown-top !right-0 !top-0"
         />

@@ -7,6 +7,7 @@ import type { InjectionKey } from 'vue';
 interface TasksContext {
   handleEdit: (id: string) => void;
   handleRefresh: () => Promise<void>;
+  handleRemove: (id: string) => void;
 }
 
 /**

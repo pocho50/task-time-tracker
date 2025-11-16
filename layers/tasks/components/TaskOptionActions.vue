@@ -12,7 +12,7 @@ const handleHistory = (dropDown?: HTMLUListElement) => {
 </script>
 <template>
   <AppOptionAction
-    :actions="['edit']"
+    :actions="['edit', 'remove']"
     @@edit="$emit('@edit')"
     @@remove="$emit('@remove')"
   >

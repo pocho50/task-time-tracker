@@ -22,6 +22,7 @@ const {
   handleEdit,
   handleAdd,
   handleSave,
+  handleRemove,
   getLastSprintFromProject,
 } = useTasks(selectedSprintId.value);
 
@@ -29,6 +30,7 @@ const {
 provideTasksContext({
   handleEdit,
   handleRefresh: refresh,
+  handleRemove,
 });
 
 watch(

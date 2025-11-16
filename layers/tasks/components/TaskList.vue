@@ -13,7 +13,7 @@ const editSessionModal = useTemplateRef('editSessionModal');
 // Get the updated task from props.tasks to reflect changes
 const selectedTask = computed(() => {
   if (!selectedTaskId.value) return null;
-  return props.tasks.find(task => task.id === selectedTaskId.value) || null;
+  return props.tasks.find((task) => task.id === selectedTaskId.value) || null;
 });
 
 const handleHistory = (task: SerializedTaskWithUsersAndTimeTracks) => {
@@ -31,7 +31,7 @@ const handleEditTimeTrack = async (timeTrack: SerializedTimeTrackWithUser) => {
 </script>
 <template>
   <div
-    class="overflow-x-auto w-full bg-base-100 h-full pt-4"
+    class="overflow-x-auto w-full bg-base-100 h-full pt-12"
     data-testid="task-list"
   >
     <table class="table table-zebra w-full">
