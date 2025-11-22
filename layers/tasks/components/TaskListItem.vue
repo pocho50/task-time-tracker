@@ -45,6 +45,7 @@ const editSessionModal = useTemplateRef('editSessionModal');
 const {
   currentTimeTrackSession,
   getTimeAccumulatedSeconds,
+  getActiveSessionElapsedSeconds,
   handleStart,
   handleEnd,
   getLastSession,
@@ -117,6 +118,7 @@ const truncatedDescription = computed(() => {
       <div class="flex items-center gap-2">
         <TaskTime
           :accumulatedSeconds="timeAccumulateSeconds"
+          :initialSeconds="getActiveSessionElapsedSeconds"
           :startInmediate="currentTimeTrackSession !== null"
           @@start="handleStart"
           @@end="handleEnd"

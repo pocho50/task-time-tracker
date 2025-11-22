@@ -38,21 +38,20 @@ export function useTaskTimeTracks(
   // Initialize active session check
   checkActiveSessionAndSetLastSession();
 
-  const getTimeAccumulatedSeconds = computed(() => {
+  // Get accumulated time from completed sessions only (excludes active session)
+  const getCompletedSessionsSeconds = computed(() => {
     const tracks = getTimeTracks.value;
-    // Filter tracks for current user only
     const userTracks = tracks.filter(
       (track) => track.user.id === user.value?.id
     );
 
     return userTracks.reduce((acc, timeTrack) => {
-      // Skip sessions without start/end - active sessions are handled by TaskTime component's counter
+      // Only count completed sessions (with end time)
       if (!timeTrack.start || !timeTrack.end) return acc;
 
       const startTime = new Date(timeTrack.start).getTime();
       const endTime = new Date(timeTrack.end).getTime();
 
-      // Validate that the dates are valid and that end >= start
       if (isNaN(startTime) || isNaN(endTime) || endTime < startTime) {
         return acc;
       }
@@ -60,6 +59,19 @@ export function useTaskTimeTracks(
       const diffInMs = endTime - startTime;
       return acc + Math.floor(diffInMs / 1000);
     }, 0);
+  });
+
+  // Get elapsed time of current active session (for initializing counter on page load)
+  const getActiveSessionElapsedSeconds = computed(() => {
+    if (!currentTimeTrackSession.value?.start) return 0;
+
+    const startTime = new Date(currentTimeTrackSession.value.start).getTime();
+    const now = Date.now();
+
+    if (isNaN(startTime)) return 0;
+
+    const diffInMs = now - startTime;
+    return Math.floor(diffInMs / 1000);
   });
 
   const handleStart = async () => {
@@ -127,7 +139,8 @@ export function useTaskTimeTracks(
 
   return {
     getTimeTracks,
-    getTimeAccumulatedSeconds,
+    getTimeAccumulatedSeconds: getCompletedSessionsSeconds,
+    getActiveSessionElapsedSeconds,
     handleStart,
     handleEnd,
     handleUpdateSession,

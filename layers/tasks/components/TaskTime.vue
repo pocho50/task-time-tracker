@@ -2,10 +2,12 @@
 const props = withDefaults(
   defineProps<{
     accumulatedSeconds?: number;
+    initialSeconds?: number;
     startInmediate?: boolean;
   }>(),
   {
     accumulatedSeconds: 0,
+    initialSeconds: 0,
     startInmediate: false,
   }
 );
@@ -29,7 +31,9 @@ const {
 const pad = (n: number) => String(n).padStart(2, '0');
 
 const formattedTime = computed(() => {
-  const totalSeconds = props.accumulatedSeconds + counter.value;
+  // Calculate active session time: initial + counter
+  const activeSessionSeconds = props.initialSeconds + counter.value;
+  const totalSeconds = props.accumulatedSeconds + activeSessionSeconds;
 
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -43,7 +47,8 @@ const handleStart = () => {
 };
 
 const handlePause = () => {
-  const totalSeconds = props.accumulatedSeconds + counter.value;
+  const activeSessionSeconds = props.initialSeconds + counter.value;
+  const totalSeconds = props.accumulatedSeconds + activeSessionSeconds;
   resetCounter();
   pauseCounter();
   emit('@end', totalSeconds);
