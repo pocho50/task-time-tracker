@@ -206,4 +206,38 @@ export default class TaskPage {
     // Wait for dialog to disappear (close)
     await dialog.waitFor({ state: 'hidden' });
   }
+
+  /**
+   * Helper method to create a task through the UI
+   * Encapsulates the workflow: open modal → fill form → submit → verify
+   */
+  public async createTask(taskData: TaskDataForm) {
+    // Open the add task modal
+    await this.getAddTaskButton().click();
+
+    // Wait for the form to be visible
+    const nameInput = this.getFormNameInput();
+    await nameInput.waitFor({ state: 'visible' });
+
+    // Fill and submit the form
+    await this.fillForm(taskData);
+    await this.getFormSubmitButton().click();
+
+    // Wait for the modal to close
+    await this.page.waitForTimeout(500); // Brief wait for modal animation
+
+    // Verify the task appears in the list
+    await this.waitForTaskInList(taskData.name);
+  }
+
+  /**
+   * Helper method to wait for a task to appear in the task list
+   */
+  public async waitForTaskInList(taskName: string) {
+    await this.page
+      .getByTestId('task-list')
+      .getByText(taskName)
+      .first()
+      .waitFor({ state: 'visible' });
+  }
 }
