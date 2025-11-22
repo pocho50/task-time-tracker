@@ -149,7 +149,7 @@ describe('TaskTime', () => {
     }
   });
 
-  it('applies badge-error class when timer is active', async () => {
+  it('applies error styling when timer is active', async () => {
     // Act
     const wrapper = await mountSuspended(TaskTime);
 
@@ -157,18 +157,18 @@ describe('TaskTime', () => {
     await wrapper.find('button[aria-label="Start timer"]').trigger('click');
     await wrapper.vm.$nextTick();
 
-    // Assert
-    const badge = wrapper.find('.badge');
-    expect(badge.classes()).toContain('badge-error');
+    // Assert - Check for the status indicator with error styling
+    const statusIndicator = wrapper.find('.h-2\\.5.w-2\\.5.rounded-full');
+    expect(statusIndicator.classes()).toContain('bg-error');
   });
 
-  it('applies badge-neutral class when timer is not active', async () => {
+  it('applies neutral styling when timer is not active', async () => {
     // Act
     const wrapper = await mountSuspended(TaskTime);
 
-    // Assert
-    const badge = wrapper.find('.badge');
-    expect(badge.classes()).toContain('badge-neutral');
+    // Assert - Check for the status indicator with neutral styling
+    const statusIndicator = wrapper.find('.h-2\\.5.w-2\\.5.rounded-full');
+    expect(statusIndicator.classes()).toContain('bg-base-content/20');
   });
 
   it('starts timer immediately when startInmediate prop is true', async () => {
@@ -181,8 +181,8 @@ describe('TaskTime', () => {
 
     // Assert
     expect(wrapper.emitted('@start')).toBeTruthy();
-    const badge = wrapper.find('.badge');
-    expect(badge.classes()).toContain('badge-error');
+    const statusIndicator = wrapper.find('.h-2\\.5.w-2\\.5.rounded-full');
+    expect(statusIndicator.classes()).toContain('bg-error');
   });
 
   it('adds accumulated seconds to counter when timer is running', async () => {
