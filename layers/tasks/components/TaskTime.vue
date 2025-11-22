@@ -15,8 +15,6 @@ const emit = defineEmits<{
   '@end': [totalSeconds: number];
 }>();
 
-const accumulatedSeconds = toRef(props, 'accumulatedSeconds');
-
 const {
   counter,
   pause: pauseCounter,
@@ -31,7 +29,7 @@ const {
 const pad = (n: number) => String(n).padStart(2, '0');
 
 const formattedTime = computed(() => {
-  const totalSeconds = accumulatedSeconds.value + counter.value;
+  const totalSeconds = props.accumulatedSeconds + counter.value;
 
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -45,10 +43,10 @@ const handleStart = () => {
 };
 
 const handlePause = () => {
-  accumulatedSeconds.value += counter.value;
+  const totalSeconds = props.accumulatedSeconds + counter.value;
   resetCounter();
   pauseCounter();
-  emit('@end', accumulatedSeconds.value);
+  emit('@end', totalSeconds);
 };
 
 if (props.startInmediate) {

@@ -31,7 +31,9 @@
     "duration": "Duration",
     "notes": "Notes",
     "noNotesAdded": "No notes added",
-    "editSession": "Edit Time Session"
+    "editSession": "Edit Time Session",
+    "selectDateTime": "Select date and time",
+    "optional": "Optional"
   },
   "taskForm": {
     "name": "Task Name",

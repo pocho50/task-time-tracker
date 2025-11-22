@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { SerializedTimeTrackWithUser } from '../shared/types';
-import { formatDateForInput, formatDateForSubmit } from '#layers/shared/utils';
+import { VueDatePicker } from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
 
 const props = defineProps<{
   session: SerializedTimeTrackWithUser | null;
@@ -12,90 +13,118 @@ const emit = defineEmits<{
 }>();
 
 const formData = ref({
-  start: '',
-  end: '',
+  start: null as Date | null,
+  end: null as Date | null,
   notes: '',
 });
 
+// Function to initialize/reset form data from session
+const initializeFormData = () => {
+  if (props.session) {
+    formData.value = {
+      start: props.session.start ? new Date(props.session.start) : null,
+      end: props.session.end ? new Date(props.session.end) : null,
+      notes: props.session.notes || '',
+    };
+  }
+};
+
 // Initialize form data when session prop changes
-watch(
-  () => props.session,
-  (newSession) => {
-    if (newSession) {
-      formData.value = {
-        start: formatDateForInput(newSession.start),
-        end: formatDateForInput(newSession.end),
-        notes: newSession.notes || '',
-      };
-    }
-  },
-  { immediate: true }
-);
+watch(() => props.session, initializeFormData, { immediate: true });
 
 const handleSubmit = () => {
+  if (!formData.value.start) return;
+
   emit('@save', {
-    start: formatDateForSubmit(formData.value.start),
-    end: formData.value.end ? formatDateForSubmit(formData.value.end) : null,
+    start: formData.value.start.toISOString(),
+    end: formData.value.end ? formData.value.end.toISOString() : null,
     notes: formData.value.notes || null,
   });
 };
 
 const handleCancel = () => {
+  // Reset form data to original values before closing
+  initializeFormData();
   emit('@cancel');
 };
 </script>
 
 <template>
-  <form @submit.prevent="handleSubmit" class="space-y-4">
+  <form @submit.prevent="handleSubmit" class="space-y-6">
     <!-- Start Date/Time -->
     <div class="form-control w-full">
       <label class="label">
-        <span class="label-text">{{ $t('taskHistory.start') }}</span>
+        <span class="label-text font-semibold flex items-center gap-2">
+          <Icon name="mdi:clock-start" class="w-5 h-5" />
+          {{ $t('taskHistory.start') }}
+        </span>
       </label>
-      <input
+      <VueDatePicker
         v-model="formData.start"
-        type="datetime-local"
-        step="1"
-        class="input input-bordered w-full"
+        :enable-time-picker="true"
+        :enable-seconds="true"
+        time-picker-inline
+        auto-apply
+        :format="'dd/MM/yyyy HH:mm:ss'"
+        :preview-format="'dd/MM/yyyy HH:mm:ss'"
+        :clearable="false"
         required
+        :teleport="true"
+        data-testid="session-start-picker"
+        :placeholder="$t('taskHistory.selectDateTime')"
       />
     </div>
 
     <!-- End Date/Time -->
     <div class="form-control w-full">
       <label class="label">
-        <span class="label-text">{{ $t('taskHistory.end') }}</span>
+        <span class="label-text font-semibold flex items-center gap-2">
+          <Icon name="mdi:clock-end" class="w-5 h-5" />
+          {{ $t('taskHistory.end') }}
+        </span>
       </label>
-      <input
+      <VueDatePicker
         v-model="formData.end"
-        type="datetime-local"
-        step="1"
-        class="input input-bordered w-full"
+        :enable-time-picker="true"
+        :enable-seconds="true"
+        time-picker-inline
+        auto-apply
+        :format="'dd/MM/yyyy HH:mm:ss'"
+        :preview-format="'dd/MM/yyyy HH:mm:ss'"
+        :clearable="true"
+        :teleport="true"
+        :placeholder="$t('taskHistory.selectDateTime')"
+        data-testid="session-end-picker"
       />
     </div>
 
     <!-- Notes -->
     <div class="form-control w-full">
       <label class="label">
-        <span class="label-text">{{ $t('taskHistory.notes') }}</span>
+        <span class="label-text font-semibold flex items-center gap-2">
+          <Icon name="mdi:note-text" class="w-5 h-5" />
+          {{ $t('taskHistory.notes') }}
+        </span>
       </label>
       <textarea
         v-model="formData.notes"
-        class="textarea textarea-bordered w-full"
+        class="textarea textarea-bordered w-full focus:textarea-primary transition-colors"
         rows="4"
         :placeholder="$t('taskHistory.noNotesAdded')"
       ></textarea>
     </div>
 
     <!-- Actions -->
-    <div class="flex gap-2 justify-end">
+    <div class="flex gap-3 justify-end pt-2">
       <AppButton
         type="button"
-        variant="ghost"
-        :label="$t('common.cancel')"
+        variant="default"
+        icon="mdi:close"
         @click="handleCancel"
-      />
-      <AppButton type="submit" variant="primary">
+      >
+        {{ $t('common.cancel') }}
+      </AppButton>
+      <AppButton type="submit" variant="primary" icon="mdi:content-save">
         {{ $t('common.save') }}
       </AppButton>
     </div>

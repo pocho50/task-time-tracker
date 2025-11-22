@@ -191,17 +191,28 @@ export default class TaskPage {
     const form = dialog.locator('form');
 
     if (data.start) {
-      // Labels are not associated with inputs in the current implementation, so we use type selector
-      // Start is the first datetime-local input
-      await form
-        .locator('input[type="datetime-local"]')
-        .first()
-        .fill(data.start);
+      // VueDatePicker renders an input field that we can interact with
+      const startInput = form
+        .getByTestId('session-start-picker')
+        .locator('input')
+        .first();
+      await startInput.waitFor({ state: 'visible', timeout: 5000 });
+      await startInput.click();
+      await startInput.clear();
+      await startInput.fill(data.start);
     }
 
     if (data.end) {
-      // End is the second datetime-local input
-      await form.locator('input[type="datetime-local"]').nth(1).fill(data.end);
+      // VueDatePicker renders an input field that we can interact with
+      const endInput = form
+        .getByTestId('session-end-picker')
+        .locator('input')
+        .first();
+      await endInput.waitFor({ state: 'visible', timeout: 5000 });
+      await endInput.click();
+      await endInput.clear();
+      await endInput.fill(data.end);
+      await this.page.waitForTimeout(500);
     }
 
     if (data.notes) {
