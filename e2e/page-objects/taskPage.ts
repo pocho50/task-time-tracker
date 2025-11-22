@@ -51,7 +51,12 @@ export default class TaskPage {
   public async fillForm(data: TaskDataForm) {
     await this.getFormNameInput().fill(data.name);
     if (data.description) {
-      await this.getFormDescriptionInput().fill(data.description);
+      // Wait for TinyMCE iframe to be ready
+      const editorBody = this.getFormDescriptionInput();
+      await editorBody.waitFor({ state: 'visible', timeout: 10000 });
+      // Click to focus and fill the content
+      await editorBody.click();
+      await editorBody.fill(data.description);
     }
     await this.getFormPrioritySelect().selectOption(data.priority);
     await this.getFormStatusSelect().selectOption(data.status);
@@ -67,7 +72,9 @@ export default class TaskPage {
   }
 
   public getFormDescriptionInput() {
-    return this.page.getByRole('textbox', { name: /description/i });
+    // TinyMCE uses an iframe for the editor
+    // Use a more generic selector that matches any TinyMCE iframe
+    return this.page.frameLocator('iframe').first().locator('body');
   }
 
   public getFormPrioritySelect() {
