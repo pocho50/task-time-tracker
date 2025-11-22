@@ -10,7 +10,7 @@ function emitClose() {
 <template>
   <teleport to="body">
     <dialog :open="open" class="modal" aria-modal="true" :aria-label="title">
-      <form method="dialog" class="modal-box" @submit.prevent>
+      <div class="modal-box">
         <header
           v-if="title"
           class="font-bold text-lg mb-2 flex items-center justify-between"
@@ -33,7 +33,7 @@ function emitClose() {
         <footer class="modal-action mt-4">
           <slot name="actions" />
         </footer>
-      </form>
+      </div>
       <form method="dialog" class="modal-backdrop" @click.prevent="emitClose">
         <button :aria-label="$t('common.close')"></button>
       </form>

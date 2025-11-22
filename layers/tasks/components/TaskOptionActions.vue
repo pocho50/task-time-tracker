@@ -18,7 +18,7 @@ const handleHistory = (dropDown?: HTMLUListElement) => {
   >
     <template #moreActions="{ dropDown }">
       <li>
-        <a @click="handleHistory(dropDown)">
+        <a data-testid="task-history-action" @click="handleHistory(dropDown)">
           <Icon name="mdi:history" /> {{ $t('taskList.history') }}
         </a>
       </li>

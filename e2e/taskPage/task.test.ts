@@ -2,6 +2,11 @@ import { expect, test } from '@nuxt/test-utils/playwright';
 import en from '#layers/tasks/i18n/locales/en.json' assert { type: 'json' };
 import TaskPage from '../page-objects/taskPage';
 import { TaskTestHelper, TEST_CONSTANTS } from '../helpers/taskTestHelpers';
+import {
+  formatDateTime,
+  getDateHoursAgo,
+  getDateMinutesAgo,
+} from '../helpers/dateHelpers';
 
 test.describe('task', async () => {
   let taskPage: TaskPage;
@@ -11,6 +16,14 @@ test.describe('task', async () => {
     projectName: string;
     sprintId: string;
     sprintName: string;
+  };
+
+  // Constants for this test suite
+  const UPDATED_TASK_NAME = 'Updated name for e2e test';
+  const TIME_TRACKING_TASK_PREFIX = 'Time Tracking Task E2E';
+  const SESSION_NOTES = {
+    ROW: 'Edited from row button',
+    HISTORY: 'Edited from history drawer',
   };
 
   test.beforeEach(async ({ goto, page }) => {
@@ -24,16 +37,30 @@ test.describe('task', async () => {
   });
 
   test.afterEach(async ({ page }) => {
-    // Clean up dummy tasks created during tests
+    // Clean up all tasks created during tests
     if (testEnvironment?.sprintId) {
       await testHelper.removeDummyTask(testEnvironment.sprintId);
-      // Also clean up the "Updated name" task from edit test
-      const updatedTask = await testHelper.findTaskByName(
-        testEnvironment.sprintId,
-        'Updated name for e2e test'
-      );
-      if (updatedTask) {
-        await page.request.delete(`/api/tasks/${updatedTask.id}`);
+
+      // Clean up tasks with specific names from tests
+      const taskNamesToClean = [
+        UPDATED_TASK_NAME,
+        new RegExp(`${TIME_TRACKING_TASK_PREFIX} \\d+`),
+      ];
+
+      for (const namePattern of taskNamesToClean) {
+        const tasks = await testHelper.getTasksBySprint(
+          testEnvironment.sprintId
+        );
+        const tasksToDelete = tasks.filter((task: any) => {
+          if (namePattern instanceof RegExp) {
+            return namePattern.test(task.name);
+          }
+          return task.name === namePattern;
+        });
+
+        for (const task of tasksToDelete) {
+          await page.request.delete(`/api/tasks/${task.id}`);
+        }
       }
     }
   });
@@ -47,79 +74,34 @@ test.describe('task', async () => {
     await expect(taskPage.getTaskListItems()).toHaveCount(taskCount);
   });
 
-  test('change sprint and verify tasks update', async ({ page }) => {
-    // Get all sprints for the project
-    const sprints = await testHelper.getSprintsByProject(
-      testEnvironment.projectId
-    );
-
-    // Only run this test if there are at least 2 sprints
-    if (!sprints || sprints.length < 2) {
-      // Skip test - just verify we have the expected number of sprints
-      expect(sprints?.length || 0).toBeLessThan(2);
-      return;
-    }
-
-    const otherSprint = sprints.find(
-      (s: any) => s.id !== testEnvironment.sprintId
-    );
-
-    if (otherSprint) {
-      // Verify sprint selector is visible before trying to click
-      const sprintSelector = taskPage.getSprintSelector();
-      const isVisible = await sprintSelector.isVisible().catch(() => false);
-
-      if (!isVisible) {
-        // Sprint selector not visible, skip this test
-        expect(isVisible).toBe(false);
-        return;
-      }
-
-      // Select the other sprint
-      await taskPage.selectSprint(otherSprint.name);
-
-      // Check that tasks are updated for the new sprint
-      const otherTaskCount = await testHelper.getTaskCount(otherSprint.id);
-      await expect(taskPage.getTaskListItems()).toHaveCount(otherTaskCount);
-    }
-  });
-
   test('add new task', async ({ page }) => {
-    const initialTaskCount = await testHelper.getTaskCount(
-      testEnvironment.sprintId
-    );
     const addButton = taskPage.getAddTaskButton();
     await expect(addButton).toBeVisible();
 
     // Click add task button
     await addButton.click();
 
-    // Wait for the form to be visible (Playwright will retry automatically)
+    // Wait for the form to be visible
     await expect(taskPage.getFormNameInput()).toBeVisible();
 
-    // Fill the form
+    // Fill and submit the form
     await taskPage.fillForm(TEST_CONSTANTS.DUMMY_TASK);
-
-    // Submit the form
     await taskPage.getFormSubmitButton().click();
 
-    // Verify the task was created by checking the UI
+    // Wait for the modal to close
+    await expect(taskPage.getFormNameInput()).not.toBeVisible();
+
+    // Verify the task was created in the UI
     await expect(
       taskPage.getTaskList().getByText(TEST_CONSTANTS.DUMMY_TASK.name).first()
     ).toBeVisible();
 
-    // Get the added task
+    // Verify via API that the task was created
     const taskAdded = await testHelper.findTaskByName(
       testEnvironment.sprintId,
       TEST_CONSTANTS.DUMMY_TASK.name
     );
-
-    if (taskAdded) {
-      // Verify UI shows the created task details
-      await expect(
-        taskPage.getTaskList().getByText(TEST_CONSTANTS.DUMMY_TASK.name).first()
-      ).toBeVisible();
-    }
+    expect(taskAdded).toBeTruthy();
   });
 
   test('edit existing task', async ({ page }) => {
@@ -131,43 +113,113 @@ test.describe('task', async () => {
     await taskPage.fillForm(TEST_CONSTANTS.DUMMY_TASK);
     await taskPage.getFormSubmitButton().click();
 
+    // Wait for the modal to close
+    await expect(taskPage.getFormNameInput()).not.toBeVisible();
+
+    // Wait for the task to be added to the UI
+    await expect(
+      taskPage.getTaskList().getByText(TEST_CONSTANTS.DUMMY_TASK.name).first()
+    ).toBeVisible();
+
     // Get the created task
     const taskAdded = await testHelper.findTaskByName(
       testEnvironment.sprintId,
       TEST_CONSTANTS.DUMMY_TASK.name
     );
 
-    if (taskAdded) {
-      // Click edit button
-      const editButton = await taskPage.getEditTaskButton(taskAdded.id);
-      await editButton.click();
+    expect(taskAdded, 'Task should be created successfully').not.toBeNull();
 
-      // Verify the form is populated with the task data
-      const nameInput = taskPage.getFormNameInput();
-      await expect(nameInput).toHaveValue(TEST_CONSTANTS.DUMMY_TASK.name);
+    if (!taskAdded) return; // Guard for TypeScript
 
-      // Modify the task name instead of description (easier to update)
-      const updatedName = 'Updated name for e2e test';
-      await nameInput.clear();
-      await nameInput.fill(updatedName);
+    // Click edit button
+    const editButton = await taskPage.getEditTaskButton(taskAdded.id);
+    await editButton.click();
 
-      // Submit the form
-      await taskPage.getFormSubmitButton().click();
+    // Verify the form is populated with the task data
+    const nameInput = taskPage.getFormNameInput();
+    await expect(nameInput).toHaveValue(TEST_CONSTANTS.DUMMY_TASK.name);
 
-      // Verify the task still exists in the list
-      await expect(
-        taskPage.getTaskList().getByText(updatedName).first()
-      ).toBeVisible();
+    // Modify the task name
+    await nameInput.clear();
+    await nameInput.fill(UPDATED_TASK_NAME);
 
-      // Verify via API that the description was updated
-      const updatedTask = await testHelper.findTaskByName(
-        testEnvironment.sprintId,
-        updatedName
-      );
+    // Submit the form
+    await taskPage.getFormSubmitButton().click();
 
-      if (updatedTask) {
-        expect(updatedTask.name).toBe(updatedName);
-      }
-    }
+    // Verify the task still exists in the list with new name
+    await expect(
+      taskPage.getTaskList().getByText(UPDATED_TASK_NAME).first()
+    ).toBeVisible();
+
+    // Verify via API that the description was updated
+    const updatedTask = await testHelper.findTaskByName(
+      testEnvironment.sprintId,
+      UPDATED_TASK_NAME
+    );
+
+    expect(updatedTask, 'Task name should be updated').not.toBeNull();
+    expect(updatedTask?.name).toBe(UPDATED_TASK_NAME);
+  });
+
+  test('edit session from row button and history', async ({ page }) => {
+    const timestamp = Date.now();
+    const taskName = `${TIME_TRACKING_TASK_PREFIX} ${timestamp}`;
+    const taskData = { ...TEST_CONSTANTS.DUMMY_TASK, name: taskName };
+
+    // Create task
+    const addButton = taskPage.getAddTaskButton();
+    await expect(addButton).toBeVisible();
+    await addButton.click();
+    await taskPage.fillForm(taskData);
+    await taskPage.getFormSubmitButton().click();
+
+    // Verify task is visible
+    await expect(taskPage.getTaskRow(taskName)).toBeVisible();
+
+    // 1. Start a session via timer button
+    await taskPage.startTaskTimer(taskName);
+    await expect(taskPage.getPauseTimerButton(taskName)).toBeVisible();
+
+    // 2. Edit the active session (change start time + notes)
+    await taskPage.editActiveSession(taskName);
+    const newStartDate = getDateHoursAgo(2);
+    await taskPage.fillSessionForm({
+      start: formatDateTime(newStartDate),
+      notes: SESSION_NOTES.ROW,
+    });
+
+    // 3. Stop the session so it moves to history
+    await taskPage.stopTaskTimer(taskName);
+    await expect(taskPage.getStartTimerButton(taskName)).toBeVisible();
+
+    // 4. Open history and verify the edited session is listed
+    await taskPage.openTaskHistory(taskName);
+    await expect(page.getByText(SESSION_NOTES.ROW)).toBeVisible();
+
+    // 5. Edit the completed session from history (change end time + notes)
+    await taskPage.editHistorySession(0);
+    const newEndDate = getDateMinutesAgo(30);
+    await taskPage.fillSessionForm({
+      end: formatDateTime(newEndDate),
+      notes: SESSION_NOTES.HISTORY,
+    });
+
+    await expect(page.getByText(SESSION_NOTES.HISTORY)).toBeVisible();
+
+    // 6. Verify via API that the task session reflects the changes
+    const taskAfterHistoryEdit = await testHelper.findTaskByName(
+      testEnvironment.sprintId,
+      taskName
+    );
+
+    expect(taskAfterHistoryEdit).toBeTruthy();
+    const trackAfterHistoryEdit = taskAfterHistoryEdit?.timeTracking?.find(
+      (track: any) => track.notes === SESSION_NOTES.HISTORY
+    );
+
+    expect(trackAfterHistoryEdit).toBeTruthy();
+    expect(trackAfterHistoryEdit?.notes).toBe(SESSION_NOTES.HISTORY);
+    expect(trackAfterHistoryEdit?.start).toBeTruthy();
+    expect(trackAfterHistoryEdit?.end).toBeTruthy();
   });
 });

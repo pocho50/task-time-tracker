@@ -62,6 +62,7 @@ const handleEdit = (timeTrack: SerializedTimeTrackWithUser) => {
                 class="btn btn-ghost btn-xs btn-square"
                 :title="$t('taskHistory.editSession')"
                 @click="handleEdit(timeTrack)"
+                :data-testid="`edit-history-session-button-${timeTrack.id}`"
               >
                 <Icon name="mdi:pencil" class="text-base" />
               </button>

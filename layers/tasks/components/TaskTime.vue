@@ -73,6 +73,7 @@ if (props.startInmediate) {
       @click="handleStart"
       aria-label="Start timer"
       title="Start"
+      data-testid="start-timer-button"
     >
       <Icon name="mdi:play" class="text-success" size="24" />
     </AppButton>
@@ -83,6 +84,7 @@ if (props.startInmediate) {
       @click="handlePause"
       aria-label="Pause timer"
       title="Pause"
+      data-testid="pause-timer-button"
     >
       <Icon name="mdi:pause" class="text-warning" size="24" />
     </AppButton>

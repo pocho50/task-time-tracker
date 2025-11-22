@@ -66,7 +66,7 @@ watch(
 </script>
 
 <template>
-  <tr class="hover">
+  <tr class="hover" data-testid="task-row">
     <!-- Name -->
     <td>
       <div class="font-bold">
@@ -107,6 +107,7 @@ watch(
           @click="editSessionModal?.handleOpenEditSession"
           class="btn btn-ghost btn-xs"
           :aria-label="$t('common.edit')"
+          data-testid="edit-active-session-button"
         >
           <Icon name="mdi:pencil" size="16" />
         </button>
