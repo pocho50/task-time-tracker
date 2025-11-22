@@ -63,6 +63,26 @@ watch(
   },
   { immediate: true }
 );
+
+// Strip HTML tags and truncate description to 100 characters
+const truncatedDescription = computed(() => {
+  if (!props.task.description) return '';
+
+  // Remove HTML tags
+  const plainText = props.task.description.replace(/<[^>]*>/g, '');
+
+  // Decode HTML entities
+  const textarea = document.createElement('textarea');
+  textarea.innerHTML = plainText;
+  const decodedText = textarea.value;
+
+  // Truncate to 100 characters
+  if (decodedText.length > 100) {
+    return decodedText.substring(0, 100) + '...';
+  }
+
+  return decodedText;
+});
 </script>
 
 <template>
@@ -72,8 +92,8 @@ watch(
       <div class="font-bold">
         {{ task.name }}
       </div>
-      <div v-if="task.description" class="text-sm text-gray-500">
-        {{ task.description }}
+      <div v-if="truncatedDescription" class="text-sm text-gray-500">
+        {{ truncatedDescription }}
       </div>
     </td>
     <!-- Priority -->

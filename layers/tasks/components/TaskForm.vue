@@ -82,7 +82,7 @@ defineExpose({
         :label="$t('taskForm.name')"
       />
 
-      <AppFormTextarea
+      <AppFormEditor
         name="description"
         class-input="w-full"
         :placeholder="$t('taskForm.description')"

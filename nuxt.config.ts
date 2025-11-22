@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       appTitle: TITLE,
+      tinymceApiKey: '',
     },
   },
   compatibilityDate: '2024-11-01',

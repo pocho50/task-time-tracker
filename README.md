@@ -43,6 +43,8 @@ Before running the project, copy `.env.example` to `.env` and fill in your own v
   - In production, the SQLite database file should be stored **outside** the public directory for security reasons.
 - **NUXT_SESSION_PASSWORD**: Session secret for Nuxt Auth Utils.
   - Must be at least 32 characters long for security.
+- **NUXT_PUBLIC_TINYMCE_API_KEY**: API key for TinyMCE rich text editor.
+  - Get your free API key from [TinyMCE Cloud](https://www.tiny.cloud/).
 
 See the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) for more information.
 
@@ -71,7 +73,6 @@ To run the tests:
    ```
 
    This will:
-
    - Reset and seed the test database (`time_tracker_test.db`)
    - Set up the necessary environment variables
    - Start the Nuxt server on port 3030
