@@ -45,18 +45,12 @@ export function useTaskTimeTracks(
       (track) => track.user.id === user.value?.id
     );
 
-    return userTracks.reduce((acc, timeTrack, index) => {
-      if (!timeTrack.start) return acc;
+    return userTracks.reduce((acc, timeTrack) => {
+      // Skip sessions without start/end - active sessions are handled by TaskTime component's counter
+      if (!timeTrack.start || !timeTrack.end) return acc;
 
       const startTime = new Date(timeTrack.start).getTime();
-      const isLastItem = index === 0;
-
-      // Only the last item can have end null (active session)
-      const endTime = timeTrack.end
-        ? new Date(timeTrack.end).getTime()
-        : isLastItem
-          ? Date.now()
-          : startTime; // If not the last item and there is no end, ignore it
+      const endTime = new Date(timeTrack.end).getTime();
 
       // Validate that the dates are valid and that end >= start
       if (isNaN(startTime) || isNaN(endTime) || endTime < startTime) {
