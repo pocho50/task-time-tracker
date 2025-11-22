@@ -82,6 +82,7 @@ if (props.startInmediate) {
 
     <!-- Time Display -->
     <div
+      data-testid="task-time-display"
       class="font-mono text-lg font-bold tracking-wide tabular-nums text-base-content"
       :class="{ 'text-error': isActive }"
       :title="formattedTime"

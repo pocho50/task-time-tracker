@@ -258,4 +258,11 @@ export default class TaskPage {
       .first()
       .waitFor({ state: 'visible' });
   }
+
+  /**
+   * Get the time display element for a task
+   */
+  public getTaskTimeDisplay(taskName: string) {
+    return this.getTaskRow(taskName).getByTestId('task-time-display');
+  }
 }
