@@ -1,4 +1,4 @@
-import { type Page } from '@playwright/test';
+import type { Page } from '@playwright/test';
 
 export async function fetchApiData<T>(page: Page, url: string): Promise<T[]> {
   const apiResponse = await page.request.get(url);

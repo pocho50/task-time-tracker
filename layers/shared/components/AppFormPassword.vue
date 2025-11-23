@@ -27,8 +27,8 @@ function toggleShow() {
         />
         <button
           type="button"
-          @click="toggleShow"
           class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+          @click="toggleShow"
         >
           <Icon
             :name="!show ? 'mdi:eye-off' : 'mdi:eye'"

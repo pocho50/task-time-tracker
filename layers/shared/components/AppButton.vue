@@ -40,7 +40,7 @@ defineProps<{
       customClass,
     ]"
   >
-    <span v-if="loading" class="loading loading-spinner loading-xs"></span>
-    <slot></slot>
+    <span v-if="loading" class="loading loading-spinner loading-xs"/>
+    <slot/>
   </button>
 </template>

@@ -1,6 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { mountSuspended } from '@nuxt/test-utils/runtime';
-import { mockComponent, mockNuxtImport } from '@nuxt/test-utils/runtime';
+import { mountSuspended, mockComponent, mockNuxtImport  } from '@nuxt/test-utils/runtime';
 import AppAutocomplete from '../../components/AppAutocomplete.vue';
 
 const PLACEHOLDER = 'Select an option';

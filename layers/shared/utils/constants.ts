@@ -4,3 +4,7 @@ export const ALL_ENTITIES = {
   PROJECTS: 'projects',
   USERS: 'users',
 };
+export const ROLES = {
+  ADMIN: 'ADMIN',
+  USER: 'USER',
+} as const;

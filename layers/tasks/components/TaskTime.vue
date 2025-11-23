@@ -69,7 +69,7 @@ if (props.startInmediate) {
       <div
         v-if="isActive"
         class="absolute rounded-full bg-error opacity-75"
-      ></div>
+      />
       <div
         class="h-2.5 w-2.5 rounded-full shadow-sm transition-colors duration-300"
         :class="
@@ -77,7 +77,7 @@ if (props.startInmediate) {
             ? 'bg-error'
             : 'bg-base-content/20 group-hover:bg-base-content/30'
         "
-      ></div>
+      />
     </div>
 
     <!-- Time Display -->
@@ -91,7 +91,7 @@ if (props.startInmediate) {
     </div>
 
     <!-- Vertical Separator -->
-    <div class="mx-1 h-5 w-px bg-base-200"></div>
+    <div class="mx-1 h-5 w-px bg-base-200"/>
 
     <!-- Actions -->
     <div class="flex items-center">
@@ -100,10 +100,10 @@ if (props.startInmediate) {
         variant="ghost"
         size="sm"
         custom-class="btn-circle hover:bg-success/10 hover:text-success transition-colors"
-        @click="handleStart"
         aria-label="Start timer"
         title="Start"
         data-testid="start-timer-button"
+        @click="handleStart"
       >
         <Icon name="mdi:play" size="24" />
       </AppButton>
@@ -113,10 +113,10 @@ if (props.startInmediate) {
         variant="ghost"
         size="sm"
         custom-class="btn-circle hover:bg-warning/10 hover:text-warning transition-colors"
-        @click="handlePause"
         aria-label="Pause timer"
         title="Pause"
         data-testid="pause-timer-button"
+        @click="handlePause"
       >
         <Icon name="mdi:pause" size="24" />
       </AppButton>

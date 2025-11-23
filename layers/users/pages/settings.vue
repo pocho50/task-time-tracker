@@ -24,13 +24,13 @@ const onSubmit = (values: Record<string, any>) => {
   <section class="py-12 px-4 bg-base-100">
     <AppTitle :text="$t('settings.title')" />
     <VeeForm
+      v-slot="{ handleSubmit }"
       :validation-schema="validationSchema"
       :initial-values="initialData"
       class="flex flex-col gap-4 max-w-lg"
-      v-slot="{ handleSubmit }"
       as="div"
     >
-      <form @submit="handleSubmit($event, onSubmit)" ref="form">
+      <form ref="form" @submit="handleSubmit($event, onSubmit)">
         <AppFormInput
           type="text"
           name="name"

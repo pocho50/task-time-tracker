@@ -44,9 +44,9 @@ const getDimensions = computed(() => {
     <!-- Overlay -->
     <div
       v-if="open"
-      @click="closeDrawer"
       :class="{ 'drawer-right-overlay': open }"
       class="fixed inset-0 bg-black/30 transition-opacity duration-300 ease-in-out z-40"
+      @click="closeDrawer"
     />
 
     <!-- Drawer -->
@@ -61,12 +61,12 @@ const getDimensions = computed(() => {
       ]"
     >
       <div class="flex flex-col h-full">
-        <p class="text-lg font-bold p-4" v-if="title">{{ title }}</p>
+        <p v-if="title" class="text-lg font-bold p-4">{{ title }}</p>
         <div class="p-4 h-full overflow-y-auto grow">
-          <slot></slot>
+          <slot/>
         </div>
         <footer class="p-4 flex justify-end gap-4">
-          <slot name="actions"></slot>
+          <slot name="actions"/>
         </footer>
       </div>
     </aside>

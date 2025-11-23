@@ -41,7 +41,7 @@ const handleEditTimeTrack = async (timeTrack: SerializedTimeTrackWithUser) => {
           <th>{{ $t('taskList.priority') }}</th>
           <th>{{ $t('taskList.status') }}</th>
           <th>{{ $t('taskList.assignedUsers') }}</th>
-          <th></th>
+          <th/>
           <th class="w-28">{{ $t('taskList.actions') }}</th>
         </tr>
       </thead>
@@ -80,8 +80,8 @@ const handleEditTimeTrack = async (timeTrack: SerializedTimeTrackWithUser) => {
   </AppDrawerRight>
 
   <TaskTimeTrackEdit
-    ref="editSessionModal"
     v-if="session && selectedTask"
+    ref="editSessionModal"
     :task="selectedTask"
     :session="session"
   />

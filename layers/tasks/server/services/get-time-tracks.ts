@@ -1,4 +1,4 @@
-import { TimeTrackRepository } from '../repository/time-track';
+import type { TimeTrackRepository } from '../repository/time-track';
 
 interface GetTimeTracksInput {
   taskId: string;

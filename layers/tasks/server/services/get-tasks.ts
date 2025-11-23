@@ -1,4 +1,4 @@
-import { TaskRepository } from '../repository/task';
+import type { TaskRepository } from '../repository/task';
 
 interface GetTasksInput {
   sprintId: string;

@@ -1,4 +1,4 @@
-import { TimeTrackRepository } from '../repository/time-track';
+import type { TimeTrackRepository } from '../repository/time-track';
 import type { TimeTrackWithUser } from '../../shared/types';
 
 // Custom error class for time tracking operations

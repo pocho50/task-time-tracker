@@ -1,9 +1,11 @@
-import { PrismaClient, TaskPriority, TaskStatus } from '@prisma/client';
+import type { TaskPriority, TaskStatus } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import type {
   TaskWithUsers,
   TaskWithUsersData,
   TaskWithUsersAndTimeTracks,
 } from '../../shared/types';
+import { ROLES } from '#layers/shared/utils/constants';
 
 export class TaskRepository {
   private prisma: PrismaClient;
@@ -193,7 +195,7 @@ export class TaskRepository {
     projectId: string
   ): Promise<boolean> {
     // Admins always have access
-    if (userRole === 'ADMIN') return true;
+    if (userRole === ROLES.ADMIN) return true;
 
     if (taskId) {
       // Updating existing task - check if user is assigned to this task

@@ -1,6 +1,7 @@
 import { TaskRepository } from '../../repository/task';
 import { GetTasksService } from '../../services/get-tasks';
 import { DEFAULT_PAGE_SIZE } from '../../constants';
+import { ROLES } from '#layers/shared/utils/constants';
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
@@ -30,7 +31,7 @@ export default defineEventHandler(async (event) => {
 
   // Check if user has access to this sprint (admins always have access)
   const hasAccess =
-    user.role === 'ADMIN' || (await repo.isUserInSprint(user.id, sprintId));
+    user.role === ROLES.ADMIN || (await repo.isUserInSprint(user.id, sprintId));
 
   if (!hasAccess) {
     throw createError({

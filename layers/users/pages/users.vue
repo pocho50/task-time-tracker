@@ -37,7 +37,7 @@ const userForm = useTemplateRef('userForm');
     <AppPagination
       v-if="pagination && pagination.pageCount > 1"
       :page="page"
-      :totalPages="pagination.pageCount"
+      :total-pages="pagination.pageCount"
       @@prev="page--"
       @@next="page++"
     />
@@ -48,10 +48,10 @@ const userForm = useTemplateRef('userForm');
     >
       <LazyUserForm
         v-if="openDrawer"
+        ref="userForm"
         :initial-data="selectedUser"
         :is-create="isCreate"
         @@submit="handleSave"
-        ref="userForm"
       />
       <template #actions>
         <AppButton

@@ -1,4 +1,4 @@
-import { SprintRepository } from '../repository/sprint';
+import type { SprintRepository } from '../repository/sprint';
 
 interface GetSprintsInput {
   projectId: string;

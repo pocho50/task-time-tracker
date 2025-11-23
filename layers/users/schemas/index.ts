@@ -1,6 +1,5 @@
 import { z } from 'zod';
-import { LOCALES, THEMES } from '#layers/shared/utils/constants';
-import { ROLES } from '#layers/users/utils/constants';
+import { LOCALES, THEMES, ROLES } from '#layers/shared/utils/constants';
 
 export const loginSchema = z.object({
   email: z.string().email(),
@@ -23,7 +22,7 @@ export function getUserSchema(isCreate: boolean) {
       id: z.string().optional(),
       name: z.string().min(1),
       email: z.string().email(),
-      role: z.enum(ROLES),
+      role: z.enum([ROLES.ADMIN, ROLES.USER]),
       password: isCreate ? z.string().min(8) : z.string().min(8).optional(),
       repeatPassword: isCreate
         ? z.string().min(8)

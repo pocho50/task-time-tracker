@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { useUsers } from '../../composables/useUsers';
 import { mockNuxtImport } from '@nuxt/test-utils/runtime';
 import { mockUsers } from '../__mocks__/userMocks';
+import { ROLES } from '#layers/shared/utils/constants';
 
 // Mock dependencies
 const mockUserRepo = {
@@ -48,7 +49,7 @@ describe('useUsers', () => {
       id: 'u3',
       name: 'Charlie',
       email: 'charlie@example.com',
-      role: 'USER' as const,
+      role: ROLES.USER,
     };
 
     mockUserRepo.save.mockResolvedValue({});

@@ -1,4 +1,4 @@
-import { type Page } from '@playwright/test';
+import type { Page } from '@playwright/test';
 import en_shared from '#layers/shared/i18n/locales/en.json' assert { type: 'json' };
 
 export default class UserPage {

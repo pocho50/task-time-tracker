@@ -1,4 +1,4 @@
-import { ProjectRepository } from '../repository/project';
+import type { ProjectRepository } from '../repository/project';
 
 interface GetProjectsInput {
   userId: string;

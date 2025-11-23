@@ -64,10 +64,10 @@ const sprintForm = useTemplateRef('sprintForm');
     <AppPagination
       v-if="pagination"
       :page="page"
-      :totalPages="pagination.pageCount"
+      :total-pages="pagination.pageCount"
+      class="my-4"
       @@prev="page--"
       @@next="page++"
-      class="my-4"
     />
     <!-- Add Sprint Button -->
     <AppAddBtn @click="handleAdd" />

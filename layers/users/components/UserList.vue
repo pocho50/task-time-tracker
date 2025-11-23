@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { User } from '../utils/index';
 import type { UserRole } from '@prisma/client';
+import { ROLES } from '#layers/shared/utils/constants';
 const props = defineProps<{
   users: User[];
 }>();
@@ -9,7 +10,7 @@ const props = defineProps<{
 const { handleEdit, handleRemove } = useUsersContext();
 
 const getVariant = (role: UserRole) => {
-  return role === 'ADMIN' ? 'success' : 'info';
+  return role === ROLES.ADMIN ? 'success' : 'info';
 };
 </script>
 
@@ -21,7 +22,7 @@ const getVariant = (role: UserRole) => {
     <table class="table table-zebra w-full">
       <thead>
         <tr>
-          <th class="w-16 hidden lg:table-cell"></th>
+          <th class="w-16 hidden lg:table-cell"/>
           <th>{{ $t('userList.name') }}</th>
           <th>{{ $t('userList.email') }}</th>
           <th>{{ $t('userList.role') }}</th>
@@ -60,9 +61,9 @@ const getVariant = (role: UserRole) => {
               <div :data-testid="`user-actions-${user.id}`">
                 <AppOptionAction
                   :actions="['edit', 'remove']"
+                  class="relative dropdown-top !right-0 !top-0"
                   @@edit="handleEdit(user.id)"
                   @@remove="handleRemove(user.id)"
-                  class="relative dropdown-top !right-0 !top-0"
                 />
               </div>
             </td>

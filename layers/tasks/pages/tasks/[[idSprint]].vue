@@ -107,8 +107,8 @@ definePageMeta({
 
           <!-- Sprint Selector -->
           <AppSprintSelector
-            v-model="selectedSprintId"
             v-if="selectedProjectId"
+            v-model="selectedSprintId"
             :project-id="selectedProjectId"
             :label="$t('taskList.selectSprint')"
             :placeholder="$t('taskList.selectSprint')"

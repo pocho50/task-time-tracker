@@ -1,4 +1,5 @@
-import { PrismaClient, type Sprint, SprintStatus } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import type { SprintStatus, Sprint } from '@prisma/client';
 
 export class SprintRepository {
   private prisma: PrismaClient;
@@ -14,15 +15,16 @@ export class SprintRepository {
   ): Promise<Sprint[]> {
     const sprints = await this.prisma.sprint.findMany({
       where: {
-        projectId
+        projectId,
       },
       orderBy: {
-        createdAt: 'desc'
+        createdAt: 'desc',
       },
-      ...(page && pageSize && {
-        skip: (page - 1) * pageSize,
-        take: pageSize
-      })
+      ...(page &&
+        pageSize && {
+          skip: (page - 1) * pageSize,
+          take: pageSize,
+        }),
     });
 
     return sprints;
@@ -30,26 +32,26 @@ export class SprintRepository {
 
   async getById(id: string): Promise<Sprint | null> {
     return this.prisma.sprint.findUnique({
-      where: { id }
+      where: { id },
     });
   }
 
   async countSprintsByProjectId(projectId: string): Promise<number> {
     return this.prisma.sprint.count({
       where: {
-        projectId
-      }
+        projectId,
+      },
     });
   }
-  
+
   async isUserInProject(userId: string, projectId: string): Promise<boolean> {
     const count = await this.prisma.projectsOnUsers.count({
       where: {
         userId,
-        projectId
-      }
+        projectId,
+      },
     });
-    
+
     return count > 0;
   }
 

@@ -1,6 +1,7 @@
 import { SprintRepository } from '../../repository/sprint';
 import { sprintSchema } from '#layers/sprints/schemas';
 import { SaveSprintService } from '../../services/save-sprint';
+import { ROLES } from '#layers/shared/utils/constants';
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
@@ -15,7 +16,8 @@ export default defineEventHandler(async (event) => {
 
   // Check if user has access to this project (admins always have access)
   const hasAccess =
-    user.role === 'ADMIN' || (await repo.isUserInProject(user.id, projectId!));
+    user.role === ROLES.ADMIN ||
+    (await repo.isUserInProject(user.id, projectId!));
 
   if (!hasAccess) {
     throw createError({

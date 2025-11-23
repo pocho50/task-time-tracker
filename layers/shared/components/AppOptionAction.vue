@@ -40,8 +40,8 @@ function confirmRemove() {
       size="20"
     />
     <ul
-      tabindex="0"
       ref="dropDown"
+      tabindex="0"
       class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-xl border border-base-200 divide-y divide-base-200"
     >
       <li v-if="actions.includes('edit')">
@@ -54,7 +54,7 @@ function confirmRemove() {
           <Icon name="mdi:delete" /> {{ $t('common.delete') }}
         </a>
       </li>
-      <slot name="moreActions" :dropDown="dropDown" />
+      <slot name="moreActions" :drop-down="dropDown" />
     </ul>
     <AppModal v-model="showRemoveModal" :title="$t('common.confirmDeletion')">
       <template #default>

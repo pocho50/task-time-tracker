@@ -1,5 +1,5 @@
-import { TaskPriority, TaskStatus } from '@prisma/client';
-import { TaskRepository } from '../repository/task';
+import type { TaskPriority, TaskStatus } from '@prisma/client';
+import type { TaskRepository } from '../repository/task';
 import type { TaskWithUsers } from '../../shared/types';
 
 export class SaveTasksService {

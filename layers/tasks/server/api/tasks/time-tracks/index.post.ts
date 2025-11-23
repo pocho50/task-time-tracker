@@ -3,6 +3,7 @@ import {
   CreateUpdateTimeTrackService,
   TimeTrackError,
 } from '../../../services/save-time-track';
+import { ROLES } from '#layers/shared/utils/constants';
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
@@ -24,7 +25,8 @@ export default defineEventHandler(async (event) => {
 
   // Check if user has access to this task (admins always have access)
   const hasAccess =
-    user.role === 'ADMIN' || (await repo.isUserInTask(user.id, body.taskId));
+    user.role === ROLES.ADMIN ||
+    (await repo.isUserInTask(user.id, body.taskId));
 
   if (!hasAccess) {
     throw createError({
