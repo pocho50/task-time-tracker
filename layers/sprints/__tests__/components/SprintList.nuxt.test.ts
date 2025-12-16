@@ -1,6 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { mockComponent, mockNuxtImport } from '@nuxt/test-utils/runtime';
-import { mountSuspended } from '@nuxt/test-utils/runtime';
+import { mockComponent, mockNuxtImport, mountSuspended  } from '@nuxt/test-utils/runtime';
 import SprintList from '../../components/SprintList.vue';
 import { mockSprints } from '../__mocks__/sprintMocks';
 

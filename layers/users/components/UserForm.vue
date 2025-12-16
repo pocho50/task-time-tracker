@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod';
-import { ROLES } from '#layers/users/utils/constants';
+import { ROLES } from '#layers/shared/utils/constants';
 
 const emit = defineEmits<{
   (e: '@submit', data: UserDataForm): void;
@@ -39,16 +39,16 @@ defineExpose({
 
 <template>
   <VeeForm
+    v-slot="{ handleSubmit }"
     :validation-schema="validationSchema"
     :initial-values="initialData"
-    v-slot="{ handleSubmit }"
     class="flex flex-col gap-4"
     as="div"
   >
     <form
-      @submit="handleSubmit($event, onSubmit)"
       ref="form"
       data-testid="user-form"
+      @submit="handleSubmit($event, onSubmit)"
     >
       <AppFormInput
         name="name"
@@ -65,7 +65,10 @@ defineExpose({
       <AppFormSelect
         name="role"
         class-input="w-full"
-        :options="ROLES.map((r) => ({ value: r, text: r }))"
+        :options="[
+          { value: ROLES.ADMIN, text: ROLES.ADMIN },
+          { value: ROLES.USER, text: ROLES.USER },
+        ]"
         :placeholder="$t('userForm.role')"
       />
       <AppFormPassword

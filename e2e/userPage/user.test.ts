@@ -4,6 +4,7 @@ import UserPage from '../page-objects/userPage';
 import { fetchApiData, removeItem } from '../helpers/api';
 import type { User } from '@prisma/client';
 import type { Page } from '@playwright/test';
+import { ROLES } from '#layers/shared/utils/constants';
 
 let userPage: UserPage;
 const URL_API = '/api/users';
@@ -11,7 +12,7 @@ const URL_API = '/api/users';
 const dumyUser = {
   name: 'test',
   email: 'test123@test123.com',
-  role: 'ADMIN',
+  role: ROLES.ADMIN,
   password: 'Test1245678',
   repeatPassword: 'Test1245678',
 } as UserDataForm;
@@ -23,7 +24,7 @@ async function removeDumyUser(page: Page) {
   }
 }
 
-async function getUserByEmail(page: Page, email: String) {
+async function getUserByEmail(page: Page, email: string) {
   const usersFromApi = await fetchApiData<User>(page, URL_API);
   const user = usersFromApi.find((user) => user.email === email);
   return user;

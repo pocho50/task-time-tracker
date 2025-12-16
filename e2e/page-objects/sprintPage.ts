@@ -1,4 +1,4 @@
-import { type Page } from '@playwright/test';
+import type { Page } from '@playwright/test';
 import en from '#layers/sprints/i18n/locales/en.json' assert { type: 'json' };
 import en_shared from '#layers/shared/i18n/locales/en.json' assert { type: 'json' };
 import type { SprintDataForm } from '../types/sprint';

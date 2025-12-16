@@ -10,8 +10,8 @@ const { userIsAllowedToWrite } = useUser();
 </script>
 <template>
   <div
-    class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
     v-if="projects && projects.length"
+    class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
     data-testid="project-list"
   >
     <article

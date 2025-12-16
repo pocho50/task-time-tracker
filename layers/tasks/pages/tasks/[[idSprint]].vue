@@ -90,7 +90,10 @@ definePageMeta({
       <!-- Selectors Container -->
       <div class="flex flex-col sm:flex-row gap-4">
         <!-- Loading State -->
-        <div v-if="!selectedProjectId && loadingProjectId" class="lg:mr-5">
+        <div
+          v-if="!selectedProjectId && loadingProjectId && status !== 'error'"
+          class="lg:mr-5"
+        >
           <AppLoading size="lg" :text="$t('taskList.loadingSelectors')" />
         </div>
 
@@ -107,8 +110,8 @@ definePageMeta({
 
           <!-- Sprint Selector -->
           <AppSprintSelector
-            v-model="selectedSprintId"
             v-if="selectedProjectId"
+            v-model="selectedSprintId"
             :project-id="selectedProjectId"
             :label="$t('taskList.selectSprint')"
             :placeholder="$t('taskList.selectSprint')"

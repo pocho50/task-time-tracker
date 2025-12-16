@@ -50,7 +50,7 @@ const handleCancel = () => {
 </script>
 
 <template>
-  <form @submit.prevent="handleSubmit" class="space-y-6">
+  <form class="space-y-6" @submit.prevent="handleSubmit">
     <!-- Start Date/Time -->
     <div class="form-control w-full">
       <label class="label">
@@ -111,7 +111,7 @@ const handleCancel = () => {
         class="textarea textarea-bordered w-full focus:textarea-primary transition-colors"
         rows="4"
         :placeholder="$t('taskHistory.noNotesAdded')"
-      ></textarea>
+      />
     </div>
 
     <!-- Actions -->

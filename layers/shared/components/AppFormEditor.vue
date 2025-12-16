@@ -66,8 +66,8 @@ const handleInput = (content: string) => {
         :api-key="tinymceApiKey"
         :init="editorConfig"
         :model-value="value"
-        @update:model-value="handleInput"
         :disabled="disabled"
+        @update:model-value="handleInput"
       />
       <template #fallback>
         <div

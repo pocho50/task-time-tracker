@@ -65,8 +65,8 @@ watch(
         :placeholder="placeholder"
         :disabled="disabled || !props.projectId"
         :model-value="selectedSprint?.value"
-        @update:model-value="handleChange"
         clearable
+        @update:model-value="handleChange"
       />
       <div v-else class="form-control" :class="props.class">
         <label class="label">
@@ -77,7 +77,7 @@ watch(
           :placeholder="$t('sprintList.selectProjectFirst')"
           class="input input-bordered"
           disabled
-        />
+        >
       </div>
     </fieldset>
   </div>

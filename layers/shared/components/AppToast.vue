@@ -71,8 +71,8 @@ function handleClose() {
       v-if="closable"
       class="btn btn-ghost hover:bg-transparent focus:bg-transparent border-none btn-sm ml-2 mt-1"
       aria-label="Close"
-      @click="handleClose"
       data-testid="toast-close"
+      @click="handleClose"
     >
       <Icon name="mdi:close" size="20" />
     </button>

@@ -1,5 +1,5 @@
 import type { UserRepository } from '../repository/user';
-import { type UserRole } from '@prisma/client';
+import type { UserRole } from '@prisma/client';
 
 export class SaveUserService {
   constructor(private repo: UserRepository) {}

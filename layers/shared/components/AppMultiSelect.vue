@@ -60,7 +60,7 @@ function resetSelection() {
 </script>
 
 <template>
-  <div class="form-control w-full" ref="multiSelect">
+  <div ref="multiSelect" class="form-control w-full">
     <label v-if="label" class="label">
       <span class="label-text">{{ label }}</span>
     </label>
@@ -94,11 +94,11 @@ function resetSelection() {
         <li v-for="option in options" :key="option.value">
           <label class="label cursor-pointer py-2 px-3">
             <input
+              v-model="selectedValues"
               type="checkbox"
               :value="option.value"
-              v-model="selectedValues"
               class="checkbox checkbox-default"
-            />
+            >
             <span>{{ option.label }}</span>
           </label>
         </li>

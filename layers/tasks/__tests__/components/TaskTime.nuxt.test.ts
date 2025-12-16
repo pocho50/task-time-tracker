@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { mockComponent } from '@nuxt/test-utils/runtime';
-import { mountSuspended } from '@nuxt/test-utils/runtime';
+import { mockComponent, mountSuspended  } from '@nuxt/test-utils/runtime';
 import TaskTime from '../../components/TaskTime.vue';
 
 // Only mock Icon component for simplicity, test with real AppButton

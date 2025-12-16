@@ -31,12 +31,12 @@ const projectForm = useTemplateRef('projectForm');
       {{ $t('emptyState.noProjectsDescription') }}
     </AppEmptyState>
     <!-- Icon add project fixed button -->
-    <AppAddBtn @click="handleAdd" v-if="userIsAllowedToWrite(ENTITY)" />
+    <AppAddBtn v-if="userIsAllowedToWrite(ENTITY)" @click="handleAdd" />
     <!-- Pagination -->
     <AppPagination
       v-if="pagination && pagination.pageCount > 1"
       :page="page"
-      :totalPages="pagination.pageCount"
+      :total-pages="pagination.pageCount"
       @@prev="page--"
       @@next="page++"
     />

@@ -27,6 +27,11 @@ export class TaskRepo<T> extends BaseRepo<T> {
     return this.fetch(`${this.basePath}/time-tracks/by-task?taskId=${taskId}`);
   }
 
+  async getWorkingTasks() {
+    const query = this.getQueryParams();
+    return this.fetch(`${this.basePath}/working?${query}`);
+  }
+
   async updateSession(data: {
     id?: string;
     taskId: string;

@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { Hash } from '@adonisjs/hash';
 import { Scrypt } from '@adonisjs/hash/drivers/scrypt';
 import { PERMISSIONS } from '#layers/shared/utils/permissions';
+import { ROLES } from '#layers/shared/utils/constants';
 
 const prisma = new PrismaClient();
 
@@ -33,7 +34,7 @@ async function main() {
       email: 'admin@admin.com',
       name: 'Jose',
       password: adminPassword,
-      role: 'ADMIN',
+      role: ROLES.ADMIN,
     },
   });
 
@@ -44,7 +45,7 @@ async function main() {
       email: 'test@test.com',
       name: 'Pedro',
       password: userPassword,
-      role: 'USER',
+      role: ROLES.USER,
     },
   });
 
@@ -52,7 +53,7 @@ async function main() {
   // ADMIN role gets all project permissions (read, write, delete)
   await prisma.userPermission.create({
     data: {
-      role: 'ADMIN',
+      role: ROLES.ADMIN,
       entity: 'projects',
       permission:
         PERMISSIONS.PROJECTS_READ |
@@ -63,7 +64,7 @@ async function main() {
   // ADMIN role gets all users permissions (read, write, delete)
   await prisma.userPermission.create({
     data: {
-      role: 'ADMIN',
+      role: ROLES.ADMIN,
       entity: 'users',
       permission:
         PERMISSIONS.USERS_READ |
@@ -74,7 +75,7 @@ async function main() {
   // USER role gets only read permission for projects
   await prisma.userPermission.create({
     data: {
-      role: 'USER',
+      role: ROLES.USER,
       entity: 'projects',
       permission: PERMISSIONS.PROJECTS_READ,
     },

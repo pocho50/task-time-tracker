@@ -37,13 +37,13 @@ defineExpose({
 
 <template>
   <VeeForm
+    v-slot="{ handleSubmit }"
     :validation-schema="validationSchema"
     :initial-values="initialData"
     class="flex flex-col gap-4"
-    v-slot="{ handleSubmit }"
     as="div"
   >
-    <form @submit="handleSubmit($event, onSubmit)" ref="form">
+    <form ref="form" @submit="handleSubmit($event, onSubmit)">
       <AppFormInput
         type="text"
         name="name"

@@ -16,23 +16,23 @@ const { login, isLoading, credentials } = useLogin();
     <h1 class="text-2xl font-bold text-center mb-6">
       {{ useRuntimeConfig().public.appTitle }}
     </h1>
-    <VeeForm @submit="login" :validation-schema="validationSchema">
+    <VeeForm :validation-schema="validationSchema" @submit="login">
       <AppFormInput
+        v-model="credentials.email"
         type="email"
         name="email"
         data-testid="login-email"
         :placeholder="$t('login.email')"
         class-input="input input-bordered w-full"
-        v-model="credentials.email"
         required
       />
 
       <AppFormPassword
+        v-model="credentials.password"
         name="password"
         data-testid="login-password"
         :placeholder="$t('login.password')"
         class-input="input input-bordered w-full"
-        v-model="credentials.password"
       />
 
       <div class="form-control mt-6">
@@ -42,7 +42,7 @@ const { login, isLoading, credentials } = useLogin();
           class="btn btn-primary w-full"
           :disabled="isLoading"
         >
-          <span v-if="isLoading" class="loading loading-spinner"></span>
+          <span v-if="isLoading" class="loading loading-spinner"/>
           {{ isLoading ? $t('login.signingIn') : $t('login.submit') }}
         </button>
       </div>

@@ -80,9 +80,9 @@ const getVariant = (status: SprintStatus) => {
               <div :data-testid="`sprint-actions-${sprint.id}`">
                 <AppOptionAction
                   :actions="['edit', 'remove']"
+                  class="relative dropdown-top !right-0 !top-0"
                   @@edit="handleEdit(sprint.id)"
                   @@remove="handleRemove(sprint.id)"
-                  class="relative dropdown-top !right-0 !top-0"
                 />
               </div>
             </td>

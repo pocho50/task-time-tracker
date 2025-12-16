@@ -1,15 +1,86 @@
-import { PrismaClient, TaskPriority, TaskStatus } from '@prisma/client';
+import type { TaskPriority, TaskStatus } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import type {
   TaskWithUsers,
   TaskWithUsersData,
   TaskWithUsersAndTimeTracks,
 } from '../../shared/types';
+import { ROLES } from '#layers/shared/utils/constants';
 
 export class TaskRepository {
   private prisma: PrismaClient;
 
   constructor(prisma?: PrismaClient) {
     this.prisma = prisma || new PrismaClient();
+  }
+
+  async countWorkingTasks(): Promise<number> {
+    return this.prisma.task.count({
+      where: {
+        timeTracking: {
+          some: {
+            end: null,
+          },
+        },
+      },
+    });
+  }
+
+  async findManyWorkingWithUserDataAndTimeTracks(
+    skip: number,
+    take: number
+  ): Promise<TaskWithUsersAndTimeTracks[]> {
+    const tasks = await this.prisma.task.findMany({
+      skip,
+      take,
+      where: {
+        timeTracking: {
+          some: {
+            end: null,
+          },
+        },
+      },
+      include: {
+        users: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+        timeTracking: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return tasks.map((task) => {
+      const { users: taskUsers, timeTracking, ...taskData } = task;
+      return {
+        ...taskData,
+        usersId: taskUsers.map((tu: any) => tu.userId),
+        users: taskUsers.map((tu: any) => tu.user),
+        timeTracking,
+      };
+    });
   }
 
   async countTasksForSprint(sprintId: string): Promise<number> {
@@ -193,7 +264,7 @@ export class TaskRepository {
     projectId: string
   ): Promise<boolean> {
     // Admins always have access
-    if (userRole === 'ADMIN') return true;
+    if (userRole === ROLES.ADMIN) return true;
 
     if (taskId) {
       // Updating existing task - check if user is assigned to this task

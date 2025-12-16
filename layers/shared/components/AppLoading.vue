@@ -46,7 +46,7 @@ const loadingClasses = computed(() => [
     class="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center"
   >
     <div class="bg-base-100 rounded-lg p-6 shadow-xl flex flex-col items-center gap-4">
-      <span :class="loadingClasses"></span>
+      <span :class="loadingClasses"/>
       <p v-if="text" class="text-base-content font-medium">{{ text }}</p>
     </div>
   </div>
@@ -56,13 +56,13 @@ const loadingClasses = computed(() => [
     v-else-if="center"
     class="flex flex-col items-center justify-center py-12 gap-4"
   >
-    <span :class="loadingClasses"></span>
+    <span :class="loadingClasses"/>
     <p v-if="text" class="text-base-content/70">{{ text }}</p>
   </div>
 
   <!-- Inline Loading -->
   <div v-else class="flex items-center gap-3">
-    <span :class="loadingClasses"></span>
+    <span :class="loadingClasses"/>
     <span v-if="text" class="text-base-content/70">{{ text }}</span>
   </div>
 </template>

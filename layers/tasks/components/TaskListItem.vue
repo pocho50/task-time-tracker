@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TaskStatus, TaskPriority } from '@prisma/client';
 import type { SerializedTaskWithUsersAndTimeTracks } from '../shared/types';
+import { truncateHtmlText } from '../utils/truncateHtmlText';
 
 const STATUS_VARIANTS: Record<
   TaskStatus,
@@ -67,22 +68,7 @@ watch(
 
 // Strip HTML tags and truncate description to 100 characters
 const truncatedDescription = computed(() => {
-  if (!props.task.description) return '';
-
-  // Remove HTML tags
-  const plainText = props.task.description.replace(/<[^>]*>/g, '');
-
-  // Decode HTML entities
-  const textarea = document.createElement('textarea');
-  textarea.innerHTML = plainText;
-  const decodedText = textarea.value;
-
-  // Truncate to 100 characters
-  if (decodedText.length > 100) {
-    return decodedText.substring(0, 100) + '...';
-  }
-
-  return decodedText;
+  return truncateHtmlText(props.task.description ?? '', 100);
 });
 </script>
 
@@ -117,19 +103,19 @@ const truncatedDescription = computed(() => {
       <!-- Task time -->
       <div class="flex items-center gap-2">
         <TaskTime
-          :accumulatedSeconds="timeAccumulateSeconds"
-          :initialSeconds="getActiveSessionElapsedSeconds"
-          :startInmediate="currentTimeTrackSession !== null"
+          :accumulated-seconds="timeAccumulateSeconds"
+          :initial-seconds="getActiveSessionElapsedSeconds"
+          :start-inmediate="currentTimeTrackSession !== null"
           @@start="handleStart"
           @@end="handleEnd"
         />
         <button
           v-if="getLastSession"
           type="button"
-          @click="editSessionModal?.handleOpenEditSession"
           class="btn btn-ghost btn-xs"
           :aria-label="$t('common.edit')"
           data-testid="edit-active-session-button"
+          @click="editSessionModal?.handleOpenEditSession"
         >
           <Icon name="mdi:pencil" size="16" />
         </button>
@@ -139,10 +125,10 @@ const truncatedDescription = computed(() => {
     <td>
       <div :data-testid="`task-actions-${task.id}`">
         <TaskOptionActions
+          class="relative dropdown-top !right-0 !top-0"
           @@edit="handleEdit(task.id)"
           @@remove="handleRemove(task.id)"
           @@history="$emit('@history', task)"
-          class="relative dropdown-top !right-0 !top-0"
         />
       </div>
     </td>
@@ -150,8 +136,8 @@ const truncatedDescription = computed(() => {
 
   <!-- Edit Session Modal -->
   <TaskTimeTrackEdit
-    ref="editSessionModal"
     v-if="getLastSession"
+    ref="editSessionModal"
     :task="task"
     :session="getLastSession"
   />

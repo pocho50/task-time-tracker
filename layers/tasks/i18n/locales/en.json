@@ -2,10 +2,13 @@
   "taskList": {
     "title": "Tasks",
     "name": "Name",
+    "project": "Project",
+    "sprint": "Sprint",
     "priority": "Priority",
     "status": "Status",
     "estimatedHours": "Estimated Hours",
     "assignedUsers": "Assigned Users",
+    "workingUser": "Working user",
     "createdAt": "Created At",
     "actions": "Actions",
     "noTasks": "No tasks found",
@@ -44,6 +47,9 @@
     "assignedUsers": "Assigned Users",
     "selectUsers": "Select Users",
     "sprint": "Sprint"
+  },
+  "taskOnWorking": {
+    "title": "On Working"
   },
   "server": {
     "sprintIdRequired": "Sprint ID is required",

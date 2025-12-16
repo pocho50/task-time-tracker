@@ -13,6 +13,8 @@ export function useTaskTimeTracks(
   const { user } = useUser();
   const currentTimeTrackSession = ref<SerializedTimeTrackWithUser | null>(null);
 
+  const { sendData } = useWsTasks();
+
   // Use embedded time tracking data instead of making a separate API call
   const getTimeTracks = computed(() => task.value.timeTracking ?? []);
 
@@ -83,7 +85,11 @@ export function useTaskTimeTracks(
     const response = await safeApiCall(() =>
       taskRepo.startSession(task.value.id)
     );
+
     if (response !== false) {
+      // Send update to WebSocket
+      sendData(new Date().toISOString());
+
       currentTimeTrackSession.value = response.data;
       // Refresh the parent task list to get updated time tracking data
       if (refreshTasks) {
@@ -100,6 +106,9 @@ export function useTaskTimeTracks(
     );
 
     if (result !== false) {
+      // Send update to WebSocket
+      sendData(new Date().toISOString());
+
       currentTimeTrackSession.value = null;
       // Refresh the parent task list to get updated time tracking data
       if (refreshTasks) {

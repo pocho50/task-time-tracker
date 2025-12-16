@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod';
-import { TaskStatus, TaskPriority, UserRole } from '@prisma/client';
+import { TaskStatus, TaskPriority } from '@prisma/client';
+import { ROLES } from '#layers/shared/utils/constants';
 
 const validationSchema = toTypedSchema(taskSchema);
 
@@ -13,7 +14,7 @@ const form = useTemplateRef('form');
 const { user } = useUser();
 
 // Check if current user is USER role (not ADMIN)
-const isUserRole = computed(() => user.value?.role === UserRole.USER);
+const isUserRole = computed(() => user.value?.role === ROLES.USER);
 
 const selectedUsers = ref<string[]>([]);
 selectedUsers.value = props.initialData?.usersId ?? [];
@@ -67,13 +68,13 @@ defineExpose({
 
 <template>
   <VeeForm
+    v-slot="{ handleSubmit }"
     :validation-schema="validationSchema"
     :initial-values="initialData"
     class="flex flex-col gap-4"
-    v-slot="{ handleSubmit }"
     as="div"
   >
-    <form @submit="handleSubmit($event, onSubmit)" ref="form">
+    <form ref="form" @submit="handleSubmit($event, onSubmit)">
       <AppFormInput
         type="text"
         name="name"

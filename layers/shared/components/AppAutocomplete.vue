@@ -184,7 +184,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="form-control w-full" ref="autocomplete">
+  <div ref="autocomplete" class="form-control w-full">
     <label v-if="label" class="label">
       <span class="label-text">{{ label }}</span>
     </label>
@@ -203,11 +203,11 @@ watchEffect(() => {
             }"
             :placeholder="placeholder || t('autocomplete.placeholder')"
             :disabled="disabled"
+            autocomplete="off"
             @input="onInput"
             @focus="openDropdown"
             @keydown="onKeydown"
-            autocomplete="off"
-          />
+          >
 
           <div class="absolute inset-y-0 right-0 flex items-center pr-3">
             <Icon

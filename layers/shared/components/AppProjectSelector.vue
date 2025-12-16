@@ -55,8 +55,8 @@ function handleChange(projectId: string | number | null) {
       :placeholder="placeholder"
       :disabled="disabled"
       :model-value="selectedProject?.value"
-      @update:model-value="handleChange"
       clearable
+      @update:model-value="handleChange"
     />
   </div>
 </template>
