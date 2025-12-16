@@ -33,7 +33,7 @@ const truncatedDescription = computed(() => {
       </div>
     </td>
 
-    <td>
+    <td class="hidden md:table-cell">
       <span class="text-sm">
         {{ session.task.project.name }}
       </span>

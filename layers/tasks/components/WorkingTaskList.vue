@@ -15,7 +15,7 @@ const props = defineProps<{
       <thead>
         <tr>
           <th>{{ $t('taskList.name') }}</th>
-          <th>{{ $t('taskList.project') }}</th>
+          <th class="hidden md:table-cell">{{ $t('taskList.project') }}</th>
           <th>{{ $t('taskList.sprint') }}</th>
           <th>{{ $t('taskList.workingUser') }}</th>
           <th>{{ $t('taskHistory.duration') }}</th>
