@@ -14,6 +14,75 @@ export class TaskRepository {
     this.prisma = prisma || new PrismaClient();
   }
 
+  async countWorkingTasks(): Promise<number> {
+    return this.prisma.task.count({
+      where: {
+        timeTracking: {
+          some: {
+            end: null,
+          },
+        },
+      },
+    });
+  }
+
+  async findManyWorkingWithUserDataAndTimeTracks(
+    skip: number,
+    take: number
+  ): Promise<TaskWithUsersAndTimeTracks[]> {
+    const tasks = await this.prisma.task.findMany({
+      skip,
+      take,
+      where: {
+        timeTracking: {
+          some: {
+            end: null,
+          },
+        },
+      },
+      include: {
+        users: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+        timeTracking: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return tasks.map((task) => {
+      const { users: taskUsers, timeTracking, ...taskData } = task;
+      return {
+        ...taskData,
+        usersId: taskUsers.map((tu: any) => tu.userId),
+        users: taskUsers.map((tu: any) => tu.user),
+        timeTracking,
+      };
+    });
+  }
+
   async countTasksForSprint(sprintId: string): Promise<number> {
     return this.prisma.task.count({
       where: {
