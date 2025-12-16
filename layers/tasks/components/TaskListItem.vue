@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TaskStatus, TaskPriority } from '@prisma/client';
 import type { SerializedTaskWithUsersAndTimeTracks } from '../shared/types';
+import { truncateHtmlText } from '../utils/truncateHtmlText';
 
 const STATUS_VARIANTS: Record<
   TaskStatus,
@@ -67,22 +68,7 @@ watch(
 
 // Strip HTML tags and truncate description to 100 characters
 const truncatedDescription = computed(() => {
-  if (!props.task.description) return '';
-
-  // Remove HTML tags
-  const plainText = props.task.description.replace(/<[^>]*>/g, '');
-
-  // Decode HTML entities
-  const textarea = document.createElement('textarea');
-  textarea.innerHTML = plainText;
-  const decodedText = textarea.value;
-
-  // Truncate to 100 characters
-  if (decodedText.length > 100) {
-    return decodedText.substring(0, 100) + '...';
-  }
-
-  return decodedText;
+  return truncateHtmlText(props.task.description ?? '', 100);
 });
 </script>
 

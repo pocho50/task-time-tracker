@@ -66,4 +66,9 @@ export default defineNuxtConfig({
     },
   },
   css: ['~/assets/app.css'],
+  nitro: {
+    experimental: {
+      websocket: true,
+    },
+  },
 });

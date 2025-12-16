@@ -4,11 +4,13 @@ const props = withDefaults(
     accumulatedSeconds?: number;
     initialSeconds?: number;
     startInmediate?: boolean;
+    readOnly?: boolean;
   }>(),
   {
     accumulatedSeconds: 0,
     initialSeconds: 0,
     startInmediate: false,
+    readOnly: false,
   }
 );
 
@@ -41,12 +43,17 @@ const formattedTime = computed(() => {
   return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 });
 
-const handleStart = () => {
+const startCounter = () => {
   resumeCounter();
-  emit('@start');
+};
+
+const handleStart = () => {
+  startCounter();
+  if (!props.readOnly) emit('@start');
 };
 
 const handlePause = () => {
+  if (props.readOnly) return;
   const activeSessionSeconds = props.initialSeconds + counter.value;
   const totalSeconds = props.accumulatedSeconds + activeSessionSeconds;
   resetCounter();
@@ -55,21 +62,18 @@ const handlePause = () => {
 };
 
 if (props.startInmediate) {
-  handleStart();
+  startCounter();
 }
 </script>
 
 <template>
   <div
-    class="group flex items-center gap-3 rounded-full border border-base-200 bg-base-100 py-1 pl-4 pr-1 shadow-sm transition-all duration-300 hover:border-base-300 hover:shadow-md"
+    class="group inline-flex w-fit max-w-max whitespace-nowrap items-center gap-3 rounded-full border border-base-200 bg-base-100 py-1 pl-4 pr-1 shadow-sm transition-all duration-300 hover:border-base-300 hover:shadow-md"
     :class="{ 'border-error/30 bg-error/5 ring-1 ring-error/20': isActive }"
   >
     <!-- Status Indicator -->
     <div class="relative flex items-center justify-center">
-      <div
-        v-if="isActive"
-        class="absolute rounded-full bg-error opacity-75"
-      />
+      <div v-if="isActive" class="absolute rounded-full bg-error opacity-75" />
       <div
         class="h-2.5 w-2.5 rounded-full shadow-sm transition-colors duration-300"
         :class="
@@ -91,10 +95,10 @@ if (props.startInmediate) {
     </div>
 
     <!-- Vertical Separator -->
-    <div class="mx-1 h-5 w-px bg-base-200"/>
+    <div class="mx-1 h-5 w-px bg-base-200" />
 
     <!-- Actions -->
-    <div class="flex items-center">
+    <div v-if="!readOnly" class="flex items-center">
       <AppButton
         v-if="!isActive"
         variant="ghost"

@@ -8,7 +8,8 @@
       "tasks": "Tasks",
       "reports": "Reports",
       "settings": "Settings",
-      "users": "Users"
+      "users": "Users",
+      "tasksOnWorking": "On working"
     }
   },
   "cancel": "Cancel",

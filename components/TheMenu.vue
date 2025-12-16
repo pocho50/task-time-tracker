@@ -15,6 +15,12 @@ const rawMenuItems = [
     label: 'app.menu.tasks',
   },
   {
+    to: '/tasks/working',
+    icon: 'mdi:fire',
+    label: 'app.menu.tasksOnWorking',
+    onlyAdmin: true,
+  },
+  {
     to: '/users',
     icon: 'mdi:users',
     label: 'app.menu.users',
@@ -28,12 +34,15 @@ const rawMenuItems = [
   },
 ];
 
-const { userIsAllowedToWrite } = useUser();
+const { userIsAllowedToWrite, userIsAdmin } = useUser();
 
 const menuItems = computed(() =>
-  rawMenuItems.filter(
-    (item) => !item.requiresWrite || userIsAllowedToWrite(item.entity)
-  )
+  rawMenuItems.filter((item) => {
+    if (item.onlyAdmin) {
+      return userIsAdmin.value;
+    }
+    return !item.requiresWrite || userIsAllowedToWrite(item.entity);
+  })
 );
 </script>
 

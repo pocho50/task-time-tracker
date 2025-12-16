@@ -145,7 +145,15 @@ export function useTasks(sprintId: string | undefined) {
     if (tasksStatus.value === 'success' && projectsStatus.value === 'success') {
       return 'success';
     }
-    return 'pending';
+
+    if (tasksStatus.value === 'error' || projectsStatus.value === 'error') {
+      return 'error';
+    }
+
+    if (tasksStatus.value === 'pending' || projectsStatus.value === 'pending') {
+      return 'pending';
+    }
+    return tasksStatus.value;
   });
 
   return {

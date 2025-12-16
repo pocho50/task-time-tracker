@@ -1,4 +1,4 @@
-import type { Task, TimeTrack, User } from '@prisma/client';
+import type { Project, Sprint, Task, TimeTrack, User } from '@prisma/client';
 
 export interface TaskWithUsers extends Task {
   usersId: string[];
@@ -42,6 +42,22 @@ export interface TimeTrackWithUser extends TimeTrack {
 // Serialized version for client-side (dates become strings)
 export interface SerializedTimeTrackWithUser
   extends Omit<TimeTrackWithUser, 'start' | 'end' | 'createdAt' | 'updatedAt'> {
+  start: string;
+  end: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface WorkingSession extends TimeTrackWithUser {
+  task: Pick<Task, 'id' | 'name' | 'description'> & {
+    project: Pick<Project, 'id' | 'name'>;
+    sprint: Pick<Sprint, 'id' | 'name'> | null;
+  };
+  accumulatedSeconds: number;
+}
+
+export interface SerializedWorkingSession
+  extends Omit<WorkingSession, 'start' | 'end' | 'createdAt' | 'updatedAt'> {
   start: string;
   end: string | null;
   createdAt: string;
