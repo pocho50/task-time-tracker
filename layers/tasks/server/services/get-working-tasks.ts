@@ -1,4 +1,4 @@
-import type { TaskRepository } from '../repository/task';
+import type { TimeTrackRepository } from '../repository/time-track';
 
 interface GetWorkingTasksInput {
   page: number;
@@ -6,18 +6,18 @@ interface GetWorkingTasksInput {
 }
 
 export class GetWorkingTasksService {
-  constructor(private repo: TaskRepository) {}
+  constructor(private repo: TimeTrackRepository) {}
 
   async execute({ page, pageSize }: GetWorkingTasksInput) {
     const skip = (page - 1) * pageSize;
 
-    const [total, tasks] = await Promise.all([
-      this.repo.countWorkingTasks(),
-      this.repo.findManyWorkingWithUserDataAndTimeTracks(skip, pageSize),
+    const [total, sessions] = await Promise.all([
+      this.repo.countActiveSessions(),
+      this.repo.findManyActiveSessions(skip, pageSize),
     ]);
 
     return {
-      data: tasks,
+      data: sessions,
       pagination: {
         total,
         page,

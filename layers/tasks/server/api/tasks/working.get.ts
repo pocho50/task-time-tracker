@@ -1,5 +1,5 @@
 import { createError, defineEventHandler, getQuery } from 'h3';
-import { TaskRepository } from '../../repository/task';
+import { TimeTrackRepository } from '../../repository/time-track';
 import { GetWorkingTasksService } from '../../services/get-working-tasks';
 import { DEFAULT_PAGE_SIZE } from '../../constants';
 import { ROLES } from '#layers/shared/utils/constants';
@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
       ? Number.MAX_SAFE_INTEGER
       : pageSizeParam || DEFAULT_PAGE_SIZE;
 
-  const repo = new TaskRepository();
+  const repo = new TimeTrackRepository();
 
   try {
     const service = new GetWorkingTasksService(repo);
