@@ -65,8 +65,10 @@ const handleCancel = () => {
         :enable-seconds="true"
         time-picker-inline
         auto-apply
-        :format="'dd/MM/yyyy HH:mm:ss'"
-        :preview-format="'dd/MM/yyyy HH:mm:ss'"
+        :formats="{
+          input: 'dd/MM/yyyy HH:mm:ss',
+          preview: 'dd/MM/yyyy HH:mm:ss',
+        }"
         :clearable="false"
         required
         :teleport="true"
@@ -89,8 +91,10 @@ const handleCancel = () => {
         :enable-seconds="true"
         time-picker-inline
         auto-apply
-        :format="'dd/MM/yyyy HH:mm:ss'"
-        :preview-format="'dd/MM/yyyy HH:mm:ss'"
+        :formats="{
+          input: 'dd/MM/yyyy HH:mm:ss',
+          preview: 'dd/MM/yyyy HH:mm:ss',
+        }"
         :clearable="true"
         :teleport="true"
         :placeholder="$t('taskHistory.selectDateTime')"
