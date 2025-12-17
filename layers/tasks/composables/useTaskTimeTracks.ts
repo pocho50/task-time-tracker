@@ -25,6 +25,8 @@ export function useTaskTimeTracks(
     // If the last track has no end time, it's an active session that needs to be recovered
     if (lastTrack && lastTrack.start && !lastTrack.end) {
       currentTimeTrackSession.value = lastTrack;
+    } else {
+      currentTimeTrackSession.value = null;
     }
   };
 
@@ -37,8 +39,14 @@ export function useTaskTimeTracks(
     return userTracks?.[0] ?? null;
   });
 
-  // Initialize active session check
-  checkActiveSessionAndSetLastSession();
+  // Keep active session in sync when task time tracking data changes
+  watch(
+    getLastSession,
+    () => {
+      checkActiveSessionAndSetLastSession();
+    },
+    { immediate: true }
+  );
 
   // Get accumulated time from completed sessions only (excludes active session)
   const getCompletedSessionsSeconds = computed(() => {
@@ -136,6 +144,9 @@ export function useTaskTimeTracks(
     );
 
     if (response !== false) {
+      // Send update to WebSocket
+      sendData(new Date().toISOString());
+
       // Refresh the parent task list to get updated time tracking data
       if (refreshTasks) {
         await refreshTasks();
@@ -155,5 +166,6 @@ export function useTaskTimeTracks(
     handleUpdateSession,
     currentTimeTrackSession,
     getLastSession,
+    checkActiveSessionAndSetLastSession,
   };
 }

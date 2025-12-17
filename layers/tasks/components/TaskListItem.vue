@@ -50,6 +50,7 @@ const {
   handleStart,
   handleEnd,
   getLastSession,
+  checkActiveSessionAndSetLastSession,
 } = useTaskTimeTracks(toRef(props, 'task'), handleRefresh);
 
 const timeAccumulateSeconds = useState<number>(

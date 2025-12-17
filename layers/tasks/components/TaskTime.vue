@@ -64,6 +64,18 @@ const handlePause = () => {
 if (props.startInmediate) {
   startCounter();
 }
+
+watch(
+  () => props.startInmediate,
+  (newValue) => {
+    if (newValue) {
+      startCounter();
+    } else {
+      resetCounter();
+      pauseCounter();
+    }
+  }
+);
 </script>
 
 <template>

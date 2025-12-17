@@ -152,7 +152,9 @@ definePageMeta({
     <!-- Drawer for edit or add task -->
     <AppDrawerRight
       v-model="openDrawer"
-      :title="selectedTask ? $t('taskList.editTask') : $t('taskList.addTask')"
+      :title="
+        selectedTask?.id ? $t('taskList.editTask') : $t('taskList.addTask')
+      "
       size="lg"
     >
       <LazyTaskForm

@@ -1,16 +1,15 @@
 import type { Peer, Message } from 'crossws';
 
-const room = 'ROOM';
+const room = 'taskTimeTracks';
 export default defineWebSocketHandler({
   open(peer) {
     peer.subscribe(room);
-    peer.publish(room, 'Another user joined the chat');
   },
   close(peer) {
-    console.log('closed WS', peer);
+    console.log('closed WS');
   },
   error(peer, error) {
-    console.log('error on WS', peer, error);
+    console.log('error on WS', error);
   },
   message(peer, message) {
     peer.publish(room, message.text());
