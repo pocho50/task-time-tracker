@@ -67,7 +67,24 @@
     "title": "Roles",
     "role": "Role",
     "name": "Name",
+    "actions": "Actions",
     "noRolesFound": "No roles found",
     "noRolesFoundDescription": "Create a role to start assigning permissions"
+  },
+  "roleForm": {
+    "title": "Add role",
+    "role": "Role",
+    "name": "Name",
+    "permissions": "Permissions",
+    "projects": "Projects",
+    "sprints": "Sprints",
+    "tasks": "Tasks",
+    "users": "Users",
+    "roles": "Roles",
+    "working": "Working",
+    "read": "Read",
+    "write": "Write",
+    "delete": "Delete",
+    "save": "Save"
   }
 }

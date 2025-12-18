@@ -1,9 +1,10 @@
 import { RoleRepository } from '../../repository/role';
 import { DeleteRoleService } from '../../services/delete-role';
-import { ENTITY } from '#layers/users/utils/constants';
+import { ALL_ENTITIES, ROLES } from '#layers/shared/utils/constants';
 import { PERMISSIONS } from '#layers/shared/utils/permissions';
 import { assertHasPermissionOrThrow } from '#layers/shared/server/utils';
-import { ROLES } from '#layers/shared/utils/constants';
+import { PrismaClient } from '@prisma/client';
+import { UserPermissionRepository } from '../../repository/user';
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
@@ -11,8 +12,8 @@ export default defineEventHandler(async (event) => {
 
   assertHasPermissionOrThrow(
     user?.permissions,
-    ENTITY,
-    PERMISSIONS.USERS_WRITE,
+    ALL_ENTITIES.ROLES,
+    PERMISSIONS.ROLES_DELETE,
     t('server.unauthorizedDelete')
   );
 
@@ -25,7 +26,9 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  if (key === ROLES.ADMIN) {
+  const normalizedKey = decodeURIComponent(key).trim();
+
+  if (normalizedKey === ROLES.ADMIN) {
     throw createError({
       statusCode: 403,
       message:
@@ -33,8 +36,18 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const repo = new RoleRepository();
-  const usersCount = await repo.countUsersByRoleKey(key);
+  const prisma = new PrismaClient();
+  const repo = new RoleRepository(prisma);
+
+  const role = await repo.findByKey(normalizedKey);
+  if (!role) {
+    throw createError({
+      statusCode: 404,
+      message: t('server.invalidRoleKey') || 'Invalid role key',
+    });
+  }
+
+  const usersCount = await repo.countUsersByRoleKey(normalizedKey);
   if (usersCount > 0) {
     throw createError({
       statusCode: 409,
@@ -44,10 +57,15 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const service = new DeleteRoleService(repo);
-
   try {
-    const deletedRole = await service.execute(key);
+    const deletedRole = await prisma.$transaction(async (tx) => {
+      const permissionsRepoTx = new UserPermissionRepository(tx);
+      const roleRepoTx = new RoleRepository(tx);
+
+      await permissionsRepoTx.deleteManyByRole(normalizedKey);
+      const serviceTx = new DeleteRoleService(roleRepoTx);
+      return await serviceTx.execute(normalizedKey);
+    });
     return {
       message: t('server.succesDeleteRole') || 'Role deleted successfully',
       data: deletedRole,

@@ -1,6 +1,6 @@
 import { RoleRepository } from '../../repository/role';
 import { GetRolesService } from '../../services/get-roles';
-import { ENTITY } from '#layers/users/utils/constants';
+import { ALL_ENTITIES } from '#layers/shared/utils/constants';
 import { PERMISSIONS } from '#layers/shared/utils/permissions';
 import { assertHasPermissionOrThrow } from '#layers/shared/server/utils';
 
@@ -10,8 +10,8 @@ export default defineEventHandler(async (event) => {
 
   assertHasPermissionOrThrow(
     user?.permissions,
-    ENTITY,
-    PERMISSIONS.USERS_READ,
+    ALL_ENTITIES.ROLES,
+    PERMISSIONS.ROLES_READ,
     t('server.unauthorizedRead')
   );
 

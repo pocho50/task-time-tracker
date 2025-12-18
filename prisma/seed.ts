@@ -10,19 +10,19 @@ async function main() {
   // Clean up existing data
   console.log('Cleaning up existing data...');
   // Disable foreign key checks and truncate all tables
-  await prisma.$transaction([
-    prisma.$executeRaw`PRAGMA foreign_keys = OFF`,
-    prisma.$executeRaw`DELETE FROM user_permissions`,
-    prisma.$executeRaw`DELETE FROM roles`,
-    prisma.$executeRaw`DELETE FROM time_tracks`,
-    prisma.$executeRaw`DELETE FROM tasks_users`,
-    prisma.$executeRaw`DELETE FROM projects_users`,
-    prisma.$executeRaw`DELETE FROM tasks`,
-    prisma.$executeRaw`DELETE FROM sprints`,
-    prisma.$executeRaw`DELETE FROM projects`,
-    prisma.$executeRaw`DELETE FROM users`,
-    prisma.$executeRaw`PRAGMA foreign_keys = ON`,
-  ]);
+  // Note: In SQLite, PRAGMA foreign_keys is connection-scoped and does not apply
+  // reliably when executed inside a Prisma $transaction batch.
+  await prisma.$executeRawUnsafe('PRAGMA foreign_keys = OFF');
+  await prisma.$executeRawUnsafe('DELETE FROM user_permissions');
+  await prisma.$executeRawUnsafe('DELETE FROM roles');
+  await prisma.$executeRawUnsafe('DELETE FROM time_tracks');
+  await prisma.$executeRawUnsafe('DELETE FROM tasks_users');
+  await prisma.$executeRawUnsafe('DELETE FROM projects_users');
+  await prisma.$executeRawUnsafe('DELETE FROM tasks');
+  await prisma.$executeRawUnsafe('DELETE FROM sprints');
+  await prisma.$executeRawUnsafe('DELETE FROM projects');
+  await prisma.$executeRawUnsafe('DELETE FROM users');
+  await prisma.$executeRawUnsafe('PRAGMA foreign_keys = ON');
   console.log('Data cleanup completed');
 
   const scrypt = new Scrypt({});
@@ -78,6 +78,53 @@ async function main() {
         PERMISSIONS.USERS_READ |
         PERMISSIONS.USERS_WRITE |
         PERMISSIONS.USERS_DELETE,
+    },
+  });
+
+  // ADMIN role gets all roles permissions (read, write, delete)
+  await prisma.userPermission.create({
+    data: {
+      role: ROLES.ADMIN,
+      entity: 'roles',
+      permission:
+        PERMISSIONS.ROLES_READ |
+        PERMISSIONS.ROLES_WRITE |
+        PERMISSIONS.ROLES_DELETE,
+    },
+  });
+
+  await prisma.userPermission.create({
+    data: {
+      role: ROLES.ADMIN,
+      entity: 'sprints',
+      permission: PERMISSIONS.SPRINTS_WRITE | PERMISSIONS.SPRINTS_DELETE,
+    },
+  });
+
+  await prisma.userPermission.create({
+    data: {
+      role: ROLES.ADMIN,
+      entity: 'tasks',
+      permission: PERMISSIONS.TASKS_WRITE | PERMISSIONS.TASKS_DELETE,
+    },
+  });
+
+  await prisma.userPermission.create({
+    data: {
+      role: ROLES.ADMIN,
+      entity: 'working',
+      permission: PERMISSIONS.WORKING_READ,
+    },
+  });
+
+  await prisma.userPermission.create({
+    data: {
+      role: ROLES.ADMIN,
+      entity: 'time_tracks',
+      permission:
+        PERMISSIONS.TIME_TRACKS_READ |
+        PERMISSIONS.TIME_TRACKS_WRITE |
+        PERMISSIONS.TIME_TRACKS_DELETE,
     },
   });
   // USER role gets only read permission for projects

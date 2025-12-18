@@ -1,9 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 
 export class RoleRepository {
-  private prisma: PrismaClient;
+  private prisma: PrismaClient | Prisma.TransactionClient;
 
-  constructor(prisma?: PrismaClient) {
+  constructor(prisma?: PrismaClient | Prisma.TransactionClient) {
     this.prisma = prisma || new PrismaClient();
   }
 

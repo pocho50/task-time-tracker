@@ -1,9 +1,9 @@
-import { PrismaClient, type User } from '@prisma/client';
+import { Prisma, PrismaClient, type User } from '@prisma/client';
 
 export class UserRepository {
-  private prisma: PrismaClient;
+  private prisma: PrismaClient | Prisma.TransactionClient;
 
-  constructor(prisma?: PrismaClient) {
+  constructor(prisma?: PrismaClient | Prisma.TransactionClient) {
     this.prisma = prisma || new PrismaClient();
   }
 
@@ -120,15 +120,44 @@ export class UserRepository {
 }
 
 export class UserPermissionRepository {
-  private prisma: PrismaClient;
+  private prisma: PrismaClient | Prisma.TransactionClient;
 
-  constructor(prisma?: PrismaClient) {
+  constructor(prisma?: PrismaClient | Prisma.TransactionClient) {
     this.prisma = prisma || new PrismaClient();
   }
 
   async findManyByRole(role: string) {
     return this.prisma.userPermission.findMany({
       where: { role },
+    });
+  }
+
+  async deleteManyByRole(role: string) {
+    return this.prisma.userPermission.deleteMany({
+      where: { role },
+    });
+  }
+
+  async upsertByRoleAndEntity(params: {
+    role: string;
+    entity: string;
+    permission: number;
+  }) {
+    return this.prisma.userPermission.upsert({
+      where: {
+        role_entity: {
+          role: params.role,
+          entity: params.entity,
+        },
+      },
+      update: {
+        permission: params.permission,
+      },
+      create: {
+        role: params.role,
+        entity: params.entity,
+        permission: params.permission,
+      },
     });
   }
 }

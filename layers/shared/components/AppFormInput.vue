@@ -4,6 +4,7 @@ defineProps<{
   type: string;
   placeholder: string;
   classInput?: string;
+  disabled?: boolean;
 }>();
 
 const value = defineModel<string>();
@@ -16,6 +17,7 @@ const value = defineModel<string>();
         v-model="value"
         :name
         :type
+        :disabled
         class="input"
         :class="classInput"
         :placeholder

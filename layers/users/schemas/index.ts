@@ -15,6 +15,32 @@ export const settingsSchema = z.object({
 export const roleSchema = z.object({
   key: z.string().min(1),
   name: z.string().min(1),
+  permissions: z
+    .object({
+      projects: z.number().int().nonnegative(),
+      sprints: z.number().int().nonnegative(),
+      tasks: z.number().int().nonnegative(),
+      users: z.number().int().nonnegative(),
+      roles: z.number().int().nonnegative(),
+      working: z.number().int().nonnegative(),
+    })
+    .optional()
+    .refine((p) => !p || (p.projects & 1) === 1, {
+      message: 'Projects permission must include READ.',
+      path: ['projects'],
+    })
+    .refine((p) => !p || (p.sprints & 1) === 0, {
+      message: 'Sprints permission cannot include READ.',
+      path: ['sprints'],
+    })
+    .refine((p) => !p || (p.tasks & 1) === 0, {
+      message: 'Tasks permission cannot include READ.',
+      path: ['tasks'],
+    })
+    .refine((p) => !p || (p.working & ~1) === 0, {
+      message: 'Working permission can only include READ.',
+      path: ['working'],
+    }),
 });
 
 /**

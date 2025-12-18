@@ -32,7 +32,7 @@ const rawMenuItems = [
     icon: 'mdi:account-key',
     label: 'app.menu.roles',
     requiresWrite: true,
-    entity: ALL_ENTITIES.USERS,
+    entity: ALL_ENTITIES.ROLES,
   },
   {
     to: '/settings',
