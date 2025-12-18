@@ -62,5 +62,12 @@
     "locale": "Language",
     "password": "Password",
     "repeatPassword": "Repeat password"
+  },
+  "roleList": {
+    "title": "Roles",
+    "role": "Role",
+    "name": "Name",
+    "noRolesFound": "No roles found",
+    "noRolesFoundDescription": "Create a role to start assigning permissions"
   }
 }
