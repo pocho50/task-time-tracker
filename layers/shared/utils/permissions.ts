@@ -2,7 +2,6 @@
 // Each entity type (projects, users, etc.) has its own bitmask range
 export const PERMISSIONS = {
   // projects
-  PROJECTS_READ: 1,
   PROJECTS_WRITE: 2,
   PROJECTS_DELETE: 4,
 

@@ -63,10 +63,7 @@ async function main() {
     data: {
       role: ROLES.ADMIN,
       entity: 'projects',
-      permission:
-        PERMISSIONS.PROJECTS_READ |
-        PERMISSIONS.PROJECTS_WRITE |
-        PERMISSIONS.PROJECTS_DELETE,
+      permission: PERMISSIONS.PROJECTS_WRITE | PERMISSIONS.PROJECTS_DELETE,
     },
   });
   // ADMIN role gets all users permissions (read, write, delete)
@@ -125,14 +122,6 @@ async function main() {
         PERMISSIONS.TIME_TRACKS_READ |
         PERMISSIONS.TIME_TRACKS_WRITE |
         PERMISSIONS.TIME_TRACKS_DELETE,
-    },
-  });
-  // USER role gets only read permission for projects
-  await prisma.userPermission.create({
-    data: {
-      role: ROLES.USER,
-      entity: 'projects',
-      permission: PERMISSIONS.PROJECTS_READ,
     },
   });
 

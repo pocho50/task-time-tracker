@@ -9,7 +9,7 @@ const mockUserWithReadPermissions = {
     id: 1,
     name: 'Test User',
     permissions: [
-      { entity: 'projects', permission: PERMISSIONS.PROJECTS_READ },
+      { entity: 'projects', permission: PERMISSIONS.PROJECTS_WRITE },
       { entity: 'users', permission: PERMISSIONS.USERS_READ },
     ],
   },
@@ -22,7 +22,7 @@ const mockUserWithWritePermissions = {
     permissions: [
       {
         entity: 'projects',
-        permission: PERMISSIONS.PROJECTS_READ + PERMISSIONS.PROJECTS_WRITE,
+        permission: PERMISSIONS.PROJECTS_WRITE,
       },
       {
         entity: 'users',
