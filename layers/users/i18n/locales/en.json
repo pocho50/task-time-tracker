@@ -29,11 +29,18 @@
     "unauthorizedWrite": "You do not have permission to add or edit users.",
     "unauthorizedDelete": "You do not have permission to delete users.",
     "invalidId": "Invalid user id",
+    "invalidRoleKey": "Invalid role key",
     "errorSaving": "Error saving user",
+    "errorSavingRole": "Error saving role",
     "errorDeleting": "Error deleting user",
+    "errorDeletingRole": "Error deleting role",
     "errorFetching": "Error fetching users",
     "succesSaveUser": "User saved successfully",
-    "succesDeleteUser": "User deleted successfully"
+    "succesDeleteUser": "User deleted successfully",
+    "succesSaveRole": "Role saved successfully",
+    "succesDeleteRole": "Role deleted successfully",
+    "roleAdminCannotBeDeleted": "ADMIN role cannot be deleted",
+    "roleAssignedToUsers": "Role is assigned to one or more users"
   },
   "userList": {
     "title": "Users",
