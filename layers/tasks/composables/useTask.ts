@@ -1,5 +1,6 @@
-import { TaskPriority, TaskStatus, UserRole } from '@prisma/client';
+import { TaskPriority, TaskStatus } from '@prisma/client';
 import type { SerializedTaskWithUsersAndTimeTracks } from '../shared/types';
+import { ROLES } from '#layers/shared/utils/constants';
 
 export function useTasks(sprintId: string | undefined) {
   const { $api } = useNuxtApp();
@@ -61,9 +62,7 @@ export function useTasks(sprintId: string | undefined) {
 
     // Auto-assign to current user if they have USER role
     const defaultUsersId =
-      user.value?.role === UserRole.USER && user.value?.id
-        ? [user.value.id]
-        : [];
+      user.value?.role === ROLES.USER && user.value?.id ? [user.value.id] : [];
 
     selectedTask.value = {
       projectId: projectId || '', // Fallback to empty string if no project

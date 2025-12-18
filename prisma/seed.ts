@@ -13,6 +13,7 @@ async function main() {
   await prisma.$transaction([
     prisma.$executeRaw`PRAGMA foreign_keys = OFF`,
     prisma.$executeRaw`DELETE FROM user_permissions`,
+    prisma.$executeRaw`DELETE FROM roles`,
     prisma.$executeRaw`DELETE FROM time_tracks`,
     prisma.$executeRaw`DELETE FROM tasks_users`,
     prisma.$executeRaw`DELETE FROM projects_users`,
@@ -26,6 +27,13 @@ async function main() {
 
   const scrypt = new Scrypt({});
   const hash = new Hash(scrypt);
+
+  await prisma.role.createMany({
+    data: [
+      { key: ROLES.ADMIN, name: 'Administrator' },
+      { key: ROLES.USER, name: 'User' },
+    ],
+  });
 
   // Create admin user
   const adminPassword = await hash.make('admin123');

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { User } from '../utils/index';
-import type { UserRole } from '@prisma/client';
 import { ROLES } from '#layers/shared/utils/constants';
 const props = defineProps<{
   users: User[];
@@ -9,7 +8,7 @@ const props = defineProps<{
 // Inject handlers from parent context
 const { handleEdit, handleRemove } = useUsersContext();
 
-const getVariant = (role: UserRole) => {
+const getVariant = (role: string) => {
   return role === ROLES.ADMIN ? 'success' : 'info';
 };
 </script>
@@ -22,7 +21,7 @@ const getVariant = (role: UserRole) => {
     <table class="table table-zebra w-full">
       <thead>
         <tr>
-          <th class="w-16 hidden lg:table-cell"/>
+          <th class="w-16 hidden lg:table-cell" />
           <th>{{ $t('userList.name') }}</th>
           <th>{{ $t('userList.email') }}</th>
           <th>{{ $t('userList.role') }}</th>

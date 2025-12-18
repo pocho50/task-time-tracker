@@ -1,4 +1,4 @@
-import { PrismaClient, type UserRole, type User } from '@prisma/client';
+import { PrismaClient, type User } from '@prisma/client';
 
 export class UserRepository {
   private prisma: PrismaClient;
@@ -63,7 +63,7 @@ export class UserRepository {
     id?: string;
     name: string;
     email: string;
-    role: UserRole;
+    role: string;
     password?: string;
   }) {
     if (data.id) {
@@ -126,7 +126,7 @@ export class UserPermissionRepository {
     this.prisma = prisma || new PrismaClient();
   }
 
-  async findManyByRole(role: UserRole) {
+  async findManyByRole(role: string) {
     return this.prisma.userPermission.findMany({
       where: { role },
     });

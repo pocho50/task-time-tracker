@@ -1,5 +1,4 @@
 import type { UserRepository } from '../repository/user';
-import type { UserRole } from '@prisma/client';
 
 export class SaveUserService {
   constructor(private repo: UserRepository) {}
@@ -8,7 +7,7 @@ export class SaveUserService {
     id: string | undefined,
     name: string,
     email: string,
-    role: UserRole,
+    role: string,
     password?: string
   ) {
     return this.repo.save({
