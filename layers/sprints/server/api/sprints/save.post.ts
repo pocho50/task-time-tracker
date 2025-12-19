@@ -1,7 +1,12 @@
 import { SprintRepository } from '../../repository/sprint';
 import { sprintSchema } from '#layers/sprints/schemas';
 import { SaveSprintService } from '../../services/save-sprint';
-import { ROLES } from '#layers/shared/utils/constants';
+import {
+  assertHasPermissionOrThrow,
+  assertUserInProjectOrAdminOrThrow,
+} from '#layers/shared/server/utils';
+import { ALL_ENTITIES } from '#layers/shared/utils/constants';
+import { PERMISSIONS } from '#layers/shared/utils/permissions';
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
@@ -14,17 +19,20 @@ export default defineEventHandler(async (event) => {
 
   const repo = new SprintRepository();
 
-  // Check if user has access to this project (admins always have access)
-  const hasAccess =
-    user.role === ROLES.ADMIN ||
-    (await repo.isUserInProject(user.id, projectId!));
+  assertHasPermissionOrThrow(
+    user?.permissions,
+    ALL_ENTITIES.SPRINTS,
+    PERMISSIONS.SPRINTS_WRITE,
+    t('server.unauthorized')
+  );
 
-  if (!hasAccess) {
-    throw createError({
-      statusCode: 403,
-      message: t('server.unauthorizedAccess'),
-    });
-  }
+  await assertUserInProjectOrAdminOrThrow({
+    userId: user.id,
+    userRole: user.role,
+    projectId: projectId!,
+    isUserInProject: repo.isUserInProject.bind(repo),
+    errorMessage: t('server.unauthorizedAccess'),
+  });
 
   try {
     const service = new SaveSprintService(repo);

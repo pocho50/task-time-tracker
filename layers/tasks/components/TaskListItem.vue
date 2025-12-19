@@ -2,6 +2,7 @@
 import type { TaskStatus, TaskPriority } from '@prisma/client';
 import type { SerializedTaskWithUsersAndTimeTracks } from '../shared/types';
 import { truncateHtmlText } from '../utils/truncateHtmlText';
+import { ROLES } from '#layers/shared/utils/constants';
 
 const STATUS_VARIANTS: Record<
   TaskStatus,
@@ -53,10 +54,19 @@ const {
   checkActiveSessionAndSetLastSession,
 } = useTaskTimeTracks(toRef(props, 'task'), handleRefresh);
 
+const { user } = useUserSession();
+
 const timeAccumulateSeconds = useState<number>(
   `timeAccumulateSeconds-${props.task.id}`,
   () => getTimeAccumulatedSeconds.value
 );
+
+// Check if current user is assigned to this task
+const isUserAssignedToTask = computed(() => {
+  if (user.value?.role === ROLES.ADMIN) return true;
+  if (!user.value?.id || !props.task.users) return false;
+  return props.task.users.some((taskUser) => taskUser.id === user.value?.id);
+});
 
 // Watch for changes in accumulated time and update the state
 watch(
@@ -104,6 +114,7 @@ const truncatedDescription = computed(() => {
       <!-- Task time -->
       <div class="flex items-center gap-2">
         <TaskTime
+          v-if="isUserAssignedToTask"
           :accumulated-seconds="timeAccumulateSeconds"
           :initial-seconds="getActiveSessionElapsedSeconds"
           :start-inmediate="currentTimeTrackSession !== null"
@@ -111,7 +122,7 @@ const truncatedDescription = computed(() => {
           @@end="handleEnd"
         />
         <button
-          v-if="getLastSession"
+          v-if="getLastSession && isUserAssignedToTask"
           type="button"
           class="btn btn-ghost btn-xs"
           :aria-label="$t('common.edit')"

@@ -2,7 +2,9 @@ import { createError, defineEventHandler, getQuery } from 'h3';
 import { TimeTrackRepository } from '../../repository/time-track';
 import { GetWorkingTasksService } from '../../services/get-working-tasks';
 import { DEFAULT_PAGE_SIZE } from '../../constants';
-import { ROLES } from '#layers/shared/utils/constants';
+import { assertHasPermissionOrThrow } from '#layers/shared/server/utils';
+import { ALL_ENTITIES, ROLES } from '#layers/shared/utils/constants';
+import { PERMISSIONS } from '#layers/shared/utils/permissions';
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
@@ -10,10 +12,12 @@ export default defineEventHandler(async (event) => {
   const t = await useTranslation(event);
 
   if (user.role !== ROLES.ADMIN) {
-    throw createError({
-      statusCode: 403,
-      message: t('server.unauthorizedAccess'),
-    });
+    assertHasPermissionOrThrow(
+      user.permissions,
+      ALL_ENTITIES.WORKING,
+      PERMISSIONS.WORKING_READ,
+      t('server.unauthorizedAccess')
+    );
   }
 
   const query = getQuery(event);

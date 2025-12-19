@@ -15,11 +15,6 @@ export const PERMISSIONS = {
   TASKS_WRITE: 2,
   TASKS_DELETE: 4,
 
-  // time tracks
-  TIME_TRACKS_READ: 1,
-  TIME_TRACKS_WRITE: 2,
-  TIME_TRACKS_DELETE: 4,
-
   // working
   WORKING_READ: 1,
 

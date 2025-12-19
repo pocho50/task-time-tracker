@@ -80,11 +80,11 @@ watch(
 
 <template>
   <div
-    class="group inline-flex w-fit max-w-max whitespace-nowrap items-center gap-3 rounded-full border border-base-200 bg-base-100 py-1 pl-4 pr-1 shadow-sm transition-all duration-300 hover:border-base-300 hover:shadow-md"
+    class="group inline-flex w-fit max-w-max whitespace-nowrap items-center gap-2 rounded-full border border-base-200 bg-base-100 py-1 pl-4 pr-1 shadow-sm transition-all duration-300 hover:border-base-300 hover:shadow-md"
     :class="{ 'border-error/30 bg-error/5 ring-1 ring-error/20': isActive }"
   >
     <!-- Status Indicator -->
-    <div class="relative flex items-center justify-center">
+    <div class="relative flex items-center justify-center px-1">
       <div v-if="isActive" class="absolute rounded-full bg-error opacity-75" />
       <div
         class="h-2.5 w-2.5 rounded-full shadow-sm transition-colors duration-300"
@@ -99,43 +99,44 @@ watch(
     <!-- Time Display -->
     <div
       data-testid="task-time-display"
-      class="font-mono text-lg font-bold tracking-wide tabular-nums text-base-content"
+      class="pr-3 font-mono text-lg font-bold tracking-wide tabular-nums text-base-content"
       :class="{ 'text-error': isActive }"
       :title="formattedTime"
     >
       {{ formattedTime }}
     </div>
+    <template v-if="!readOnly">
+      <!-- Vertical Separator -->
+      <div class="h-5 w-px bg-base-200" />
+      <div class="flex items-center">
+        <AppButton
+          v-if="!isActive"
+          variant="ghost"
+          size="sm"
+          custom-class="btn-circle hover:bg-success/10 hover:text-success transition-colors"
+          aria-label="Start timer"
+          title="Start"
+          data-testid="start-timer-button"
+          @click="handleStart"
+        >
+          <Icon name="mdi:play" size="24" />
+        </AppButton>
 
-    <!-- Vertical Separator -->
-    <div class="mx-1 h-5 w-px bg-base-200" />
+        <AppButton
+          v-else
+          variant="ghost"
+          size="sm"
+          custom-class="btn-circle hover:bg-warning/10 hover:text-warning transition-colors"
+          aria-label="Pause timer"
+          title="Pause"
+          data-testid="pause-timer-button"
+          @click="handlePause"
+        >
+          <Icon name="mdi:pause" size="24" />
+        </AppButton>
+      </div>
+    </template>
 
     <!-- Actions -->
-    <div v-if="!readOnly" class="flex items-center">
-      <AppButton
-        v-if="!isActive"
-        variant="ghost"
-        size="sm"
-        custom-class="btn-circle hover:bg-success/10 hover:text-success transition-colors"
-        aria-label="Start timer"
-        title="Start"
-        data-testid="start-timer-button"
-        @click="handleStart"
-      >
-        <Icon name="mdi:play" size="24" />
-      </AppButton>
-
-      <AppButton
-        v-else
-        variant="ghost"
-        size="sm"
-        custom-class="btn-circle hover:bg-warning/10 hover:text-warning transition-colors"
-        aria-label="Pause timer"
-        title="Pause"
-        data-testid="pause-timer-button"
-        @click="handlePause"
-      >
-        <Icon name="mdi:pause" size="24" />
-      </AppButton>
-    </div>
   </div>
 </template>

@@ -114,17 +114,6 @@ async function main() {
     },
   });
 
-  await prisma.userPermission.create({
-    data: {
-      role: ROLES.ADMIN,
-      entity: 'time_tracks',
-      permission:
-        PERMISSIONS.TIME_TRACKS_READ |
-        PERMISSIONS.TIME_TRACKS_WRITE |
-        PERMISSIONS.TIME_TRACKS_DELETE,
-    },
-  });
-
   // Create a project
   const project = await prisma.project.create({
     data: {
