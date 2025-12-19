@@ -80,6 +80,10 @@ export class ProjectRepository {
     });
   }
 
+  async countAllProjects(): Promise<number> {
+    return this.prisma.project.count();
+  }
+
   async findManyForUser(
     userId: string,
     skip: number,
@@ -95,6 +99,32 @@ export class ProjectRepository {
           },
         },
       },
+      include: {
+        users: {
+          select: { userId: true },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return projects.map((project) => {
+      return {
+        ...project,
+        users: undefined,
+        usersId: project.users.map((user) => user.userId),
+      };
+    });
+  }
+
+  async findManyAll(
+    skip: number,
+    take?: number
+  ): Promise<ProjectWithIdUsers[]> {
+    const projects = await this.prisma.project.findMany({
+      skip,
+      take,
       include: {
         users: {
           select: { userId: true },
