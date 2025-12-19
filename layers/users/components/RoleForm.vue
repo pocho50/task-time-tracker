@@ -17,7 +17,7 @@ const validationSchema = toTypedSchema(roleSchema);
 const form = useTemplateRef('form');
 
 const permissionsState = reactive({
-  projects: { read: true, write: false, del: false },
+  projects: { write: false, del: false },
   sprints: { write: false, del: false },
   tasks: { write: false, del: false },
   users: { read: false, write: false, del: false },
@@ -36,7 +36,6 @@ const toBitmask = (flags: {
 watch(
   () => props.initialData,
   (data) => {
-    permissionsState.projects.read = true;
     permissionsState.projects.write = false;
     permissionsState.projects.del = false;
     permissionsState.sprints.write = false;
@@ -80,7 +79,10 @@ const onSubmit = (values: Record<string, any>) => {
     key: String(values.key ?? '').trim(),
     name: String(values.name ?? '').trim(),
     permissions: {
-      projects: toBitmask(permissionsState.projects),
+      projects: toBitmask({
+        write: permissionsState.projects.write,
+        del: permissionsState.projects.del,
+      }),
       sprints: toBitmask({
         write: permissionsState.sprints.write,
         del: permissionsState.sprints.del,
@@ -136,15 +138,6 @@ defineExpose({
         <div class="bg-base-100 rounded-box p-4 border border-base-300">
           <div class="font-semibold mb-2">{{ $t('roleForm.projects') }}</div>
           <div class="flex flex-wrap gap-4">
-            <label class="label cursor-pointer gap-2">
-              <input
-                v-model="permissionsState.projects.read"
-                type="checkbox"
-                class="checkbox"
-                disabled
-              />
-              <span class="label-text">{{ $t('roleForm.read') }}</span>
-            </label>
             <label class="label cursor-pointer gap-2">
               <input
                 v-model="permissionsState.projects.write"

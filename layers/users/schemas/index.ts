@@ -25,10 +25,6 @@ export const roleSchema = z.object({
       working: z.number().int().nonnegative(),
     })
     .optional()
-    .refine((p) => !p || (p.projects & 1) === 1, {
-      message: 'Projects permission must include READ.',
-      path: ['projects'],
-    })
     .refine((p) => !p || (p.sprints & 1) === 0, {
       message: 'Sprints permission cannot include READ.',
       path: ['sprints'],
