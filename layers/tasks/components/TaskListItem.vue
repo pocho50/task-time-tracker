@@ -2,7 +2,8 @@
 import type { TaskStatus, TaskPriority } from '@prisma/client';
 import type { SerializedTaskWithUsersAndTimeTracks } from '../shared/types';
 import { truncateHtmlText } from '../utils/truncateHtmlText';
-import { ROLES } from '#layers/shared/utils/constants';
+import { ALL_ENTITIES, ROLES } from '#layers/shared/utils/constants';
+import type { OptionAction } from '#layers/shared/utils/optionActions';
 
 const STATUS_VARIANTS: Record<
   TaskStatus,
@@ -51,10 +52,20 @@ const {
   handleStart,
   handleEnd,
   getLastSession,
-  checkActiveSessionAndSetLastSession,
 } = useTaskTimeTracks(toRef(props, 'task'), handleRefresh);
 
 const { user } = useUserSession();
+
+const { userIsAllowedToWrite, userIsAllowedToDelete } = useUser();
+
+const availableActions = computed<OptionAction[]>(() => {
+  const actions: OptionAction[] = [];
+
+  if (userIsAllowedToWrite(ALL_ENTITIES.TASKS)) actions.push('edit');
+  if (userIsAllowedToDelete(ALL_ENTITIES.TASKS)) actions.push('remove');
+
+  return actions;
+});
 
 const timeAccumulateSeconds = useState<number>(
   `timeAccumulateSeconds-${props.task.id}`,
@@ -138,6 +149,7 @@ const truncatedDescription = computed(() => {
       <div :data-testid="`task-actions-${task.id}`">
         <TaskOptionActions
           class="relative dropdown-top !right-0 !top-0"
+          :actions="availableActions"
           @@edit="handleEdit(task.id)"
           @@remove="handleRemove(task.id)"
           @@history="$emit('@history', task)"

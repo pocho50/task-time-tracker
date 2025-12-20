@@ -1,12 +1,24 @@
 <script setup lang="ts">
 import type { User } from '../utils/index';
-import { ROLES } from '#layers/shared/utils/constants';
+import { ALL_ENTITIES, ROLES } from '#layers/shared/utils/constants';
+import type { OptionAction } from '#layers/shared/utils/optionActions';
 const props = defineProps<{
   users: User[];
 }>();
 
 // Inject handlers from parent context
 const { handleEdit, handleRemove } = useUsersContext();
+
+const { userIsAllowedToWrite, userIsAllowedToDelete } = useUser();
+
+const availableActions = computed<OptionAction[]>(() => {
+  const actions: OptionAction[] = [];
+
+  if (userIsAllowedToWrite(ALL_ENTITIES.USERS)) actions.push('edit');
+  if (userIsAllowedToDelete(ALL_ENTITIES.USERS)) actions.push('remove');
+
+  return actions;
+});
 
 const getVariant = (role: string) => {
   return role === ROLES.ADMIN ? 'success' : 'info';
@@ -59,7 +71,11 @@ const getVariant = (role: string) => {
             <td>
               <div :data-testid="`user-actions-${user.id}`">
                 <AppOptionAction
-                  :actions="['edit', 'remove']"
+                  v-if="
+                    userIsAllowedToWrite(ALL_ENTITIES.USERS) ||
+                    userIsAllowedToDelete(ALL_ENTITIES.USERS)
+                  "
+                  :actions="availableActions"
                   class="relative dropdown-top !right-0 !top-0"
                   @@edit="handleEdit(user.id)"
                   @@remove="handleRemove(user.id)"

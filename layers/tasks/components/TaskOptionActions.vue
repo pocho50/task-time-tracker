@@ -1,4 +1,15 @@
 <script setup lang="ts">
+import type { OptionAction } from '#layers/shared/utils/optionActions';
+
+withDefaults(
+  defineProps<{
+    actions?: OptionAction[];
+  }>(),
+  {
+    actions: () => ['edit', 'remove'],
+  }
+);
+
 const emit = defineEmits<{
   (event: '@edit'): void;
   (event: '@remove'): void;
@@ -12,7 +23,7 @@ const handleHistory = (dropDown?: HTMLUListElement) => {
 </script>
 <template>
   <AppOptionAction
-    :actions="['edit', 'remove']"
+    :actions="actions"
     @@edit="$emit('@edit')"
     @@remove="$emit('@remove')"
   >

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { ALL_ENTITIES } from '#layers/shared/utils/constants';
+import type { OptionAction } from '#layers/shared/utils/optionActions';
+
 defineProps<{
   projects: ProjectFormData[];
 }>();
@@ -6,7 +9,16 @@ defineProps<{
 // Inject handlers from parent context
 const { handleEdit, handleRemove } = useProjectsContext();
 
-const { userIsAllowedToWrite } = useUser();
+const { userIsAllowedToWrite, userIsAllowedToDelete } = useUser();
+
+const availableActions = computed<OptionAction[]>(() => {
+  const actions: OptionAction[] = [];
+
+  if (userIsAllowedToWrite(ALL_ENTITIES.PROJECTS)) actions.push('edit');
+  if (userIsAllowedToDelete(ALL_ENTITIES.PROJECTS)) actions.push('remove');
+
+  return actions;
+});
 </script>
 <template>
   <div
@@ -20,12 +32,14 @@ const { userIsAllowedToWrite } = useUser();
       class="card bg-base-100 shadow-md hover:shadow-2xl relative overflow-hidden transition-transform duration-300 ease-in-out hover:scale-[1.03]"
     >
       <AppOptionAction
-        v-if="userIsAllowedToWrite(ENTITY)"
-        :actions="['edit', 'remove']"
-        @@edit="() => typeof project.id === 'string' && handleEdit(project.id)"
-        @@remove="
-          () => typeof project.id === 'string' && handleRemove(project.id)
+        v-if="
+          (userIsAllowedToWrite(ALL_ENTITIES.PROJECTS) ||
+            userIsAllowedToDelete(ALL_ENTITIES.PROJECTS)) &&
+          typeof project.id === 'string'
         "
+        :actions="availableActions"
+        @@edit="handleEdit(project.id)"
+        @@remove="handleRemove(project.id)"
       />
       <div class="card-body">
         <h2 class="card-title">
