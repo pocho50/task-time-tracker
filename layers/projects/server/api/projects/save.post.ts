@@ -1,7 +1,7 @@
 import { ProjectRepository } from '../../repository/project';
 import { projectSchema } from '#layers/projects/schemas';
 import { PERMISSIONS } from '#layers/shared/utils/permissions';
-import { ENTITY } from '#layers/projects/utils/constants';
+import { ALL_ENTITIES } from '#layers/shared/utils/constants';
 import { assertHasPermissionOrThrow } from '#layers/shared/server/utils';
 import { SaveProjectsService } from '../../services/save-projects';
 
@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
 
   assertHasPermissionOrThrow(
     user?.permissions,
-    ENTITY,
+    ALL_ENTITIES.PROJECTS,
     PERMISSIONS.PROJECTS_WRITE,
     t('server.unauthorized')
   );

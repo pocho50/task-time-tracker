@@ -1,7 +1,7 @@
 // endpoint for deleting a project
 import { ProjectRepository } from '../../repository/project';
 import { assertHasPermissionOrThrow } from '#layers/shared/server/utils';
-import { ENTITY } from '#layers/projects/utils/constants';
+import { ALL_ENTITIES } from '#layers/shared/utils/constants';
 import { PERMISSIONS } from '#layers/shared/utils/permissions';
 import { DeleteProjectsService } from '../../services/delete-projects';
 
@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
   // Permission check
   assertHasPermissionOrThrow(
     user?.permissions,
-    ENTITY,
+    ALL_ENTITIES.PROJECTS,
     PERMISSIONS.PROJECTS_WRITE,
     t('server.unauthorizedDelete')
   );

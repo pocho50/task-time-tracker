@@ -16,6 +16,8 @@ const {
   selectedSprint,
 } = useSprints(routeProjectId.value as string);
 
+const { userIsAllowedToWrite } = useUser();
+
 // Provide context to child components
 provideSprintsContext({
   handleEdit,
@@ -70,7 +72,10 @@ const sprintForm = useTemplateRef('sprintForm');
       @@next="page++"
     />
     <!-- Add Sprint Button -->
-    <AppAddBtn @click="handleAdd" />
+    <AppAddBtn
+      v-if="userIsAllowedToWrite(ALL_ENTITIES.SPRINTS)"
+      @click="handleAdd"
+    />
 
     <!-- Drawer -->
     <AppDrawerRight

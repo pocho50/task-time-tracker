@@ -21,6 +21,8 @@ provideUsersContext({
 
 // form template refs
 const userForm = useTemplateRef('userForm');
+
+const { userIsAllowedToWrite } = useUser();
 </script>
 
 <template>
@@ -41,7 +43,10 @@ const userForm = useTemplateRef('userForm');
       @@prev="page--"
       @@next="page++"
     />
-    <AppAddBtn @click="handleAdd" />
+    <AppAddBtn
+      @click="handleAdd"
+      v-if="userIsAllowedToWrite(ALL_ENTITIES.USERS)"
+    />
     <AppDrawerRight
       v-model="openDrawer"
       :title="isCreate ? $t('userList.addUser') : $t('userList.editUser')"
