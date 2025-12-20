@@ -65,6 +65,7 @@ provideRolesContext({
           type="button"
           variant="primary"
           size="lg"
+          data-testid="role-form-submit"
           @click="roleForm?.triggerSubmit()"
         >
           {{ $t('save') }}
