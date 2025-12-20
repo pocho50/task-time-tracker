@@ -30,3 +30,6 @@ prisma/prisma
 
 # E2E testing auth state
 e2e/.auth/
+
+# Test results
+test-results
