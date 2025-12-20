@@ -2,7 +2,7 @@
 import type { TaskStatus, TaskPriority } from '@prisma/client';
 import type { SerializedTaskWithUsersAndTimeTracks } from '../shared/types';
 import { truncateHtmlText } from '../utils/truncateHtmlText';
-import { ALL_ENTITIES, ROLES } from '#layers/shared/utils/constants';
+import { ALL_ENTITIES } from '#layers/shared/utils/constants';
 import type { OptionAction } from '#layers/shared/utils/optionActions';
 
 const STATUS_VARIANTS: Record<
@@ -54,8 +54,6 @@ const {
   getLastSession,
 } = useTaskTimeTracks(toRef(props, 'task'), handleRefresh);
 
-const { user } = useUserSession();
-
 const { userIsAllowedToWrite, userIsAllowedToDelete } = useUser();
 
 const availableActions = computed<OptionAction[]>(() => {
@@ -72,12 +70,7 @@ const timeAccumulateSeconds = useState<number>(
   () => getTimeAccumulatedSeconds.value
 );
 
-// Check if current user is assigned to this task
-const isUserAssignedToTask = computed(() => {
-  if (user.value?.role === ROLES.ADMIN) return true;
-  if (!user.value?.id || !props.task.users) return false;
-  return props.task.users.some((taskUser) => taskUser.id === user.value?.id);
-});
+const { isUserAssignedToTask } = useIsUserAssignedToTask(toRef(props, 'task'));
 
 // Watch for changes in accumulated time and update the state
 watch(

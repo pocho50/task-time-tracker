@@ -2,6 +2,27 @@ import { TaskPriority, TaskStatus } from '@prisma/client';
 import type { SerializedTaskWithUsersAndTimeTracks } from '../shared/types';
 import { ROLES } from '#layers/shared/utils/constants';
 
+export function useIsUserAssignedToTask(
+  task:
+    | Ref<SerializedTaskWithUsersAndTimeTracks | null | undefined>
+    | MaybeRefOrGetter<SerializedTaskWithUsersAndTimeTracks | null | undefined>
+) {
+  const { user } = useUserSession();
+
+  const isUserAssignedToTask = computed(() => {
+    const taskValue = toValue(task);
+
+    if (user.value?.role === ROLES.ADMIN) return true;
+    if (!user.value?.id || !taskValue?.users) return false;
+
+    return taskValue.users.some((taskUser) => taskUser.id === user.value?.id);
+  });
+
+  return {
+    isUserAssignedToTask,
+  };
+}
+
 export function useTasks(sprintId: string | undefined) {
   const { $api } = useNuxtApp();
   const taskRepo = new TaskRepo($api);
