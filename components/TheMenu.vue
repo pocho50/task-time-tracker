@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useUser } from '#layers/shared/composables/useUser';
 import { ALL_ENTITIES } from '~/layers/shared/utils/constants';
+import { hasPermission, PERMISSIONS } from '~/layers/shared/utils/permissions';
 
 const rawMenuItems = [
   {
@@ -13,19 +14,28 @@ const rawMenuItems = [
     to: '/tasks',
     icon: 'mdi:timer',
     label: 'app.menu.tasks',
+    entity: ALL_ENTITIES.TASKS,
   },
   {
     to: '/tasks/working',
     icon: 'mdi:fire',
     label: 'app.menu.tasksOnWorking',
-    onlyAdmin: true,
+    entity: ALL_ENTITIES.WORKING,
+    permission: PERMISSIONS.WORKING_READ,
   },
   {
     to: '/users',
     icon: 'mdi:users',
     label: 'app.menu.users',
-    requiresWrite: true,
     entity: ALL_ENTITIES.USERS,
+    permission: PERMISSIONS.USERS_READ,
+  },
+  {
+    to: '/roles',
+    icon: 'mdi:account-key',
+    label: 'app.menu.roles',
+    entity: ALL_ENTITIES.ROLES,
+    permission: PERMISSIONS.ROLES_READ,
   },
   {
     to: '/settings',
@@ -34,14 +44,17 @@ const rawMenuItems = [
   },
 ];
 
-const { userIsAllowedToWrite, userIsAdmin } = useUser();
+const { user } = useUser();
 
 const menuItems = computed(() =>
   rawMenuItems.filter((item) => {
-    if (item.onlyAdmin) {
-      return userIsAdmin.value;
+    if ('permission' in item && item.permission) {
+      return hasPermission(user.value?.permissions ?? [], {
+        entity: item.entity,
+        permission: item.permission,
+      });
     }
-    return !item.requiresWrite || userIsAllowedToWrite(item.entity);
+    return true;
   })
 );
 </script>

@@ -29,11 +29,18 @@
     "unauthorizedWrite": "You do not have permission to add or edit users.",
     "unauthorizedDelete": "You do not have permission to delete users.",
     "invalidId": "Invalid user id",
+    "invalidRoleKey": "Invalid role key",
     "errorSaving": "Error saving user",
+    "errorSavingRole": "Error saving role",
     "errorDeleting": "Error deleting user",
+    "errorDeletingRole": "Error deleting role",
     "errorFetching": "Error fetching users",
     "succesSaveUser": "User saved successfully",
-    "succesDeleteUser": "User deleted successfully"
+    "succesDeleteUser": "User deleted successfully",
+    "succesSaveRole": "Role saved successfully",
+    "succesDeleteRole": "Role deleted successfully",
+    "roleAdminCannotBeDeleted": "ADMIN role cannot be deleted",
+    "roleAssignedToUsers": "Role is assigned to one or more users"
   },
   "userList": {
     "title": "Users",
@@ -55,5 +62,29 @@
     "locale": "Language",
     "password": "Password",
     "repeatPassword": "Repeat password"
+  },
+  "roleList": {
+    "title": "Roles",
+    "role": "Role",
+    "name": "Name",
+    "actions": "Actions",
+    "noRolesFound": "No roles found",
+    "noRolesFoundDescription": "Create a role to start assigning permissions"
+  },
+  "roleForm": {
+    "title": "Add role",
+    "role": "Role",
+    "name": "Name",
+    "permissions": "Permissions",
+    "projects": "Projects",
+    "sprints": "Sprints",
+    "tasks": "Tasks",
+    "users": "Users",
+    "roles": "Roles",
+    "working": "Working",
+    "read": "Read",
+    "write": "Write",
+    "delete": "Delete",
+    "save": "Save"
   }
 }

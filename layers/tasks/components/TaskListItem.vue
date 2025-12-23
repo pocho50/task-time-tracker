@@ -2,6 +2,8 @@
 import type { TaskStatus, TaskPriority } from '@prisma/client';
 import type { SerializedTaskWithUsersAndTimeTracks } from '../shared/types';
 import { truncateHtmlText } from '../utils/truncateHtmlText';
+import { ALL_ENTITIES } from '#layers/shared/utils/constants';
+import type { OptionAction } from '#layers/shared/utils/optionActions';
 
 const STATUS_VARIANTS: Record<
   TaskStatus,
@@ -50,13 +52,25 @@ const {
   handleStart,
   handleEnd,
   getLastSession,
-  checkActiveSessionAndSetLastSession,
 } = useTaskTimeTracks(toRef(props, 'task'), handleRefresh);
+
+const { userIsAllowedToWrite, userIsAllowedToDelete } = useUser();
+
+const availableActions = computed<OptionAction[]>(() => {
+  const actions: OptionAction[] = [];
+
+  if (userIsAllowedToWrite(ALL_ENTITIES.TASKS)) actions.push('edit');
+  if (userIsAllowedToDelete(ALL_ENTITIES.TASKS)) actions.push('remove');
+
+  return actions;
+});
 
 const timeAccumulateSeconds = useState<number>(
   `timeAccumulateSeconds-${props.task.id}`,
   () => getTimeAccumulatedSeconds.value
 );
+
+const { isUserAssignedToTask } = useIsUserAssignedToTask(toRef(props, 'task'));
 
 // Watch for changes in accumulated time and update the state
 watch(
@@ -104,6 +118,7 @@ const truncatedDescription = computed(() => {
       <!-- Task time -->
       <div class="flex items-center gap-2">
         <TaskTime
+          v-if="isUserAssignedToTask"
           :accumulated-seconds="timeAccumulateSeconds"
           :initial-seconds="getActiveSessionElapsedSeconds"
           :start-inmediate="currentTimeTrackSession !== null"
@@ -111,7 +126,7 @@ const truncatedDescription = computed(() => {
           @@end="handleEnd"
         />
         <button
-          v-if="getLastSession"
+          v-if="getLastSession && isUserAssignedToTask"
           type="button"
           class="btn btn-ghost btn-xs"
           :aria-label="$t('common.edit')"
@@ -127,6 +142,7 @@ const truncatedDescription = computed(() => {
       <div :data-testid="`task-actions-${task.id}`">
         <TaskOptionActions
           class="relative dropdown-top !right-0 !top-0"
+          :actions="availableActions"
           @@edit="handleEdit(task.id)"
           @@remove="handleRemove(task.id)"
           @@history="$emit('@history', task)"

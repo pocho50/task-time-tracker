@@ -33,6 +33,8 @@ provideTasksContext({
   handleRemove,
 });
 
+const { userIsAllowedToWrite } = useUser();
+
 watch(
   status,
   async () => {
@@ -147,7 +149,10 @@ definePageMeta({
     </div>
 
     <!-- Floating Add Button -->
-    <AppAddBtn v-if="selectedSprintId" @click="handleAdd" />
+    <AppAddBtn
+      v-if="selectedSprintId && userIsAllowedToWrite(ALL_ENTITIES.TASKS)"
+      @click="handleAdd"
+    />
 
     <!-- Drawer for edit or add task -->
     <AppDrawerRight

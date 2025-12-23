@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { mockComponent, mountSuspended  } from '@nuxt/test-utils/runtime';
+import { mockComponent, mountSuspended } from '@nuxt/test-utils/runtime';
 import TaskTime from '../../components/TaskTime.vue';
 
 // Only mock Icon component for simplicity, test with real AppButton
@@ -178,10 +178,13 @@ describe('TaskTime', () => {
       },
     });
 
-    // Assert
-    expect(wrapper.emitted('@start')).toBeTruthy();
+    // Assert - timer should be active but no @start event emitted yet
+    // @start is only emitted when user clicks the start button
     const statusIndicator = wrapper.find('.h-2\\.5.w-2\\.5.rounded-full');
     expect(statusIndicator.classes()).toContain('bg-error');
+
+    // Verify no @start event was emitted automatically
+    expect(wrapper.emitted('@start')).toBeFalsy();
   });
 
   it('adds accumulated seconds to counter when timer is running', async () => {

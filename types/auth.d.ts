@@ -1,11 +1,9 @@
-import type { UserRole } from '@prisma/client';
-
 declare module '#auth-utils' {
   interface User {
     id: string;
     name: string;
     email: string;
-    role: UserRole;
+    role: string;
     permissions: { entity: string; permission: number }[];
     locale: 'en' | 'es';
     theme: 'light' | 'dark';

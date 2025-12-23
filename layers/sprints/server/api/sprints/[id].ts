@@ -1,5 +1,5 @@
 import { SprintRepository } from '../../repository/sprint';
-import { ROLES } from '#layers/shared/utils/constants';
+import { assertUserInProjectOrAdminOrThrow } from '#layers/shared/server/utils';
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
@@ -30,16 +30,13 @@ export default defineEventHandler(async (event) => {
   }
 
   // Check if user has access to this sprint's project (admins always have access)
-  const hasAccess =
-    user.role === ROLES.ADMIN ||
-    (await repo.isUserInProject(user.id, sprint.projectId));
-
-  if (!hasAccess) {
-    throw createError({
-      statusCode: 403,
-      message: t('server.unauthorizedAccess'),
-    });
-  }
+  await assertUserInProjectOrAdminOrThrow({
+    userId: user.id,
+    userRole: user.role,
+    projectId: sprint.projectId,
+    isUserInProject: repo.isUserInProject.bind(repo),
+    errorMessage: t('server.unauthorizedAccess'),
+  });
 
   return sprint;
 });

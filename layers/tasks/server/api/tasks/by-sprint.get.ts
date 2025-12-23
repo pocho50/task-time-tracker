@@ -1,7 +1,7 @@
 import { TaskRepository } from '../../repository/task';
 import { GetTasksService } from '../../services/get-tasks';
 import { DEFAULT_PAGE_SIZE } from '../../constants';
-import { ROLES } from '#layers/shared/utils/constants';
+import { assertUserInSprintOrAdminOrThrow } from '#layers/shared/server/utils';
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
@@ -29,16 +29,13 @@ export default defineEventHandler(async (event) => {
 
   const repo = new TaskRepository();
 
-  // Check if user has access to this sprint (admins always have access)
-  const hasAccess =
-    user.role === ROLES.ADMIN || (await repo.isUserInSprint(user.id, sprintId));
-
-  if (!hasAccess) {
-    throw createError({
-      statusCode: 403,
-      message: t('server.unauthorizedAccess'),
-    });
-  }
+  await assertUserInSprintOrAdminOrThrow({
+    userId: user.id,
+    userRole: user.role,
+    sprintId,
+    isUserInSprint: repo.isUserInSprint.bind(repo),
+    errorMessage: t('server.unauthorizedAccess'),
+  });
 
   try {
     const service = new GetTasksService(repo);

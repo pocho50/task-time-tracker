@@ -1,7 +1,8 @@
 import { GetUsersService } from '../../services/get-users';
 import { UserRepository } from '../../repository/user';
-import { ENTITY } from '#layers/users/utils/constants';
+import { ALL_ENTITIES } from '#layers/shared/utils/constants';
 import { PERMISSIONS } from '#layers/shared/utils/permissions';
+import { assertHasPermissionOrThrow } from '#layers/shared/server/utils';
 import { DEFAULT_PAGE_SIZE } from '../../constants';
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
@@ -11,7 +12,7 @@ export default defineEventHandler(async (event) => {
   // Permission check
   assertHasPermissionOrThrow(
     user?.permissions,
-    ENTITY,
+    ALL_ENTITIES.USERS,
     PERMISSIONS.USERS_READ,
     t('server.unauthorizedRead')
   );

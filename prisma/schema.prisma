@@ -10,11 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole {
-  ADMIN
-  USER
-}
-
 enum TaskStatus {
   ANALYZING
   IN_PROGRESS
@@ -34,17 +29,31 @@ enum TaskPriority {
   HIGH
 }
 
+model Role {
+  id   String @id @default(uuid())
+  key  String @unique
+  name String
+
+  // Relations
+  users       User[]           @relation("UserRole")
+  permissions UserPermission[] @relation("RolePermissions")
+
+  @@map("roles")
+  @@index([key])
+}
+
 model User {
   id        String    @id @default(uuid())
   email     String    @unique
   name      String
   password  String
-  role      UserRole  @default(USER)
+  role      String    @default("USER")
   locale    String    @default("en")
   theme     String    @default("light")
   createdAt DateTime  @default(now()) @map("created_at")
 
   // Relations
+  roleRef     Role             @relation("UserRole", fields: [role], references: [key])
   projects    ProjectsOnUsers[]
   tasks       TasksOnUsers[]
   timeTracking TimeTrack[]
@@ -57,9 +66,12 @@ model User {
 /// Relates a user to a set of permissions for a specific entity type (e.g., projects, tasks, sprints)
 model UserPermission {
   id         Int       @id @default(autoincrement())
-  role       UserRole  @default(USER)
+  role       String    @default("USER")
   entity     String    // Entity type, e.g., 'projects', 'tasks', 'sprints'
   permission Int       // Bitmask of permissions for the entity
+
+  // Relations
+  roleRef    Role      @relation("RolePermissions", fields: [role], references: [key])
 
   @@index([role])
   @@index([entity])

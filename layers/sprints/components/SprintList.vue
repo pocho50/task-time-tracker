@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { Sprint } from '../utils';
 import { formatDate } from '#layers/shared/utils';
+import { ALL_ENTITIES } from '#layers/shared/utils/constants';
+import type { OptionAction } from '#layers/shared/utils/optionActions';
 
 const VARIANTS: Record<SprintStatus, 'info' | 'success' | 'warning'> = {
   PLANNING: 'warning',
@@ -14,6 +16,17 @@ const props = defineProps<{
 
 // Inject handlers from parent context
 const { handleEdit, handleRemove } = useSprintsContext();
+
+const { userIsAllowedToWrite, userIsAllowedToDelete } = useUser();
+
+const availableActions = computed<OptionAction[]>(() => {
+  const actions: OptionAction[] = [];
+
+  if (userIsAllowedToWrite(ALL_ENTITIES.SPRINTS)) actions.push('edit');
+  if (userIsAllowedToDelete(ALL_ENTITIES.SPRINTS)) actions.push('remove');
+
+  return actions;
+});
 
 const getVariant = (status: SprintStatus) => {
   return VARIANTS[status];
@@ -79,7 +92,11 @@ const getVariant = (status: SprintStatus) => {
             <td>
               <div :data-testid="`sprint-actions-${sprint.id}`">
                 <AppOptionAction
-                  :actions="['edit', 'remove']"
+                  v-if="
+                    userIsAllowedToWrite(ALL_ENTITIES.SPRINTS) ||
+                    userIsAllowedToDelete(ALL_ENTITIES.SPRINTS)
+                  "
+                  :actions="availableActions"
                   class="relative dropdown-top !right-0 !top-0"
                   @@edit="handleEdit(sprint.id)"
                   @@remove="handleRemove(sprint.id)"

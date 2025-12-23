@@ -5,7 +5,6 @@ describe('Permissions', () => {
   describe('PERMISSIONS constants', () => {
     it('should define project permission constants', () => {
       // Assert that project permissions are defined
-      expect(PERMISSIONS.PROJECTS_READ).toBe(1);
       expect(PERMISSIONS.PROJECTS_WRITE).toBe(2);
       expect(PERMISSIONS.PROJECTS_DELETE).toBe(4);
     });
@@ -22,14 +21,14 @@ describe('Permissions', () => {
     it('should return true when user has exact permission', () => {
       // Arrange - user with read permission for projects
       const userPermissions = [
-        { entity: 'projects', permission: PERMISSIONS.PROJECTS_READ },
+        { entity: 'projects', permission: PERMISSIONS.PROJECTS_WRITE },
       ];
 
       // Act & Assert
       expect(
         hasPermission(userPermissions, {
           entity: 'projects',
-          permission: PERMISSIONS.PROJECTS_READ,
+          permission: PERMISSIONS.PROJECTS_WRITE,
         })
       ).toBe(true);
     });
@@ -39,7 +38,7 @@ describe('Permissions', () => {
       const userPermissions = [
         {
           entity: 'projects',
-          permission: PERMISSIONS.PROJECTS_READ + PERMISSIONS.PROJECTS_WRITE,
+          permission: PERMISSIONS.PROJECTS_WRITE + PERMISSIONS.PROJECTS_DELETE,
         },
       ];
 
@@ -47,14 +46,14 @@ describe('Permissions', () => {
       expect(
         hasPermission(userPermissions, {
           entity: 'projects',
-          permission: PERMISSIONS.PROJECTS_READ,
+          permission: PERMISSIONS.PROJECTS_WRITE,
         })
       ).toBe(true);
 
       expect(
         hasPermission(userPermissions, {
           entity: 'projects',
-          permission: PERMISSIONS.PROJECTS_WRITE,
+          permission: PERMISSIONS.PROJECTS_DELETE,
         })
       ).toBe(true);
     });
@@ -62,7 +61,7 @@ describe('Permissions', () => {
     it('should return false when user does not have permission', () => {
       // Arrange - user with only read permission
       const userPermissions = [
-        { entity: 'projects', permission: PERMISSIONS.PROJECTS_READ },
+        { entity: 'projects', permission: PERMISSIONS.PROJECTS_DELETE },
       ];
 
       // Act & Assert - should fail for write permission
@@ -77,7 +76,7 @@ describe('Permissions', () => {
     it('should return false when user has no permission for entity', () => {
       // Arrange - user with projects permission but no users permission
       const userPermissions = [
-        { entity: 'projects', permission: PERMISSIONS.PROJECTS_READ },
+        { entity: 'projects', permission: PERMISSIONS.PROJECTS_WRITE },
       ];
 
       // Act & Assert - should fail for users entity
@@ -97,7 +96,7 @@ describe('Permissions', () => {
       expect(
         hasPermission(userPermissions, {
           entity: 'projects',
-          permission: PERMISSIONS.PROJECTS_READ,
+          permission: PERMISSIONS.PROJECTS_WRITE,
         })
       ).toBe(false);
     });

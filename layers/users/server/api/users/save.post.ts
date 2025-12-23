@@ -1,7 +1,7 @@
 import { SaveUserService } from '../../services/save-user';
 import { UserRepository } from '../../repository/user';
 import { getUserSchema } from '#layers/users/schemas';
-import { ENTITY } from '#layers/users/utils/constants';
+import { ALL_ENTITIES } from '#layers/shared/utils/constants';
 import { PERMISSIONS } from '#layers/shared/utils/permissions';
 import { assertHasPermissionOrThrow } from '#layers/shared/server/utils';
 
@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
 
   assertHasPermissionOrThrow(
     user?.permissions,
-    ENTITY,
+    ALL_ENTITIES.USERS,
     PERMISSIONS.USERS_WRITE,
     t('server.unauthorized')
   );

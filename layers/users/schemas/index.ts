@@ -12,6 +12,33 @@ export const settingsSchema = z.object({
   locale: z.enum(LOCALES),
 });
 
+export const roleSchema = z.object({
+  key: z.string().min(1),
+  name: z.string().min(1),
+  permissions: z
+    .object({
+      projects: z.number().int().nonnegative(),
+      sprints: z.number().int().nonnegative(),
+      tasks: z.number().int().nonnegative(),
+      users: z.number().int().nonnegative(),
+      roles: z.number().int().nonnegative(),
+      working: z.number().int().nonnegative(),
+    })
+    .optional()
+    .refine((p) => !p || (p.sprints & 1) === 0, {
+      message: 'Sprints permission cannot include READ.',
+      path: ['sprints'],
+    })
+    .refine((p) => !p || (p.tasks & 1) === 0, {
+      message: 'Tasks permission cannot include READ.',
+      path: ['tasks'],
+    })
+    .refine((p) => !p || (p.working & ~1) === 0, {
+      message: 'Working permission can only include READ.',
+      path: ['working'],
+    }),
+});
+
 /**
  * Returns a user schema that adapts password validation for create vs update.
  * @param isCreate - true if creating, false if updating
@@ -22,7 +49,7 @@ export function getUserSchema(isCreate: boolean) {
       id: z.string().optional(),
       name: z.string().min(1),
       email: z.string().email(),
-      role: z.enum([ROLES.ADMIN, ROLES.USER]),
+      role: z.string().min(1),
       password: isCreate ? z.string().min(8) : z.string().min(8).optional(),
       repeatPassword: isCreate
         ? z.string().min(8)

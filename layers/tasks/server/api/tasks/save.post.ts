@@ -1,6 +1,13 @@
 import { TaskRepository } from '../../repository/task';
 import { taskSchema } from '#layers/tasks/schemas';
 import { SaveTasksService } from '../../services/save-tasks';
+import {
+  assertHasPermissionOrThrow,
+  assertUserInProjectOrAdminOrThrow,
+  assertUserInSprintOrAdminOrThrow,
+} from '#layers/shared/server/utils';
+import { ALL_ENTITIES } from '#layers/shared/utils/constants';
+import { PERMISSIONS } from '#layers/shared/utils/permissions';
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
@@ -31,18 +38,46 @@ export default defineEventHandler(async (event) => {
 
   const repo = new TaskRepository();
 
-  // Check user access
-  const hasAccess = await repo.hasAccessToTask(
-    user.id,
-    user.role,
-    id,
-    projectId
+  assertHasPermissionOrThrow(
+    user?.permissions,
+    ALL_ENTITIES.TASKS,
+    PERMISSIONS.TASKS_WRITE,
+    t('server.unauthorized')
   );
 
-  if (!hasAccess) {
-    throw createError({
-      statusCode: 403,
-      message: t('server.unauthorizedAccess'),
+  const sprintIdToCheck = id
+    ? await repo.getSprintIdByTaskId(id)
+    : (sprintId ?? null);
+
+  let projectIdToCheck: string;
+  if (id) {
+    const projectIdFromDb = await repo.getProjectIdByTaskId(id);
+    if (!projectIdFromDb) {
+      throw createError({
+        statusCode: 404,
+        message: t('server.taskNotFound') || 'Task not found',
+      });
+    }
+    projectIdToCheck = projectIdFromDb;
+  } else {
+    projectIdToCheck = projectId;
+  }
+
+  if (sprintIdToCheck) {
+    await assertUserInSprintOrAdminOrThrow({
+      userId: user.id,
+      userRole: user.role,
+      sprintId: sprintIdToCheck,
+      isUserInSprint: repo.isUserInSprint.bind(repo),
+      errorMessage: t('server.unauthorizedAccess'),
+    });
+  } else {
+    await assertUserInProjectOrAdminOrThrow({
+      userId: user.id,
+      userRole: user.role,
+      projectId: projectIdToCheck,
+      isUserInProject: repo.isUserInProject.bind(repo),
+      errorMessage: t('server.unauthorizedAccess'),
     });
   }
 

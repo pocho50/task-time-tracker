@@ -1,6 +1,7 @@
 import { ProjectRepository } from '../../repository/project';
 import { GetProjectsService } from '../../services/get-projects';
 import { DEFAULT_PAGE_SIZE } from '../../constants';
+import { ROLES } from '#layers/shared/utils/constants';
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
@@ -28,6 +29,7 @@ export default defineEventHandler(async (event) => {
     const service = new GetProjectsService(repo);
     return service.execute({
       userId: user.id,
+      isAdmin: user.role === ROLES.ADMIN,
       page,
       pageSize,
     });

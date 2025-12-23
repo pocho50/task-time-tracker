@@ -10,22 +10,30 @@ async function main() {
   // Clean up existing data
   console.log('Cleaning up existing data...');
   // Disable foreign key checks and truncate all tables
-  await prisma.$transaction([
-    prisma.$executeRaw`PRAGMA foreign_keys = OFF`,
-    prisma.$executeRaw`DELETE FROM user_permissions`,
-    prisma.$executeRaw`DELETE FROM time_tracks`,
-    prisma.$executeRaw`DELETE FROM tasks_users`,
-    prisma.$executeRaw`DELETE FROM projects_users`,
-    prisma.$executeRaw`DELETE FROM tasks`,
-    prisma.$executeRaw`DELETE FROM sprints`,
-    prisma.$executeRaw`DELETE FROM projects`,
-    prisma.$executeRaw`DELETE FROM users`,
-    prisma.$executeRaw`PRAGMA foreign_keys = ON`,
-  ]);
+  // Note: In SQLite, PRAGMA foreign_keys is connection-scoped and does not apply
+  // reliably when executed inside a Prisma $transaction batch.
+  await prisma.$executeRawUnsafe('PRAGMA foreign_keys = OFF');
+  await prisma.$executeRawUnsafe('DELETE FROM user_permissions');
+  await prisma.$executeRawUnsafe('DELETE FROM roles');
+  await prisma.$executeRawUnsafe('DELETE FROM time_tracks');
+  await prisma.$executeRawUnsafe('DELETE FROM tasks_users');
+  await prisma.$executeRawUnsafe('DELETE FROM projects_users');
+  await prisma.$executeRawUnsafe('DELETE FROM tasks');
+  await prisma.$executeRawUnsafe('DELETE FROM sprints');
+  await prisma.$executeRawUnsafe('DELETE FROM projects');
+  await prisma.$executeRawUnsafe('DELETE FROM users');
+  await prisma.$executeRawUnsafe('PRAGMA foreign_keys = ON');
   console.log('Data cleanup completed');
 
   const scrypt = new Scrypt({});
   const hash = new Hash(scrypt);
+
+  await prisma.role.createMany({
+    data: [
+      { key: ROLES.ADMIN, name: 'Administrator' },
+      { key: ROLES.USER, name: 'User' },
+    ],
+  });
 
   // Create admin user
   const adminPassword = await hash.make('admin123');
@@ -55,10 +63,7 @@ async function main() {
     data: {
       role: ROLES.ADMIN,
       entity: 'projects',
-      permission:
-        PERMISSIONS.PROJECTS_READ |
-        PERMISSIONS.PROJECTS_WRITE |
-        PERMISSIONS.PROJECTS_DELETE,
+      permission: PERMISSIONS.PROJECTS_WRITE | PERMISSIONS.PROJECTS_DELETE,
     },
   });
   // ADMIN role gets all users permissions (read, write, delete)
@@ -72,12 +77,40 @@ async function main() {
         PERMISSIONS.USERS_DELETE,
     },
   });
-  // USER role gets only read permission for projects
+
+  // ADMIN role gets all roles permissions (read, write, delete)
   await prisma.userPermission.create({
     data: {
-      role: ROLES.USER,
-      entity: 'projects',
-      permission: PERMISSIONS.PROJECTS_READ,
+      role: ROLES.ADMIN,
+      entity: 'roles',
+      permission:
+        PERMISSIONS.ROLES_READ |
+        PERMISSIONS.ROLES_WRITE |
+        PERMISSIONS.ROLES_DELETE,
+    },
+  });
+
+  await prisma.userPermission.create({
+    data: {
+      role: ROLES.ADMIN,
+      entity: 'sprints',
+      permission: PERMISSIONS.SPRINTS_WRITE | PERMISSIONS.SPRINTS_DELETE,
+    },
+  });
+
+  await prisma.userPermission.create({
+    data: {
+      role: ROLES.ADMIN,
+      entity: 'tasks',
+      permission: PERMISSIONS.TASKS_WRITE | PERMISSIONS.TASKS_DELETE,
+    },
+  });
+
+  await prisma.userPermission.create({
+    data: {
+      role: ROLES.ADMIN,
+      entity: 'working',
+      permission: PERMISSIONS.WORKING_READ,
     },
   });
 

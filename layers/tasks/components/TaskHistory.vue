@@ -18,6 +18,8 @@ const getTimeTracksNotes = computed(() => {
 const handleEdit = (timeTrack: SerializedTimeTrackWithUser) => {
   emit('@edit', timeTrack);
 };
+
+const { isUserAssignedToTask } = useIsUserAssignedToTask(toRef(props, 'task'));
 </script>
 <template>
   <div>
@@ -58,6 +60,7 @@ const handleEdit = (timeTrack: SerializedTimeTrackWithUser) => {
               </span>
               <!-- Edit button -->
               <button
+                v-if="isUserAssignedToTask"
                 type="button"
                 class="btn btn-ghost btn-xs btn-square"
                 :title="$t('taskHistory.editSession')"

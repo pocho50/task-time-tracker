@@ -1,6 +1,11 @@
 import { TaskRepository } from '../../repository/task';
 import { DeleteTaskService } from '../../services/delete-task';
-import { ROLES } from '#layers/shared/utils/constants';
+import {
+  assertHasPermissionOrThrow,
+  assertUserInSprintOrAdminOrThrow,
+} from '#layers/shared/server/utils';
+import { ALL_ENTITIES } from '#layers/shared/utils/constants';
+import { PERMISSIONS } from '#layers/shared/utils/permissions';
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
@@ -19,16 +24,28 @@ export default defineEventHandler(async (event) => {
 
   const repo = new TaskRepository();
 
-  // Check if user has access to this task (admins always have access)
-  const hasAccess =
-    user.role === ROLES.ADMIN || (await repo.isUserInTask(user.id, id));
+  assertHasPermissionOrThrow(
+    user?.permissions,
+    ALL_ENTITIES.TASKS,
+    PERMISSIONS.TASKS_DELETE,
+    t('server.unauthorizedDelete')
+  );
 
-  if (!hasAccess) {
+  const sprintId = await repo.getSprintIdByTaskId(id);
+  if (!sprintId) {
     throw createError({
-      statusCode: 403,
-      message: t('server.unauthorizedAccess'),
+      statusCode: 404,
+      message: t('server.taskNotFound') || 'Task not found',
     });
   }
+
+  await assertUserInSprintOrAdminOrThrow({
+    userId: user.id,
+    userRole: user.role,
+    sprintId,
+    isUserInSprint: repo.isUserInSprint.bind(repo),
+    errorMessage: t('server.unauthorizedAccess'),
+  });
 
   const service = new DeleteTaskService(repo);
   const deletedTask = await service.execute(id);

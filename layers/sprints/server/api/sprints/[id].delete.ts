@@ -1,7 +1,10 @@
 // endpoint for deleting a sprint
 import { SprintRepository } from '../../repository/sprint';
-import { assertHasPermissionOrThrow } from '#layers/shared/server/utils';
-import { ENTITY } from '#layers/projects/utils/constants';
+import {
+  assertHasPermissionOrThrow,
+  assertUserInProjectOrAdminOrThrow,
+} from '#layers/shared/server/utils';
+import { ALL_ENTITIES } from '#layers/shared/utils/constants';
 import { PERMISSIONS } from '#layers/shared/utils/permissions';
 import { DeleteSprintService } from '../../services/delete-sprint';
 
@@ -20,15 +23,33 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // Permission check - using projects entity since sprints are part of projects
+  // Permission check
   assertHasPermissionOrThrow(
     user?.permissions,
-    ENTITY,
-    PERMISSIONS.PROJECTS_WRITE,
+    ALL_ENTITIES.SPRINTS,
+    PERMISSIONS.SPRINTS_DELETE,
     t('server.unauthorizedDelete')
   );
 
-  const service = new DeleteSprintService(new SprintRepository());
+  const repo = new SprintRepository();
+
+  const sprint = await repo.getById(id);
+  if (!sprint) {
+    throw createError({
+      statusCode: 404,
+      message: t('server.sprintNotFound'),
+    });
+  }
+
+  await assertUserInProjectOrAdminOrThrow({
+    userId: user.id,
+    userRole: user.role,
+    projectId: sprint.projectId,
+    isUserInProject: repo.isUserInProject.bind(repo),
+    errorMessage: t('server.unauthorizedAccess'),
+  });
+
+  const service = new DeleteSprintService(repo);
 
   const deletedSprint = await service.execute(id);
 
