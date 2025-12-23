@@ -3,14 +3,14 @@ import type { SerializedTaskWithUsersAndTimeTracks } from '../shared/types';
 import { ROLES } from '#layers/shared/utils/constants';
 
 export function useIsUserAssignedToTask(
-  task:
-    | Ref<SerializedTaskWithUsersAndTimeTracks | null | undefined>
-    | MaybeRefOrGetter<SerializedTaskWithUsersAndTimeTracks | null | undefined>
+  task: MaybeRefOrGetter<
+    SerializedTaskWithUsersAndTimeTracks | null | undefined
+  >
 ) {
   const { user } = useUserSession();
 
   const isUserAssignedToTask = computed(() => {
-    const taskValue = toValue(task);
+    const taskValue = typeof task === 'function' ? task() : unref(task);
 
     if (user.value?.role === ROLES.ADMIN) return true;
     if (!user.value?.id || !taskValue?.users) return false;

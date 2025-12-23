@@ -370,4 +370,22 @@ export class TaskRepository {
       where: { id },
     });
   }
+
+  async getSprintIdByTaskId(taskId: string): Promise<string | null> {
+    const task = await this.prisma.task.findUnique({
+      where: { id: taskId },
+      select: { sprintId: true },
+    });
+
+    return task?.sprintId ?? null;
+  }
+
+  async getProjectIdByTaskId(taskId: string): Promise<string | null> {
+    const task = await this.prisma.task.findUnique({
+      where: { id: taskId },
+      select: { projectId: true },
+    });
+
+    return task?.projectId ?? null;
+  }
 }

@@ -4,7 +4,7 @@ import { SaveTasksService } from '../../services/save-tasks';
 import {
   assertHasPermissionOrThrow,
   assertUserInProjectOrAdminOrThrow,
-  assertUserInTaskOrAdminOrThrow,
+  assertUserInSprintOrAdminOrThrow,
 } from '#layers/shared/server/utils';
 import { ALL_ENTITIES } from '#layers/shared/utils/constants';
 import { PERMISSIONS } from '#layers/shared/utils/permissions';
@@ -45,19 +45,37 @@ export default defineEventHandler(async (event) => {
     t('server.unauthorized')
   );
 
+  const sprintIdToCheck = id
+    ? await repo.getSprintIdByTaskId(id)
+    : (sprintId ?? null);
+
+  let projectIdToCheck: string;
   if (id) {
-    await assertUserInTaskOrAdminOrThrow({
+    const projectIdFromDb = await repo.getProjectIdByTaskId(id);
+    if (!projectIdFromDb) {
+      throw createError({
+        statusCode: 404,
+        message: t('server.taskNotFound') || 'Task not found',
+      });
+    }
+    projectIdToCheck = projectIdFromDb;
+  } else {
+    projectIdToCheck = projectId;
+  }
+
+  if (sprintIdToCheck) {
+    await assertUserInSprintOrAdminOrThrow({
       userId: user.id,
       userRole: user.role,
-      taskId: id,
-      isUserInTask: repo.isUserInTask.bind(repo),
+      sprintId: sprintIdToCheck,
+      isUserInSprint: repo.isUserInSprint.bind(repo),
       errorMessage: t('server.unauthorizedAccess'),
     });
   } else {
     await assertUserInProjectOrAdminOrThrow({
       userId: user.id,
       userRole: user.role,
-      projectId,
+      projectId: projectIdToCheck,
       isUserInProject: repo.isUserInProject.bind(repo),
       errorMessage: t('server.unauthorizedAccess'),
     });

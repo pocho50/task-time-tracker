@@ -2,7 +2,7 @@ import { TaskRepository } from '../../repository/task';
 import { DeleteTaskService } from '../../services/delete-task';
 import {
   assertHasPermissionOrThrow,
-  assertUserInTaskOrAdminOrThrow,
+  assertUserInSprintOrAdminOrThrow,
 } from '#layers/shared/server/utils';
 import { ALL_ENTITIES } from '#layers/shared/utils/constants';
 import { PERMISSIONS } from '#layers/shared/utils/permissions';
@@ -31,11 +31,19 @@ export default defineEventHandler(async (event) => {
     t('server.unauthorizedDelete')
   );
 
-  await assertUserInTaskOrAdminOrThrow({
+  const sprintId = await repo.getSprintIdByTaskId(id);
+  if (!sprintId) {
+    throw createError({
+      statusCode: 404,
+      message: t('server.taskNotFound') || 'Task not found',
+    });
+  }
+
+  await assertUserInSprintOrAdminOrThrow({
     userId: user.id,
     userRole: user.role,
-    taskId: id,
-    isUserInTask: repo.isUserInTask.bind(repo),
+    sprintId,
+    isUserInSprint: repo.isUserInSprint.bind(repo),
     errorMessage: t('server.unauthorizedAccess'),
   });
 
