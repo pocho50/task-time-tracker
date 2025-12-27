@@ -10,18 +10,19 @@ export default defineEventHandler(async (event) => {
 
   try {
     const service = new SaveMeService(new UserRepository());
-    await service.execute(user.id, userData);
-    return await setUserSession(event, {
+    const updatedUser = await service.execute(user.id, userData);
+    await setUserSession(event, {
       user: {
         id: user.id,
-        name: userData.name,
+        name: updatedUser.name,
         email: user.email,
         role: user.role,
-        locale: userData.locale,
-        theme: userData.theme,
-        permissions: user.permissions,
+        locale: updatedUser.locale,
+        theme: updatedUser.theme,
       },
     });
+
+    return updatedUser;
   } catch (error) {
     console.error('Error saving user:', error);
     throw createError({
