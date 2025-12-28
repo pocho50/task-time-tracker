@@ -11,7 +11,6 @@ const isDark = useDark({
 watch(
   () => user.value?.theme,
   () => {
-    console.log(user.value?.theme);
     isDark.value = user.value?.theme === 'dark';
   },
   { immediate: true }
