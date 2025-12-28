@@ -2,7 +2,10 @@ import { ProjectRepository } from '../../repository/project';
 import { projectSchema } from '#layers/projects/schemas';
 import { PERMISSIONS } from '#layers/shared/utils/permissions';
 import { ALL_ENTITIES } from '#layers/shared/utils/constants';
-import { assertHasPermissionOrThrow } from '#layers/shared/server/utils';
+import {
+  assertHasPermissionOrThrow,
+  getRolePermissions,
+} from '#layers/shared/server/utils';
 import { SaveProjectsService } from '../../services/save-projects';
 
 export default defineEventHandler(async (event) => {
@@ -11,8 +14,10 @@ export default defineEventHandler(async (event) => {
   // Get translation function for server-side
   const t = await useTranslation(event);
 
+  const permissions = await getRolePermissions(event, user.role);
+
   assertHasPermissionOrThrow(
-    user?.permissions,
+    permissions,
     ALL_ENTITIES.PROJECTS,
     PERMISSIONS.PROJECTS_WRITE,
     t('server.unauthorized')

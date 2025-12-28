@@ -1,8 +1,35 @@
-import { hasPermission } from '#layers/shared/utils/permissions';
+import {
+  hasPermission,
+  type UserPermissions,
+} from '#layers/shared/utils/permissions';
 import { ROLES } from '#layers/shared/utils/constants';
+import { UserPermissionRepository } from '#layers/users/server/repository/user';
+
+export async function getRolePermissions(event: any, role: string) {
+  event.context ||= {};
+  event.context.permissionsByRole ||= {};
+
+  if (event.context.permissionsByRole[role]) {
+    return event.context.permissionsByRole[role];
+  }
+
+  const repo = new UserPermissionRepository();
+  const permissionsArray = await repo.findManyByRole(role);
+  const permissionsRecord = permissionsArray.reduce<Record<string, number>>(
+    (acc, perm) => {
+      acc[perm.entity] = perm.permission;
+      return acc;
+    },
+    {}
+  );
+
+  event.context.permissionsByRole[role] = permissionsRecord;
+  return permissionsRecord;
+}
+
 // Throws a 403 error if the user does not have the required permission
 export function assertHasPermissionOrThrow(
-  userPermissions: { entity: string; permission: number }[] | undefined,
+  userPermissions: UserPermissions | undefined,
   entity: string,
   permission: number,
   errorMessage = 'You do not have permission to perform this action.'

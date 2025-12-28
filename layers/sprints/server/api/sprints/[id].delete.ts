@@ -3,6 +3,7 @@ import { SprintRepository } from '../../repository/sprint';
 import {
   assertHasPermissionOrThrow,
   assertUserInProjectOrAdminOrThrow,
+  getRolePermissions,
 } from '#layers/shared/server/utils';
 import { ALL_ENTITIES } from '#layers/shared/utils/constants';
 import { PERMISSIONS } from '#layers/shared/utils/permissions';
@@ -23,15 +24,17 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  const repo = new SprintRepository();
+
+  const permissions = await getRolePermissions(event, user.role);
+
   // Permission check
   assertHasPermissionOrThrow(
-    user?.permissions,
+    permissions,
     ALL_ENTITIES.SPRINTS,
     PERMISSIONS.SPRINTS_DELETE,
     t('server.unauthorizedDelete')
   );
-
-  const repo = new SprintRepository();
 
   const sprint = await repo.getById(id);
   if (!sprint) {

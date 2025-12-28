@@ -3,6 +3,7 @@ import { DeleteTaskService } from '../../services/delete-task';
 import {
   assertHasPermissionOrThrow,
   assertUserInSprintOrAdminOrThrow,
+  getRolePermissions,
 } from '#layers/shared/server/utils';
 import { ALL_ENTITIES } from '#layers/shared/utils/constants';
 import { PERMISSIONS } from '#layers/shared/utils/permissions';
@@ -24,8 +25,10 @@ export default defineEventHandler(async (event) => {
 
   const repo = new TaskRepository();
 
+  const permissions = await getRolePermissions(event, user.role);
+
   assertHasPermissionOrThrow(
-    user?.permissions,
+    permissions,
     ALL_ENTITIES.TASKS,
     PERMISSIONS.TASKS_DELETE,
     t('server.unauthorizedDelete')

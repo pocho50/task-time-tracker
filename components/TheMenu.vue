@@ -45,11 +45,12 @@ const rawMenuItems = [
 ];
 
 const { user } = useUser();
+const { permissions } = usePermissions();
 
 const menuItems = computed(() =>
   rawMenuItems.filter((item) => {
     if ('permission' in item && item.permission) {
-      return hasPermission(user.value?.permissions ?? [], {
+      return hasPermission(permissions.value ?? {}, {
         entity: item.entity,
         permission: item.permission,
       });

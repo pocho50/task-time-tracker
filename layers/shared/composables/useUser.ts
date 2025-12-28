@@ -3,6 +3,7 @@ import { PERMISSIONS, hasPermission } from '#layers/shared/utils/permissions';
 
 export function useUser() {
   const { user } = useUserSession();
+  const { permissions } = usePermissions();
 
   const userIsAllowedToWrite = (entity: string) => {
     const writePermissionByEntity: Record<string, number> = {
@@ -13,7 +14,7 @@ export function useUser() {
       [ALL_ENTITIES.ROLES]: PERMISSIONS.ROLES_WRITE,
     };
 
-    return hasPermission(user?.value?.permissions ?? [], {
+    return hasPermission(permissions.value ?? {}, {
       entity: entity,
       permission: writePermissionByEntity[entity] ?? 0,
     });
@@ -28,7 +29,7 @@ export function useUser() {
       [ALL_ENTITIES.ROLES]: PERMISSIONS.ROLES_DELETE,
     };
 
-    return hasPermission(user?.value?.permissions ?? [], {
+    return hasPermission(permissions.value ?? {}, {
       entity: entity,
       permission: deletePermissionByEntity[entity] ?? 0,
     });

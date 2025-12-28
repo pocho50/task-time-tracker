@@ -2,7 +2,10 @@ import { RoleRepository } from '../../repository/role';
 import { DeleteRoleService } from '../../services/delete-role';
 import { ALL_ENTITIES, ROLES } from '#layers/shared/utils/constants';
 import { PERMISSIONS } from '#layers/shared/utils/permissions';
-import { assertHasPermissionOrThrow } from '#layers/shared/server/utils';
+import {
+  assertHasPermissionOrThrow,
+  getRolePermissions,
+} from '#layers/shared/server/utils';
 import { PrismaClient } from '@prisma/client';
 import { UserPermissionRepository } from '../../repository/user';
 
@@ -10,8 +13,10 @@ export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
   const t = await useTranslation(event);
 
+  const permissions = await getRolePermissions(event, user.role);
+
   assertHasPermissionOrThrow(
-    user?.permissions,
+    permissions,
     ALL_ENTITIES.ROLES,
     PERMISSIONS.ROLES_DELETE,
     t('server.unauthorizedDelete')

@@ -29,14 +29,19 @@ export const PERMISSIONS = {
   ROLES_DELETE: 4,
 };
 
+type PermissionArray = { entity: string; permission: number }[];
+type PermissionRecord = Record<string, number>;
+export type UserPermissions = PermissionArray | PermissionRecord;
+
 // Helper to check if a user has a specific permission
 export function hasPermission(
-  userPermission: { entity: string; permission: number }[],
+  userPermission: UserPermissions,
   permission: { entity: string; permission: number }
 ): boolean {
-  const userPerm = userPermission.find(
-    (perm) => perm.entity === permission.entity
-  )?.permission;
+  const userPerm = Array.isArray(userPermission)
+    ? userPermission.find((perm) => perm.entity === permission.entity)
+        ?.permission
+    : userPermission[permission.entity];
 
   if (userPerm)
     return (userPerm & permission.permission) === permission.permission;

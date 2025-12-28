@@ -25,7 +25,6 @@ const onSubmit = async (values: Record<string, any>) => {
 <template>
   <section class="py-12 px-4 bg-base-100">
     <AppTitle :text="$t('settings.title')" />
-    {{ user }}
     <VeeForm
       v-slot="{ handleSubmit }"
       :validation-schema="validationSchema"

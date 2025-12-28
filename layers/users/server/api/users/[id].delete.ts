@@ -1,6 +1,9 @@
 // endpoint for deleting a user
 import { UserRepository } from '../../repository/user';
-import { assertHasPermissionOrThrow } from '#layers/shared/server/utils';
+import {
+  assertHasPermissionOrThrow,
+  getRolePermissions,
+} from '#layers/shared/server/utils';
 import { ALL_ENTITIES } from '#layers/shared/utils/constants';
 import { PERMISSIONS } from '#layers/shared/utils/permissions';
 import { DeleteUserService } from '../../services/delete-user';
@@ -8,6 +11,8 @@ import { DeleteUserService } from '../../services/delete-user';
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
   const t = await useTranslation(event);
+
+  const permissions = await getRolePermissions(event, user.role);
 
   const id = event.context.params?.id;
 
@@ -20,7 +25,7 @@ export default defineEventHandler(async (event) => {
 
   // Permission check
   assertHasPermissionOrThrow(
-    user?.permissions,
+    permissions,
     ALL_ENTITIES.USERS,
     PERMISSIONS.USERS_WRITE,
     t('server.unauthorizedDelete')

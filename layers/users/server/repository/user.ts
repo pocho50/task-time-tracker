@@ -129,6 +129,10 @@ export class UserPermissionRepository {
   async findManyByRole(role: string) {
     return this.prisma.userPermission.findMany({
       where: { role },
+      select: {
+        entity: true,
+        permission: true,
+      },
     });
   }
 

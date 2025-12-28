@@ -3,7 +3,10 @@ import { SaveRoleService } from '../../services/save-role';
 import { roleSchema } from '#layers/users/schemas';
 import { ALL_ENTITIES } from '#layers/shared/utils/constants';
 import { PERMISSIONS } from '#layers/shared/utils/permissions';
-import { assertHasPermissionOrThrow } from '#layers/shared/server/utils';
+import {
+  assertHasPermissionOrThrow,
+  getRolePermissions,
+} from '#layers/shared/server/utils';
 import { PrismaClient } from '@prisma/client';
 import { UserPermissionRepository } from '../../repository/user';
 
@@ -11,17 +14,20 @@ export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
   const t = await useTranslation(event);
 
+  const userPermissions = await getRolePermissions(event, user.role);
+
   assertHasPermissionOrThrow(
-    user?.permissions,
+    userPermissions,
     ALL_ENTITIES.ROLES,
     PERMISSIONS.ROLES_WRITE,
     t('server.unauthorized')
   );
 
-  const { key, name, permissions } = await readValidatedBody(
-    event,
-    roleSchema.parse
-  );
+  const {
+    key,
+    name,
+    permissions: rolePermissions,
+  } = await readValidatedBody(event, roleSchema.parse);
 
   const prisma = new PrismaClient();
 
@@ -34,37 +40,37 @@ export default defineEventHandler(async (event) => {
 
         const saved = await service.execute(key, name);
 
-        if (permissions) {
+        if (rolePermissions) {
           await Promise.all([
             permissionsRepo.upsertByRoleAndEntity({
               role: key,
               entity: ALL_ENTITIES.PROJECTS,
-              permission: permissions.projects,
+              permission: rolePermissions.projects,
             }),
             permissionsRepo.upsertByRoleAndEntity({
               role: key,
               entity: ALL_ENTITIES.SPRINTS,
-              permission: permissions.sprints,
+              permission: rolePermissions.sprints,
             }),
             permissionsRepo.upsertByRoleAndEntity({
               role: key,
               entity: ALL_ENTITIES.TASKS,
-              permission: permissions.tasks,
+              permission: rolePermissions.tasks,
             }),
             permissionsRepo.upsertByRoleAndEntity({
               role: key,
               entity: ALL_ENTITIES.USERS,
-              permission: permissions.users,
+              permission: rolePermissions.users,
             }),
             permissionsRepo.upsertByRoleAndEntity({
               role: key,
               entity: ALL_ENTITIES.ROLES,
-              permission: permissions.roles,
+              permission: rolePermissions.roles,
             }),
             permissionsRepo.upsertByRoleAndEntity({
               role: key,
               entity: ALL_ENTITIES.WORKING,
-              permission: permissions.working,
+              permission: rolePermissions.working,
             }),
           ]);
         }

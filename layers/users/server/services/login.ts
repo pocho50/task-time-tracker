@@ -26,7 +26,6 @@ export class LoginService {
         message: t('login.error'),
       });
     }
-    const permissions = await this.permRepo.findManyByRole(user.role);
     await setUserSession(event, {
       user: {
         id: user.id,
@@ -35,7 +34,6 @@ export class LoginService {
         role: user.role,
         locale: user.locale,
         theme: user.theme,
-        permissions,
       },
     });
     return {};

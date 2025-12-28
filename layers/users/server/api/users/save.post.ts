@@ -3,14 +3,19 @@ import { UserRepository } from '../../repository/user';
 import { getUserSchema } from '#layers/users/schemas';
 import { ALL_ENTITIES } from '#layers/shared/utils/constants';
 import { PERMISSIONS } from '#layers/shared/utils/permissions';
-import { assertHasPermissionOrThrow } from '#layers/shared/server/utils';
+import {
+  assertHasPermissionOrThrow,
+  getRolePermissions,
+} from '#layers/shared/server/utils';
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
   const t = await useTranslation(event);
 
+  const permissions = await getRolePermissions(event, user.role);
+
   assertHasPermissionOrThrow(
-    user?.permissions,
+    permissions,
     ALL_ENTITIES.USERS,
     PERMISSIONS.USERS_WRITE,
     t('server.unauthorized')

@@ -4,7 +4,6 @@ declare module '#auth-utils' {
     name: string;
     email: string;
     role: string;
-    permissions: { entity: string; permission: number }[];
     locale: 'en' | 'es';
     theme: 'light' | 'dark';
   }

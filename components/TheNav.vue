@@ -1,12 +1,21 @@
 <script setup lang="ts">
 defineEmits(['@toogleDrawer']);
-
+const { user } = useUserSession();
 const isDark = useDark({
   selector: 'html',
   attribute: 'data-theme',
   valueDark: 'business',
   valueLight: 'corporate',
 });
+
+watch(
+  () => user.value?.theme,
+  () => {
+    console.log(user.value?.theme);
+    isDark.value = user.value?.theme === 'dark';
+  },
+  { immediate: true }
+);
 </script>
 <template>
   <nav
