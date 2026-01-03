@@ -8,7 +8,6 @@ const mockUserWithReadPermissions = {
   value: {
     id: 1,
     name: 'Test User',
-    permissions: [{ entity: 'users', permission: PERMISSIONS.USERS_READ }],
   },
 };
 
@@ -16,16 +15,6 @@ const mockUserWithWritePermissions = {
   value: {
     id: 1,
     name: 'Admin User',
-    permissions: [
-      {
-        entity: 'projects',
-        permission: PERMISSIONS.PROJECTS_WRITE,
-      },
-      {
-        entity: 'users',
-        permission: PERMISSIONS.USERS_READ + PERMISSIONS.USERS_WRITE,
-      },
-    ],
   },
 };
 
@@ -33,9 +22,10 @@ const mockUserWithEmptyPermissions = {
   value: {
     id: 1,
     name: 'Test User',
-    permissions: [],
   },
 };
+
+const permissionsMock = ref<Record<string, number>>({});
 
 // Create a hoisted mock that exists before any test code runs
 const { useUserSessionMock } = vi.hoisted(() => {
@@ -51,12 +41,22 @@ mockNuxtImport('useUserSession', () => {
   return useUserSessionMock;
 });
 
+mockNuxtImport('usePermissions', () => {
+  return () => ({
+    permissions: permissionsMock,
+  });
+});
+
 describe('useUser composable', () => {
   it('userIsAllowedToWrite should return false when user has only read permissions', () => {
     // Arrange
     useUserSessionMock.mockReturnValue({
       user: mockUserWithReadPermissions,
     });
+
+    permissionsMock.value = {
+      users: PERMISSIONS.USERS_READ,
+    };
 
     // Act
     const { userIsAllowedToWrite } = useUser();
@@ -72,6 +72,11 @@ describe('useUser composable', () => {
       user: mockUserWithWritePermissions,
     });
 
+    permissionsMock.value = {
+      projects: PERMISSIONS.PROJECTS_WRITE,
+      users: PERMISSIONS.USERS_READ | PERMISSIONS.USERS_WRITE,
+    };
+
     // Act
     const { userIsAllowedToWrite } = useUser();
 
@@ -85,6 +90,8 @@ describe('useUser composable', () => {
     useUserSessionMock.mockReturnValue({
       user: mockUserWithEmptyPermissions,
     });
+
+    permissionsMock.value = {};
 
     // Act
     const { userIsAllowedToWrite } = useUser();

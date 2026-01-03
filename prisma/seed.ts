@@ -108,9 +108,25 @@ async function main() {
 
   await prisma.userPermission.create({
     data: {
+      role: ROLES.USER,
+      entity: 'tasks',
+      permission: PERMISSIONS.TASKS_WRITE,
+    },
+  });
+
+  await prisma.userPermission.create({
+    data: {
       role: ROLES.ADMIN,
       entity: 'working',
       permission: PERMISSIONS.WORKING_READ,
+    },
+  });
+
+  await prisma.userPermission.create({
+    data: {
+      role: ROLES.ADMIN,
+      entity: 'reports',
+      permission: PERMISSIONS.REPORTS_READ,
     },
   });
 

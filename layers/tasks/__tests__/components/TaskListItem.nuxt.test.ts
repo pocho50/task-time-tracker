@@ -1,5 +1,9 @@
 import { describe, it, expect, vi } from 'vitest';
-import { mockNuxtImport, mockComponent, mountSuspended  } from '@nuxt/test-utils/runtime';
+import {
+  mockNuxtImport,
+  mockComponent,
+  mountSuspended,
+} from '@nuxt/test-utils/runtime';
 import TaskListItem from '../../components/TaskListItem.vue';
 import { mockTasks } from '../__mocks__/taskMocks';
 
@@ -26,6 +30,12 @@ mockNuxtImport('useTaskTimeTracks', () => {
     getTimeAccumulatedSeconds: mockGetTimeAccumulatedSeconds,
     handleStart: mockHandleStart,
     handleEnd: mockHandleEnd,
+  });
+});
+
+mockNuxtImport('useIsUserAssignedToTask', () => {
+  return () => ({
+    isUserAssignedToTask: computed(() => true),
   });
 });
 
