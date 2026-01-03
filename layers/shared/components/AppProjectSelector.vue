@@ -39,22 +39,25 @@ const selectedProject = computed(() => {
 });
 
 function handleChange(projectId: string | number | null) {
-  if (projectId !== null) {
-    model.value = projectId.toString();
-    emit('change', projectId.toString());
+  if (projectId === null) {
+    model.value = '';
+    emit('change', '');
+    return;
   }
+
+  model.value = projectId.toString();
+  emit('change', projectId.toString());
 }
 </script>
 
 <template>
   <div class="form-control" :class="props.class">
     <AppAutocomplete
-      v-if="selectedProject?.value"
       :options="projectOptions"
       :label="label"
       :placeholder="placeholder"
       :disabled="disabled"
-      :model-value="selectedProject?.value"
+      :model-value="model || null"
       clearable
       @update:model-value="handleChange"
     />

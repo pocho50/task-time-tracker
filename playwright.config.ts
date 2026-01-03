@@ -22,21 +22,43 @@ export default defineConfig<ConfigOptions>({
       testMatch: /.*\.setup\.ts/,
     },
     {
-      name: 'logged',
-
-      use: {
-        ...devices['Desktop Chrome'],
-        storageState: 'e2e/.auth/user.json',
-      },
-      testMatch: /^(?!.*\/loginPage\/).*\.test\.ts$/,
-      dependencies: ['setup'],
-    },
-    {
       name: 'not-logged',
       use: {
         ...devices['Desktop Chrome'],
       },
       testMatch: /loginPage\/.*\.test\.ts/,
+      dependencies: ['setup'],
+    },
+
+    {
+      name: 'logged-task',
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'e2e/.auth/user.json',
+      },
+      testMatch: /taskPage\/task\.test\.ts/,
+      dependencies: ['setup'],
+    },
+    {
+      name: 'logged-time-tracking',
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'e2e/.auth/user.json',
+      },
+      testMatch: /taskPage\/time-tracking\.test\.ts/,
+      dependencies: ['logged-task'],
+    },
+    {
+      name: 'logged-other',
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'e2e/.auth/user.json',
+      },
+      testMatch: /^(?!.*\/loginPage\/).*\.test\.ts$/,
+      testIgnore: [
+        /taskPage\/task\.test\.ts/,
+        /taskPage\/time-tracking\.test\.ts/,
+      ],
       dependencies: ['setup'],
     },
   ],

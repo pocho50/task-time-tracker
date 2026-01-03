@@ -72,6 +72,11 @@ export default defineEventHandler(async (event) => {
               entity: ALL_ENTITIES.WORKING,
               permission: rolePermissions.working,
             }),
+            permissionsRepo.upsertByRoleAndEntity({
+              role: key,
+              entity: ALL_ENTITIES.REPORTS,
+              permission: rolePermissions.reports,
+            }),
           ]);
         }
 

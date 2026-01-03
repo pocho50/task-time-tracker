@@ -23,6 +23,7 @@ export const roleSchema = z.object({
       users: z.number().int().nonnegative(),
       roles: z.number().int().nonnegative(),
       working: z.number().int().nonnegative(),
+      reports: z.number().int().nonnegative(),
     })
     .optional()
     .refine((p) => !p || (p.sprints & 1) === 0, {
@@ -36,6 +37,10 @@ export const roleSchema = z.object({
     .refine((p) => !p || (p.working & ~1) === 0, {
       message: 'Working permission can only include READ.',
       path: ['working'],
+    })
+    .refine((p) => !p || (p.reports & ~1) === 0, {
+      message: 'Reports permission can only include READ.',
+      path: ['reports'],
     }),
 });
 

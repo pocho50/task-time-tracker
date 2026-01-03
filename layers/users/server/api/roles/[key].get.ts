@@ -58,6 +58,7 @@ export default defineEventHandler(async (event) => {
         users: byEntity.get(ALL_ENTITIES.USERS) ?? 0,
         roles: byEntity.get(ALL_ENTITIES.ROLES) ?? 0,
         working: byEntity.get(ALL_ENTITIES.WORKING) ?? 0,
+        reports: byEntity.get(ALL_ENTITIES.REPORTS) ?? 0,
       },
     },
   };

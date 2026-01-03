@@ -1,5 +1,9 @@
 import { describe, it, expect, vi } from 'vitest';
-import { mockNuxtImport, mockComponent, mountSuspended  } from '@nuxt/test-utils/runtime';
+import {
+  mockNuxtImport,
+  mockComponent,
+  mountSuspended,
+} from '@nuxt/test-utils/runtime';
 import ProjectList from '../../components/ProjectList.vue';
 import { mockProjects } from '../__mocks__/projectMocks';
 
@@ -13,6 +17,7 @@ const handleRemoveMock = vi.fn();
 mockNuxtImport('useUser', () => {
   return () => ({
     userIsAllowedToWrite: userAllowedMock,
+    userIsAllowedToDelete: userAllowedMock,
   });
 });
 

@@ -7,7 +7,13 @@
 
 <script setup lang="ts">
 const { loggedIn, user } = useUserSession();
-const { fetchPermissions, clearPermissions } = usePermissions();
+const { permissions, fetchPermissions, clearPermissions } = usePermissions();
+
+if (loggedIn.value) {
+  await callOnce(`permissions:${user.value?.id ?? 'unknown'}`, async () => {
+    await fetchPermissions();
+  });
+}
 
 watch(
   loggedIn,
@@ -17,13 +23,9 @@ watch(
       return;
     }
 
-    await callOnce(
-      `permissions:${user.value?.id ?? 'unknown'}`,
-      async () => {
-        await fetchPermissions();
-      },
-      { mode: 'navigation' }
-    );
+    if (Object.keys(permissions.value ?? {}).length === 0) {
+      await fetchPermissions();
+    }
   },
   { immediate: true }
 );

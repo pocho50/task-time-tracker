@@ -8,6 +8,7 @@ export const ALL_ENTITIES = {
   WORKING: 'working',
   USERS: 'users',
   ROLES: 'roles',
+  REPORTS: 'reports',
 };
 export const ROLES = {
   ADMIN: 'ADMIN',
