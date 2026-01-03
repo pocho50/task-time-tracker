@@ -22,6 +22,7 @@ export function useLogin() {
 
     if (result !== false) {
       await refreshSession();
+      await nextTick();
       await navigateTo('/');
     }
 

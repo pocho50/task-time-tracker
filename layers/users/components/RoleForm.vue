@@ -23,6 +23,7 @@ const permissionsState = reactive({
   users: { read: false, write: false, del: false },
   roles: { read: false, write: false, del: false },
   working: { read: false },
+  reports: { read: false },
 });
 
 const toBitmask = (flags: {
@@ -49,6 +50,7 @@ watch(
     permissionsState.roles.write = false;
     permissionsState.roles.del = false;
     permissionsState.working.read = false;
+    permissionsState.reports.read = false;
 
     if (data?.permissions) {
       permissionsState.projects.write = (data.permissions.projects & 2) === 2;
@@ -69,6 +71,8 @@ watch(
       permissionsState.roles.del = (data.permissions.roles & 4) === 4;
 
       permissionsState.working.read = (data.permissions.working & 1) === 1;
+
+      permissionsState.reports.read = (data.permissions.reports & 1) === 1;
     }
   },
   { immediate: true }
@@ -94,6 +98,7 @@ const onSubmit = (values: Record<string, any>) => {
       users: toBitmask(permissionsState.users),
       roles: toBitmask(permissionsState.roles),
       working: toBitmask({ read: permissionsState.working.read }),
+      reports: toBitmask({ read: permissionsState.reports.read }),
     },
   };
 
@@ -271,6 +276,20 @@ defineExpose({
             <label class="label cursor-pointer gap-2">
               <input
                 v-model="permissionsState.working.read"
+                type="checkbox"
+                class="checkbox"
+              />
+              <span class="label-text">{{ $t('roleForm.read') }}</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="bg-base-100 rounded-box p-4 border border-base-300">
+          <div class="font-semibold mb-2">{{ $t('roleForm.reports') }}</div>
+          <div class="flex flex-wrap gap-4">
+            <label class="label cursor-pointer gap-2">
+              <input
+                v-model="permissionsState.reports.read"
                 type="checkbox"
                 class="checkbox"
               />

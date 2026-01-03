@@ -1,0 +1,22 @@
+{
+  "reports": {
+    "title": "Reports",
+    "filters": {
+      "project": "Project",
+      "dateRange": "Date range"
+    },
+    "charts": {
+      "hoursByUser": "Hours worked by user",
+      "tasksByUser": "Tasks finalized by user",
+      "ratioByUser": "Hours / tasks ratio"
+    }
+  },
+  "server": {
+    "projectIdRequired": "Project ID is required",
+    "dateRangeRequired": "Date range is required",
+    "invalidDateRange": "Invalid date range",
+    "unauthorizedRead": "You do not have permission to read reports.",
+    "unauthorizedAccess": "You don't have access to this project.",
+    "errorFetching": "Error fetching reports"
+  }
+}

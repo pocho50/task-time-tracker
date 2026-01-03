@@ -16,6 +16,7 @@ export interface RoleSavePayload {
     users: number;
     roles: number;
     working: number;
+    reports: number;
   };
 }
 

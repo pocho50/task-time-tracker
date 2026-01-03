@@ -27,6 +27,9 @@ export const PERMISSIONS = {
   ROLES_READ: 1,
   ROLES_WRITE: 2,
   ROLES_DELETE: 4,
+
+  // reports
+  REPORTS_READ: 1,
 };
 
 type PermissionArray = { entity: string; permission: number }[];

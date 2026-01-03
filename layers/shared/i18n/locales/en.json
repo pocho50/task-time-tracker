@@ -10,7 +10,10 @@
     "delete": "Delete",
     "edit": "Edit",
     "add": "Add",
+    "search": "Search",
     "error": "Error",
+    "noData": "No data",
+    "tryAnotherFilter": "Try changing the filters.",
     "confirmDeletion": "Confirm Deletion",
     "confirmDeleteMessage": "Are you sure you want to delete this item?"
   },

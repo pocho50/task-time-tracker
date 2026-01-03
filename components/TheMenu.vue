@@ -24,6 +24,13 @@ const rawMenuItems = [
     permission: PERMISSIONS.WORKING_READ,
   },
   {
+    to: '/reports',
+    icon: 'mdi:chart-pie',
+    label: 'app.menu.reports',
+    entity: ALL_ENTITIES.REPORTS,
+    permission: PERMISSIONS.REPORTS_READ,
+  },
+  {
     to: '/users',
     icon: 'mdi:users',
     label: 'app.menu.users',
@@ -44,7 +51,6 @@ const rawMenuItems = [
   },
 ];
 
-const { user } = useUser();
 const { permissions } = usePermissions();
 
 const menuItems = computed(() =>

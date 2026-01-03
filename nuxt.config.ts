@@ -2,6 +2,13 @@ import tailwindcss from '@tailwindcss/vite';
 import { TITLE } from './utils/constants';
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  extends: [
+    './layers/projects',
+    './layers/sprints',
+    './layers/tasks',
+    './layers/users',
+    './layers/reports',
+  ],
   runtimeConfig: {
     public: {
       appTitle: TITLE,
