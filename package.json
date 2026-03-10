@@ -2,15 +2,23 @@
   "name": "nuxt-app",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": "22.20.0"
+  },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
   "scripts": {
     "build": "nuxt build",
+    "build:deploy": "npm run db:deploy && npm run build",
+    "build:seed": "npm run build && npm run db:seed",
+    "db:deploy": "npx prisma migrate deploy",
+    "db:seed": "npx prisma db seed",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
+    "start": "node .output/server/index.mjs",
     "test": "vitest",
     "test:e2e": "BASE_URL=http://localhost:3030 playwright test",
     "setup:test-db": "export DATABASE_URL=file:$(pwd)/prisma/db/time_tracker_test.db && npx prisma db push && npx prisma db seed",
