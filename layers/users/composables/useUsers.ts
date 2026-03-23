@@ -5,12 +5,14 @@ export function useUsers() {
   const userRepo = new UserRepo($api);
   const page = useRouteQuery('page', 1, { transform: Number });
 
-  watch(page, () => refresh());
-
-  const { data, refresh, status } = useAsyncData('users', () => {
-    userRepo.setParams({ page: page.value });
-    return userRepo.getAll();
-  });
+  const { data, refresh, status } = useAsyncData(
+    'users',
+    () => {
+      userRepo.setParams({ page: page.value });
+      return userRepo.getAll();
+    },
+    { watch: [page] }
+  );
 
   const openDrawer = ref(false);
   const selectedUser = ref<UserDataForm | undefined>(undefined);

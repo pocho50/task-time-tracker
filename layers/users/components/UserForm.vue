@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod';
-import { ROLES } from '#layers/shared/utils/constants';
-
 const emit = defineEmits<{
   (e: '@submit', data: UserDataForm): void;
 }>();
@@ -12,6 +10,12 @@ const props = defineProps<{
 }>();
 
 const validationSchema = toTypedSchema(getUserSchema(props.isCreate));
+
+const { roles } = useRoles();
+
+const roleOptions = computed(() =>
+  roles.value.map((r) => ({ value: r.key, text: r.name }))
+);
 
 const form = useTemplateRef('form');
 
@@ -65,10 +69,7 @@ defineExpose({
       <AppFormSelect
         name="role"
         class-input="w-full"
-        :options="[
-          { value: ROLES.ADMIN, text: ROLES.ADMIN },
-          { value: ROLES.USER, text: ROLES.USER },
-        ]"
+        :options="roleOptions"
         :placeholder="$t('userForm.role')"
       />
       <AppFormPassword
