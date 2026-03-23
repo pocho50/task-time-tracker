@@ -19,22 +19,37 @@ const emit = defineEmits<{
   '@end': [totalSeconds: number];
 }>();
 
-const {
-  counter,
-  pause: pauseCounter,
-  resume: resumeCounter,
-  reset: resetCounter,
-  isActive,
-} = useInterval(1000, {
-  controls: true,
-  immediate: false,
-});
+const isActive = ref(false);
+const startTimestamp = ref<number | null>(null);
+const elapsedSeconds = ref(0);
+
+const updateElapsed = () => {
+  if (startTimestamp.value !== null) {
+    elapsedSeconds.value = Math.floor(
+      (Date.now() - startTimestamp.value) / 1000
+    );
+  }
+};
+
+const { pause: pauseTick, resume: resumeTick } = useIntervalFn(
+  updateElapsed,
+  1000,
+  { immediate: false }
+);
+
+// Force update when the tab becomes visible again
+if (import.meta.client) {
+  useEventListener(document, 'visibilitychange', () => {
+    if (!document.hidden && isActive.value) {
+      updateElapsed();
+    }
+  });
+}
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
 const formattedTime = computed(() => {
-  // Calculate active session time: initial + counter
-  const activeSessionSeconds = props.initialSeconds + counter.value;
+  const activeSessionSeconds = props.initialSeconds + elapsedSeconds.value;
   const totalSeconds = props.accumulatedSeconds + activeSessionSeconds;
 
   const hours = Math.floor(totalSeconds / 3600);
@@ -44,7 +59,10 @@ const formattedTime = computed(() => {
 });
 
 const startCounter = () => {
-  resumeCounter();
+  startTimestamp.value = Date.now();
+  elapsedSeconds.value = 0;
+  isActive.value = true;
+  resumeTick();
 };
 
 const handleStart = () => {
@@ -54,10 +72,12 @@ const handleStart = () => {
 
 const handlePause = () => {
   if (props.readOnly) return;
-  const activeSessionSeconds = props.initialSeconds + counter.value;
+  const activeSessionSeconds = props.initialSeconds + elapsedSeconds.value;
   const totalSeconds = props.accumulatedSeconds + activeSessionSeconds;
-  resetCounter();
-  pauseCounter();
+  pauseTick();
+  startTimestamp.value = null;
+  elapsedSeconds.value = 0;
+  isActive.value = false;
   emit('@end', totalSeconds);
 };
 
@@ -71,8 +91,10 @@ watch(
     if (newValue) {
       startCounter();
     } else {
-      resetCounter();
-      pauseCounter();
+      pauseTick();
+      startTimestamp.value = null;
+      elapsedSeconds.value = 0;
+      isActive.value = false;
     }
   }
 );
